@@ -9,12 +9,14 @@ Here is the rainfall problem in Remix.
 
     rain-fall : {-1, -3, 0, 5, -2, 1.0, 0, -1, 6, 7, 999, -2, 0, 10}
 
-    { "Original data: ", (rain-fall) as list } ⮐
+    show "Original data: "
+    show (rain-fall) as list ⮐
 
     positive-rain-fall : filter (rain-fall) by (x) where [ x ≥ 0 ]
     valid-rain-fall : keep (x) from (positive-rain-fall) until [ x = 999 ]
 
-    { "Clean data: ", (valid-rain-fall) as list } ⮐
+    show "Clean data: "
+    show (valid-rain-fall) as list ⮐
 
     count : length of (valid-rain-fall)
     if (count = 0) [
