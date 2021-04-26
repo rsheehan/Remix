@@ -1,0 +1,21 @@
+A first attempt at object like behaviour.
+
+==== begin person object ====
+
+person : {
+	name : "Robert",
+	age : 61,
+	name-age : [ (name) info (age) ],
+	incr-age :
+		age : age + 1;,
+	.bump age by (bump) : ; can this be interpreted in another way?
+	.	age : age + bump
+}
+
+show line (person [name])
+
+person [bump age by (4)] ; can this be interpreted in another way?
+
+- yes, as a function call with a block parameter
+
+Can we distinguish this with an heuristic?.

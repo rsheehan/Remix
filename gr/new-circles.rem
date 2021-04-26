@@ -1,0 +1,16 @@
+New Circles.
+============
+radius : 200
+
+Turtle graphics on (black) paper
+	Repeat 72 times
+		new-turtle : Turtle moved around (radius)
+		Draw (random colour) circle of 80 centred on (new-turtle)
+
+========================================
+
+Turtle moved around (radius) :
+	Turn 5 degrees
+	new-turtle : Based on (turtle)
+	Move (new-turtle) by (radius)
+	new-turtle

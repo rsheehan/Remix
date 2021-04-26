@@ -1,0 +1,10 @@
+A remix version of Scratch's random pick.
+
+choose a random value from (list):
+	list[random (length of (list))]
+
+a-list : {1, 2, 4, 8, 16, 32, 64, 128, 256}
+
+randomize
+item : choose a random value from (a-list)
+show line (item) 

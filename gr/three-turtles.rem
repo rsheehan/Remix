@@ -1,0 +1,33 @@
+Turtle Graphics.
+================
+
+For the purposes of turtle graphics.
+	- the centre of the window is {0, 0}.
+	- the axes have positive y at the top of the window.
+
+turtle graphics on (black) paper
+
+	blue-turtle: make (blue) turtle heading 0
+	red-turtle: make (red) turtle heading 120
+	green-turtle: make (green) turtle heading 240
+
+	turtles: {blue-turtle, red-turtle, green-turtle}
+
+	repeat 12 times
+		repeat 4 times
+			for each (turtle) in (turtles)
+				move (turtle) 200 steps
+				turn (turtle) 90 degrees
+		for each (turtle) in (turtles)
+			turn (turtle) 10 degrees
+
+	hide turtles
+
+========================================
+
+make (colour) turtle heading (angle):
+	new-turtle : based on (turtle)
+	new-turtle [speed] : 200
+	new-turtle [colour] : colour
+	turn (new-turtle) (angle) degrees
+	new-turtle

@@ -1,0 +1,5 @@
+
+list: 1 to 10
+showline (list)
+showline (10 to -5)
+showline {"The range is ", 1 to 20}

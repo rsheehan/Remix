@@ -1,0 +1,15 @@
+Create a random list.
+
+list : {}
+
+randomize
+repeat 50 times
+	append (random 100) to (list)
+show line (list) as list
+
+repeat 10 times
+	show { choose randomly from (list), " " }
+new line
+
+choose randomly from (list):
+	list [random (length of (list))]

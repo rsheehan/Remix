@@ -1,0 +1,56 @@
+Rotating Arrows.
+================
+
+arrow-shape : {
+	{ 0, 1 },
+	{-2, 2 },
+	{ 0,-2 },
+	{ 2, 2 }
+}
+
+on standard (black) paper
+no outline
+
+arrows : a list of 36 arrows
+
+animate 30 times per sec
+	clear layer 1
+	move the (arrows)
+
+show paper
+
+========================================
+
+a list of (n) arrows :
+	angle : 0
+	arrows : {}
+	repeat (n) times
+		arrow : a new arrow
+		position the (arrow) at (angle)
+		add the (arrow) to (arrows)
+		angle : angle + 10
+	arrows
+
+a new arrow :
+	arrow : an arrow shape
+	set the (arrow) colour
+	arrow
+
+an arrow shape :
+	make shape of (arrow-shape)
+
+set the (arrow) colour :
+	arrow [colour] : random colour
+
+position the (arrow) at (angle) :
+	x : centre-x + 200 × cosine (angle)
+	y : centre-y - 200 × sine (angle)
+	arrow [position] : { x, y }
+	arrow [heading] : -1 × angle
+ 
+move the (arrows) :
+	for each (arrow) in (arrows)
+		angle : -1 × arrow [heading]
+		angle : angle + 2
+		position the (arrow) at (angle)
+		fill (arrow)

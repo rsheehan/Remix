@@ -1,0 +1,7 @@
+a: 4
+show (a)
+new line
+
+.a: 4
+.prin a
+.print ""

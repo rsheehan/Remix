@@ -1,0 +1,65 @@
+repeat until (condition-block) (block):
+	do (block)
+	if (do (condition-block))
+		break out
+	redo
+
+line (string) (value):
+	show (string)
+	show (value)
+	new line
+
+conditionA: false
+conditionB: false
+
+line "conditionA: " (conditionA)
+line "conditionB: " (conditionB)
+
+repeat until [conditionA]
+	line "inside conditionA: " (conditionA)
+	line "inside conditionB: " (conditionB)
+	if (conditionB)
+		conditionA: true
+	conditionB: true
+
+line "conditionA: " (conditionA)
+line "conditionB: " (conditionB)
+
+.repeat_until_|_|: function [
+.	condition-block
+.	block
+.][
+.	forever [
+.		do block
+.		if do condition-block [
+.			break
+.		]
+.	]
+.]
+
+.line_|_|: function [
+.	string
+.	value
+.][
+.	prin string
+.	prin value
+.	print ""
+.]
+
+.conditionA: false
+.conditionB: false
+
+.line_|_| "conditionA: " (conditionA)
+.line_|_| "conditionB: " (conditionB)
+
+.repeat_until_|_| [conditionA] [
+.	line_|_| "inside conditionA: " (conditionA)
+.	line_|_| "inside conditionB: " (conditionB)
+.	if (conditionB) [
+.		conditionA: true
+.	]
+.	conditionB: true
+.]
+
+.line_|_| "conditionA: " (conditionA)
+.line_|_| "conditionB: " (conditionB)

@@ -1,0 +1,13 @@
+Swap example.
+
+(#a) ⟺ (#b) :
+	temp : #b
+	#b : #a
+	#a : temp
+
+x : 3
+y : 4
+
+{x, y} as list ⮐
+(x) ⟺ (y)
+{x, y} as list ⮐

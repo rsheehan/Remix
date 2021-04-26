@@ -1,0 +1,46 @@
+Demonstrate joining a list of words using a separator.
+
+join (list) with (separator):
+	string : ""
+	for each (word) in (list)
+		append (word) to (string)
+		if (not at end of (list))
+			append (separator) to (string)
+	string
+
+words : {"cat", "dog", "rat", "pig"}
+result : join (words) with "-"
+showline (result)
+
+from (list) execute (block) with each (#item):
+	for each (#item) in (list) (block)
+
+join2 (list) with (separator):
+	string : ""
+	from (list) execute [
+		append (word) to (string)
+		if (not at end of (list))
+			append (separator) to (string)
+	] with each (word)
+	string
+
+.N.B. Need to fix empty strings to be copied so that the value is not kept. Done.
+words : {"cat2", "dog", "rat", "pig"}
+result : join2 (words) with "-"
+showline (result)
+
+temp (more):
+	word : "2"
+	append (more) to (word)
+	showline (word)
+
+temp "3"
+temp "4"
+
+with list (more):
+	list : { "2" }
+	append (more) to (list)
+	showline (list) as list
+
+with list "3"
+with list "4"

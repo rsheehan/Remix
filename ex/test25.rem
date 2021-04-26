@@ -1,0 +1,34 @@
+Testing the scope in blocks.
+
+one (#a) (block):
+	.these 'a's are references to the one in the caller
+	showline {"before in one: ", #a}
+	#a: #a + 1
+	do (block)
+	showline {"after in one: ", #a}
+
+two (a):
+	showline {"before in two: ", a}
+	one (a)
+		.these 'a's are local to two
+		showline {"before add: ", a}
+		a: a + 1
+		showline {"after add: ", a}
+	showline {"after in two: ", a}
+
+showline "Testing the scope of reference variables."
+
+a: 1
+showline {"a:", a}
+
+one (a)
+	.these 'a's are the global one
+	showline {"before add: ", a}
+	a: a + 1
+	showline {"after add: ", a}
+
+showline {"a:", a}
+
+two (a)
+
+showline {"a:", a}

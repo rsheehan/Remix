@@ -1,0 +1,22 @@
+
+square : make shape of {
+	{-1, -1},
+	{ 1, -1},
+	{ 1,  1},
+	{-1,  1}
+}
+
+scatter squares :
+	no outline
+	repeat 100 times
+		square [position] : random point
+		square [size]	  : random 100
+		square [colour]   : random colour
+		square [heading]  : random 90
+		fill (square)
+
+on standard paper
+	scatter squares
+	animate 1 time per sec
+		clear layer 1
+		scatter squares

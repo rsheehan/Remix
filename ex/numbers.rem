@@ -1,0 +1,5 @@
+print numbers (start) ... (finish):
+	for each (number) from (start) to (finish)
+		show {(number), " "}
+
+print numbers 1 ... 100

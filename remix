@@ -1,0 +1,4 @@
+#!/bin/bash
+REMIX_BASE=/Users/robert/Google\ Drive/My\ Drive/remix
+
+red "$REMIX_BASE/remix.red" $1

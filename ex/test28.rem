@@ -1,0 +1,24 @@
+Demonstrating "apply".
+
+(n)! :
+	if (n = 0)
+		return 1
+	n × (n - 1)!
+
+result : apply [(n)!] to each (n) from (1 to 10)
+(result) as list ⮐
+(n) ⮐
+
+result : apply [
+	append "-hi" to (word)
+] to each (word) from {"one", "two", "three"}
+(result) as list ⮐
+(word) ⮐
+
+result : apply [a × a] to each (a) from (1 to 10)
+(result) as list ⮐
+(a) ⮐
+
+another : apply [random 100] 12 times
+(another) as list ⮐
+(n) ⮐

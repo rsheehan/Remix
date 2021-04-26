@@ -1,0 +1,21 @@
+(n)!:
+	product (2 to (n))
+
+starting with [n : 1] repeat [
+	{ n, "! = ", (n)! } ⮐
+	n : n + 1
+] 10 times 
+
+starting with [n : 1] repeat [
+	{ n, "! = ", (n)! } ⮐
+	n : n + 1
+] until [n > 10]
+
+starting with [n : 1] while [n ≤ 10] repeat [
+	{ n, "! = ", (n)! } ⮐
+	n : n + 1
+]
+
+(n) ⮐
+
+"Finished!" ⮐

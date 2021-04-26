@@ -1,0 +1,18 @@
+use (some)
+	showline (some)
+
+showline {"After - ", some}
+
+nums : {1, 2, 3, 4, 9}
+for each (item) in (nums)
+	show {item, " "}
+new line
+
+a : 69
+inc (a)
+showline {"a: ", a}
+showline {"a: ", dec (a)}
+
+use (#special) (block):
+	#special : "from local"
+	do (block)

@@ -1,0 +1,248 @@
+Draw a sidewinder  maze and solve it.
+	- sidewindermaze.rem
+	- Robert Sheehan
+	- 20/01/21
+
+randomize
+
+SIZE : 10
+
+LEFT : 1
+RIGHT : 2
+UP : 3
+DOWN : 4
+
+rows : 29
+cols : 39
+
+the-maze : {}
+start : {1, 1} ; {random 39, random 29}
+finish : find the middle
+
+find the middle :
+	middle-x : convert (cols ÷ 2) to integer + 1
+	middle-y : convert (rows ÷ 2) to integer + 1
+	{middle-x, middle-y}
+
+on standard (black) paper
+	prepare the maze grid
+	make the sidewinder maze
+	mark the (start) with (blue)
+	mark the (finish) with (orange)
+	solve the maze from (start) to (finish)
+
+prepare the maze grid :
+	square : make shape of {
+		{-1, -1}, {-1, 1}, {1, 1}, {1, -1}
+	} with size (SIZE)
+	draw with (red) pen
+	for each (row) from 1 to (rows)
+		append {} to (the-maze)
+		for each (col) from 1 to (cols)
+			append {
+				right-open : false, 
+				bottom-open : false, 
+				distance : -1
+			} to (the-maze[row])
+			draw (square) at (centre of cell at {col, row})
+
+mark the (place) with (colour) :
+	fill colour (colour)
+	coords : centre of cell at (place)
+	draw circle of (SIZE ÷ 2) at (coords)
+
+make the sidewinder maze :
+	deal with all rows except the bottom
+	deal with the bottom row
+
+deal with all rows except the bottom :
+	for each (row) from 1 to (rows - 1)
+		deal with all columns in the (row) except the right
+		deal with the right cell in the (row)
+
+deal with all columns in the (row) except the right :
+	start-run : 1
+	for each (col) from 1 to (cols - 1)
+		if (heads) [
+			remove the right wall in the cell at {col, row}
+		] otherwise [
+			gap : choose from (start-run) to (col)
+			remove the bottom wall in the cell at {gap, row}
+			start-run : col + 1
+		]
+
+deal with the right cell in the (row) :
+	remove the bottom wall in the cell at {cols, row}
+
+deal with the bottom row : 
+	for each (col) from 1 to (cols - 1)
+		remove the right wall in the cell at {col, rows}
+
+Toss a coin return true if heads, false if tails.
+heads :
+	random 2 = 1
+
+remove the right wall in the cell at (position) :
+	cell : cell at (position)
+	cell[right-open] : true
+	centre : centre of cell at (position)
+	draw with (black) pen
+
+	x : centre[1] + SIZE
+	y : centre[2] - SIZE
+	start : {x, y}
+
+	y : centre[2] + SIZE
+	finish : {x, y}
+	
+	draw line from (start) to (finish)
+
+remove the bottom wall in the cell at (position) :
+	cell : cell at (position)
+	cell[bottom-open] : true
+	centre : centre of cell at (position)
+	draw with (black) pen
+
+	x : centre[1] - SIZE
+	y : centre[2] + SIZE
+	start : {x, y}
+
+	x : centre[1] + SIZE
+	finish : {x, y}
+
+	draw line from (start) to (finish)
+
+cell at (position) :
+	the-row : the-maze[position[2]]
+	the-row[position[1]]
+
+centre of cell at (position) :
+	{
+		centre-x + ((2 × position[1]) - (cols + 1)) × SIZE,
+		centre-y + ((2 × position[2]) - (rows + 1)) × SIZE
+	}
+
+choose from (start) to (finish) :
+	(random (1 + finish - start)) + start - 1
+
+solve the maze from (start) to (finish) :
+	beginning : cell at (finish) ; going backwards
+	beginning[distance] : 0
+	move outwards from (finish)
+	plot the solution
+
+move outwards from (position) :
+	cell : cell at (position)
+	new-distance : cell[distance] + 1
+	if all of {
+		[I can move right from (position)],
+		[(right from (position)) not visited]
+	} [
+		move (RIGHT) from (position) with (new-distance)
+	]
+	if all of {
+		[I can move down from (position)],
+		[(down from (position)) not visited]
+	} [
+		move (DOWN) from (position) with (new-distance)
+	]
+	if all of {
+		[I can move left from (position)],
+		[(left from (position)) not visited]
+	} [
+		move (LEFT) from (position) with (new-distance)
+	]
+	if all of {
+		[I can move up from (position)],
+		[(up from (position)) not visited]
+	} [
+		move (UP) from (position) with (new-distance)
+	]
+
+move (direction) from (position) with (distance) :
+	new-position : position going (direction) from (position)
+	store (distance) at (new-position)
+	move outwards from (new-position)
+
+position going (direction) from (position) :
+	choose from
+		[direction = RIGHT] do [right from (position)]
+		[direction = LEFT]  do [left from (position)]
+		[direction = UP]    do [up from (position)]
+		[direction = DOWN]  do [down from (position)]
+
+store (distance) at (position) :
+	cell : cell at (position)
+	cell[distance] : distance
+
+right from (position) :
+	{position[1] + 1, position[2]}
+
+left from (position) :
+	{position[1] - 1, position[2]}
+
+down from (position) :
+	{position[1], position[2] + 1}
+
+up from (position) :
+	{position[1], position[2] - 1}
+
+(position) not visited :
+	cell : cell at (position)
+	cell[distance] = -1
+
+I can move right from (position) :
+	cell : cell at (position)
+	cell[right-open]
+
+I can move left from (position) :
+	if [position[1] = 1]
+		return false
+	cell : cell at {position[1] - 1, position[2]}
+	cell[right-open]
+
+I can move down from (position) :
+	cell : cell at (position)
+	cell[bottom-open]
+
+I can move up from (position) :
+	if [position[2] = 1]
+		return false
+	cell : cell at {position[1], position[2] - 1}
+	cell[bottom-open]
+
+plot the solution :
+	cell : cell at (start)
+	distance : cell[distance]
+	go closer than (distance) from (start)
+
+go closer than (distance) from (position) :
+	if [position ≠ start]
+		mark the (position) with (green)
+	if [distance > 1] 
+		distance : distance - 1
+		choose from
+			[ all of {
+				[I can move right from (position)], 
+				[(right from (position)) is (distance) away]
+			} ] do
+				go closer than (distance) from (right from (position))
+			[ all of {
+				[I can move left from (position)], 
+				[(left from (position)) is (distance) away]
+			} ] do
+				go closer than (distance) from (left from (position))
+			[ all of {
+				[I can move down from (position)], 
+				[(down from (position)) is (distance) away]
+			} ] do
+				go closer than (distance) from (down from (position))
+			[ all of {
+				[I can move up from (position)], 
+				[(up from (position)) is (distance) away]
+			} ] do
+				go closer than (distance) from (up from (position))
+
+(position) is (distance) away :
+	cell : cell at (position)
+	cell[distance] = distance

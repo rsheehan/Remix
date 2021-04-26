@@ -1,0 +1,13 @@
+small: {}
+
+show (small) as list
+showline {" is a list?: ", type of (small) = "list"}
+showline {7, " is a list?: ", type of 7 = "list"}
+
+append 8 to (small)
+append "a word" to (small)
+showline (small) as list
+append {99, 100} to (small)
+
+showline (small)
+showline (small) as list

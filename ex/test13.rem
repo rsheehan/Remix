@@ -1,0 +1,16 @@
+(n)!:
+	if (n = 0)
+		return 1
+	n × (n - 1)!
+
+(start) ... (finish):
+	(start) to (finish)
+
+range: 1 ... 10
+start (range)
+showline "started ok"
+showline (next (range))
+showline (end of (range))
+
+for each (n) in (1 ... 4)
+	showline {n, "! = ", (n)!}

@@ -1,0 +1,5 @@
+"I am going to add up the numbers from 1 to 1000." ⮐
+
+for each (n) from 1 to 1000
+	show (n)
+	if (n ≠ 1000) [ show " + " ] otherwise [ show { " = ", sum (1 to 1000) } ⮐ ]

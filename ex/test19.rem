@@ -1,0 +1,22 @@
+
+block-list: {
+	[showline "first element"],
+	[showline "second element"],
+	[calling a function]
+}
+
+showline {"length: ", length of (block-list)}
+showline {"type of block-list: ", type of (block-list)}
+
+showline {"type of first element: ", type of (block-list [1])}
+do (block-list [1])
+
+showline "and now ..."
+
+do (block-list [2])
+
+calling a function:
+	showline "This is from the called function."
+
+for each (func) in (block-list)
+	do (func)

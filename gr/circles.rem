@@ -1,0 +1,24 @@
+Circles.
+=================
+radius : 200
+step : radius × π ÷ 180
+
+turtle graphics on (black) paper
+	turtles : 36 turtles in circle of (radius)
+	repeat 72 times
+		for each (turtle) in (turtles)
+			move (turtle) (2 × step) steps
+			turn (turtle) 5 degrees
+
+========================================
+
+(n) turtles in circle of (radius):
+	turtles : {}
+	repeat (n) times
+		new-turtle : based on (turtle)
+		new-turtle [colour] : random colour
+		move (new-turtle) by (radius)
+		turn (new-turtle) 90 degrees
+		add the (new-turtle) to (turtles)
+		turn 10 degrees
+	turtles

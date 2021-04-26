@@ -1,0 +1,47 @@
+A first attempt at object like behaviour.
+
+==== begin person object ====
+
+person : {
+	name : "Robert",
+	age : 61,
+	name-age : [concatenate {name, " - ", age}],
+	incr-age : [ age : age + 1 ],
+	bump-age : [ age : age + bump ]
+}
+
+bump (person) age by (value):
+	person [bump] : value
+	person [bump-age]
+
+show (person) values:
+	{ "name: ", person[name] } ⮐
+	{ "age: ", person[age] } ⮐
+	{"name-age: ", person [name-age]} ⮐
+
+another (original) with (name) and (age):
+	person : based on (original)
+	person[name] : name
+	person[age] : age
+	return person
+
+==== end person object ====
+
+show (person) values
+
+person[incr-age]
+
+show (person) values
+
+bump (person) age by 5
+
+show (person) values
+
+another : another (person) with "Stephanie" and 19
+another[incr-age]
+
+show (another) values
+show (person) values
+
+showline (another) as list
+showline (another) as object

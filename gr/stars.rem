@@ -1,0 +1,17 @@
+Plot a number of stars.
+=======================
+hide-turtles : true
+turtle graphics on (black) paper
+	turn 18 degrees
+	repeat 500 times
+		random star
+
+random star :
+	turtle[position] : random point
+	turtle[colour] : random colour
+	draw a star
+
+draw a star :
+	repeat 5 times
+		move 10 steps
+		turn 144 degrees

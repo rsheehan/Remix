@@ -1,0 +1,97 @@
+Bouncing balls.
+===============
+
+on standard paper
+
+a-ball : {id : 0, colour : red, position : {0, 0}, vx : 1, vy : 1, others : {}, modified : false}
+
+size : 20
+balls : {}
+
+repeat 20 times
+	a-ball [id] : a-ball [id] + 1
+	new-ball : based on (a-ball)
+	new-ball [colour] : random (white)
+	position (new-ball) safely
+	direction : random 360
+	new-ball [vx] : 5 × sine (direction)
+	new-ball [vy] : 5 × cosine (direction)
+	append (new-ball) to (balls)
+
+start : 2
+for each (ball) in (balls)
+	starting with [n : start] while [
+		n ≤ length of (balls)
+	] repeat [
+		append (balls [n]) to (ball [others])
+		inc (n)
+	]
+	inc (start)
+
+animate 24 times per sec
+	clear layer 2
+	for each (ball) in (balls)
+		ball [modified] : false
+	for each (ball) in (balls)
+		move and draw (ball)
+
+show paper
+
+=====================================
+
+position (ball) safely:
+	repeat [
+		safe : true
+		x : size + (random (std-width - 2 × size))
+		y : size + (random (std-height - 2 × size))
+		ball [position] : {x, y}
+		for each (other-ball) in (balls)
+			if (distance from (ball [position]) to (other-ball [position]) < size × 2)
+				safe : false
+	] until [safe]
+
+modify velocity of (ball):
+	if (ball [modified])
+		return
+	position : ball [position]
+	original-vx : ball [vx]
+	original-vy : ball [vy]
+	.if any of {[position [1] < size], [position [1] > std-width - size]}
+	.	ball [vx] : -1 × original-vx
+	.	ball [modified] : true
+	.	return
+	.if any of {[position [2] < size], [position [2] > std-height - size]}
+	.	ball [vy] : -1 × original-vy
+	.	ball [modified] : true
+	.	return
+	for each (other-ball) in (ball [others])
+		if (distance from (position) to (other-ball [position]) < size × 2)
+			ball [vx] : other-ball [vx]
+			other-ball [vx] : original-vx
+			ball [vy] : other-ball [vy]
+			other-ball [vy] : original-vy
+			ball [modified] : true
+			other-ball [modified] : true
+			break out
+
+move and draw (ball):
+	modify velocity of (ball)
+	move (ball)
+	draw (ball [colour]) circle of (size) at (ball [position])
+
+move (ball) :
+	position : ball [position]
+	position [1] : position [1] + ball [vx]
+	if (position [1] < 0) [
+		position [1] : position [1] + std-width
+	] otherwise [
+		if (position [1] > std-width)
+			position [1] : position [1] - std-width
+	]
+	position [2] : position [2] + ball [vy]
+	if (position [2] < 0) [
+		position [2] : position [2] + std-height
+	] otherwise [
+		if (position [2] > std-height)
+			position [2] : position [2] - std-height
+	]

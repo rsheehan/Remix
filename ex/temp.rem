@@ -1,0 +1,37 @@
+repeat [
+	show "abc "
+] 10 times
+
+repeat [show "def "] 5 times
+
+a: 7
+showline (not (a = 5))
+
+if (a = 7) [
+	showline "a is = 7"
+]
+
+if (a ≠ 7) [
+	showline "a is not = 7"
+]
+
+if [a = 7] [
+	showline "a is = 7"
+]
+
+if [a ≠ 7] [
+	showline "a is not = 7"
+]
+
+if [a < 5] [showline "a is less than 5"] otherwise [
+	showline "a is not less than 5"
+]
+
+if (not (a < 5)) [showline "a is not less than 5"] otherwise [
+	showline "a is less than 5"
+]
+
+repeat [
+	showline (a)
+	a: a - 1
+] until [a = 0]

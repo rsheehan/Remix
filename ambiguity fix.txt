@@ -1,0 +1,23 @@
+The function call created when a "list-element" is accessed
+
+The fnc-template passed to assist-create-function-call
+[ [] variable-object [] expression ]
+
+create-function-call passed the parameters
+	name: ["[]" "[]"]
+	actual-parameters: [variable-object expression]
+
+This creates a function-call-stmt object with
+	fnc-name: ["[]" "[]"]
+	actual-parameters: [variable-object expression]
+
+This statement will call the get-item-fnc built-in function.
+If this then has an error when accessing list/list-contents it is possible it is
+a function of signature "name [block]".
+So we can create a call to the correct function on the fly.
+
+create-function-call
+	name: [variable-object/name "[]"]
+	actual-parameters: [expression]
+
+Then evaluate this instead.

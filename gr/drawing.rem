@@ -1,0 +1,16 @@
+Demonstrating drawing.
+
+on standard paper
+.draw on layer 1
+draw lots of lines
+
+'show paper' not only shows the paper, it enters the event handling loop.
+It doesn't leave the loop until the window is closed.
+show paper
+
+========================================
+
+draw lots of lines :
+	repeat 100 times
+		draw with (random pen)
+		draw line from (random point) to (random point)

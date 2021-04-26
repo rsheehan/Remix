@@ -1,0 +1,23 @@
+
+window: {x: 100, y: 50}
+
+array (block):
+	999
+
+print (array):
+	a: array (2) + 1
+	showline (a)
+	a: array [2]
+	showline (a)
+
+print (window)
+
+catch (blocker):
+	do (blocker)
+	showline "done block"
+
+showline "Aargh1!!"
+catch
+	showline "Aargh2!!"
+x: 61
+catch ([showline {"Aargh3!! ", x}])
