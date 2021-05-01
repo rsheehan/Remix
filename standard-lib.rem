@@ -266,24 +266,28 @@ A variant of append.
 add the (item) to (collection):
 	append (item) to (collection)
 
-Output a pretty printed "list".
-show (list) as list:
-	show "{"
+Create a pretty string of "list".
+(list) as list:
+	result : "{"
 	for each (item) in (list)
 		if ((type of (item) = "list") or (type of (item) = "object"))[
-			show (item) as list
+			append ((item) as list) to (result)
 		] otherwise [
-			show ' if (item) string
-			show (item)
-			show ' if (item) string
+			append ' to (result) if (item) string
+			append (convert (item) to string) to (result)
+			append ' to (result) if (item) string
 		]
 		if (not at end of (list))
-			show ", "
-	show "}"
+			append ", " to (result)
+	append "}" to (result)
 
-Only used in show (list) as list.
-show ' if (value) string:
-	if (type of (value) = "string") [show "'"]
+Only used in (list) as list.
+append ' to (str) if (value) string:
+	if (type of (value) = "string") [append "'" to (str)]
+
+Output a pretty printed "list".
+show (list) as list:
+	show ((list) as list)
 
 showline (list) as list:
 	show (list) as list

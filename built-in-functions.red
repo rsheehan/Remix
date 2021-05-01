@@ -154,66 +154,93 @@ based-on-fnc: make function-object [
     red-code: [copy/deep]
 ]
 
-show-range: function [
-    { Display a range. }
+range-string: function [
+    { Create a string from a range. }
     range [hash!]
 ][
+    str: copy ""
     value: range/_start
     direction: 1
     if range/_start > range/_finish [direction: -1]
     loop (absolute range/_finish - range/_start) + 1 [
-        prin [value ""]
+        append append str value " "
         value: value + direction
     ]
+    str
+]
+
+list-string: function [
+    { Create a string from a list or object. }
+    list [hash! map!]
+][
+    str: copy ""
+    either map? list [
+        keys: keys-of list
+        remove find keys '_iter
+        foreach key keys [
+            append append str key ":"
+            append append str list/:key " "
+        ]
+    ][
+        list: at list 3
+        foreach item reduce to-block list [
+            append str item-string item
+        ]
+    ]
+    str
+]
+
+item-string: function [
+    { Create a string from a single item. 
+      If the item is a word evaluate it. }
+    item
+][
+    case [
+        word? item [ ; possibly a variable
+            to-string reduce item
+        ]
+        map? item [ ; an object
+            list-string item
+        ]
+        hash? item [ ; a list
+            either item/_start [
+                range-string item
+            ][
+                list-string item
+            ]
+        ]
+        block? item [
+            ; remove brackets
+            str: next mold item
+            str: copy/part str ((length? str) - 1)
+            ; return str
+        ]
+        true [
+            if none? item [item: ""]
+            to-string reduce item
+        ]
+    ]
+]
+
+show-range: function [
+    { Display a range. }
+    range [hash!]
+][
+    prin range-string range
 ]
 
 show-block: function [
     { Display a list or object. }
     list [hash! map!]
 ][
-    either map? list [
-        keys: keys-of list
-        remove find keys '_iter
-        foreach key keys [
-            prin key prin ": "
-            show-item list/:key
-        ]
-    ][
-        list: at list 3
-        foreach item reduce to-block list [
-            show-item item
-        ]
-    ]
+    prin list-string list
 ]
 
 show-item: function [
     { Display any item. }
     item
 ][
-    case [
-        word? item [ ; possibly a variable
-            prin reduce item
-        ]
-        map? item [ ; an object
-            show-block item
-        ]
-        hash? item [ ; a list
-            either item/_start [
-                show-range item
-            ][
-                show-block item
-            ]
-        ]
-        block? item [
-            ; remove brackets
-            output: next mold item
-            output: copy/part output ((length? output) - 1)
-            prin output
-        ]
-        true [ ; deals with operations
-            prin item
-        ]
-    ]
+    prin item-string item
     none
 ]
 
@@ -268,19 +295,6 @@ if-else-fnc: make function-object [
     red-code: [if-else-remix]
 ]
 
-; Not needed now, as no longer possibly executing a string or list.
-; do-remix: function [
-;     { The remix "do" function.
-;       Only interprets and runs code in blocks, if the parameter is not a block it returns the parameter. }
-;     block-or-other
-; ][
-;     either block! = type? block-or-other [
-;         do block-or-other
-;     ][
-;         block-or-other
-;     ]
-; ]
-
 do-fnc: make function-object [
     template: ["do" "|"]
     ; formal-parameters: ["executable"]
@@ -325,6 +339,12 @@ integer-fnc: make function-object [
     red-code: [to-integer]
 ]
 
+string-fnc: make function-object [
+    template: ["convert" "|" "to" "string"]
+    ; formal-parameters ["item-input"]
+    red-code: [item-string]
+]
+
 insert-function based-on-fnc
 insert-function show-fnc
 insert-function ask-fnc
@@ -333,6 +353,7 @@ insert-function if-else-fnc
 insert-function do-fnc
 insert-function type-fnc
 insert-function integer-fnc
+insert-function string-fnc
 
 ; ********* list and range functions ********
 
