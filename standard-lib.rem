@@ -319,11 +319,10 @@ WARNING: currently to prevent "item" leaking into the top level we have to give 
 
 Sum all the elements in the list (or range).
 sum (list):
-	result: with [
+	with [
 		sum : 0
 		item : 0
 	] apply [sum : sum + item] on each (item) in (list)
-	result
 
 Multiply all the elements in the list (or range).
 product (list):
