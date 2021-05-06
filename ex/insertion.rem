@@ -6,7 +6,7 @@
 randomize
 array : apply [(random 101) - 51] 10 times
 
-(array) as list ⮐
+(array) as list ↲
 
 swap (array) element (first) with (second):
 	temp : array [first]
@@ -23,4 +23,4 @@ insertion sort (list):
 			]
 
 insertion sort (array)
-(array) as list ⮐
+(array) as list ↲

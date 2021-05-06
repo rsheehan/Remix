@@ -8,12 +8,12 @@ Swap example.
 x : 3
 y : 4
 
-{x, y} as list ⮐
+{x, y} as list ↲
 (x) ⟺ (y)
-{x, y} as list ⮐
+{x, y} as list ↲
 
 coords : {x, y}
-(coords) as list ⮐
+(coords) as list ↲
 (x) ⟺ (y)
 coords : {x, y}
-(coords) as list ⮐
+(coords) as list ↲

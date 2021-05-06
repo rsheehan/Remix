@@ -15,9 +15,9 @@ bump (person) age by (value):
 	person [bump-age]
 
 show (person) values:
-	{ "name: ", person[name] } ⮐
-	{ "age: ", person[age] } ⮐
-	{"name-age: ", person [name-age]} ⮐
+	{ "name: ", person[name] } ↲
+	{ "age: ", person[age] } ↲
+	{"name-age: ", person [name-age]} ↲
 
 another (original) with (name) and (age):
 	person : based on (original)

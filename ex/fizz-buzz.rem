@@ -7,4 +7,4 @@ for each (n) from 1 to 100
 		[(n) is divisible by 3]  do [show "fizz "]
 		[(n) is divisible by 5]  do [show "buzz "]
 		show {n, " "}
-⮐
+↲

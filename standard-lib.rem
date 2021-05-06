@@ -9,7 +9,7 @@ nl:
 new line:
 	nl
 
-⮐:
+↲:
 	nl
 
 Output the value of "what" followed by a newline.
@@ -20,22 +20,11 @@ showline (what):
 show line (what):
 	showline (what)
 
-show (what) ⮐:
+show (what) ↲:
 	showline (what)
 
-(what) ⮐:
+(what) ↲:
 	showline (what)
-
-. Hidden 23/04/21 because not needed with the new show ⮐
-.show if (condition) (option1) otherwise (option2):
-.	if (condition) [
-.		show (do (option1))
-.	] otherwise
-.		show (do (option2))
-
-.show if (condition) (option1) otherwise (option2) ⮐:
-.	show if (condition) (option1) otherwise (option2)
-.	nl
 
 ========================================
 
@@ -296,7 +285,7 @@ showline (list) as list:
 show line (list) as list:
 	showline (list) as list
 
-(list) as list ⮐:
+(list) as list ↲:
 	showline (list) as list
 
 Output a pretty printed "object".
@@ -315,7 +304,7 @@ showline (object) as object:
 show line (object) as object:
 	showline (object) as object
 
-(object) as object ⮐:
+(object) as object ↲:
 	showline (object) as object
 
 ========================================

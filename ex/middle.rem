@@ -10,7 +10,7 @@ middle : choose from
 	(n2) if it's between (n1) and (n3)
 	(n3) if it's between (n1) and (n2) ; or just "n3"
 
-{ "The middle value is ", middle } ⮐
+{ "The middle value is ", middle } ↲
 
 =================================================
 

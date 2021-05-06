@@ -7,4 +7,4 @@ The beautiful factorial program.
 	n × (n - 1)!
 
 for each (n) from 1 to 10
-	{ n, "! = ", (n)! } ⮐
+	{ n, "! = ", (n)! } ↲
