@@ -324,6 +324,9 @@ type: function [
         logic? thing [
             "boolean"
         ]
+        none? thing [
+            "none"
+        ]
     ]    
 ]
 
