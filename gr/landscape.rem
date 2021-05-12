@@ -1,0 +1,69 @@
+
+randomize
+on standard (sky) paper
+	draw the landscape
+
+==================
+
+draw the landscape :
+	draw the background
+	draw the middleground
+	draw the foreground
+
+draw the background :
+	draw the clouds
+	draw the back mountains
+
+draw the clouds :
+	repeat (random 10 + 1) times
+		draw a cloud
+
+draw a cloud :
+	draw on layer 1
+	no outline
+	centre-of-cloud : { random (std-width), random 300 }
+	size : 20 + random 20
+	bottom-edge : centre-of-cloud [2] + size
+	left-part : {
+		centre-of-cloud [1] - size ÷ 2,
+		centre-of-cloud [2]
+	}
+	draw (white) circle of (size) at (left-part)
+	size : size + (random 10) - 5
+	right-part : {
+		centre-of-cloud [1] + size ÷ 2,
+		bottom-edge - size
+	}
+	right-bottom-edge : right-part [2] + size
+	draw (white) circle of (size) at (right-part)
+	draw (white) box from {left-part [1], bottom-edge} to {right-part [1], bottom-edge - size}
+
+draw the back mountains :
+	draw on layer 2
+	repeat 30 times
+		draw a (coal) mountain of (200) based at 200
+	draw (coal) box from {0, std-height} to {std-width, std-height - 200}
+
+draw a (colour) mountain of (max-height) based at (level) :
+	centre : random (std-width)
+	height : random (max-height)
+	peak : std-height - (height + level)
+	width : random 100 + 250
+	mountain : make shape of {
+		{ centre, peak },
+		{ centre + width ÷ 2, std-height - level },
+		{ centre - width ÷ 2, std-height - level }
+	} with size 1
+	mountain [colour] : colour
+	fill (mountain)
+
+draw the middleground :
+	draw the middle mountains
+
+draw the middle mountains :
+	draw on layer 3
+	repeat 20 times
+		draw a (gray) mountain of (150) based at 150
+
+draw the foreground :
+	"draw the foreground"↲	

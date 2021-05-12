@@ -426,6 +426,12 @@ random colour:
 draw with (pen-colour) pen:
 	draw with ((pen-colour) pen)
 
+=== Box Operations ===
+
+draw (colour) box from (bottom-left) to (top-right) :
+	fill colour (colour)
+	draw box from (bottom-left) to (top-right)
+
 === Shape Operations ===
 
 shape : {
