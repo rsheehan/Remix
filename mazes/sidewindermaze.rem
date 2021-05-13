@@ -78,10 +78,6 @@ deal with the bottom row :
 	for each (col) from 1 to (cols - 1)
 		remove the right wall in the cell at {col, rows}
 
-Toss a coin return true if heads, false if tails.
-heads :
-	random 2 = 1
-
 remove the right wall in the cell at (position) :
 	cell : cell at (position)
 	cell[right-open] : true

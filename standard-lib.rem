@@ -373,6 +373,10 @@ last in (list):
 square (x):
 	x × x
 
+Returns true 50% of the time.
+heads :
+	random 2 = 1
+
 ========================================
 
 === Set up paper ===
