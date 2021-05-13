@@ -1,11 +1,44 @@
 
 randomize
 
-the-clouds : apply [create a cloud] 10 times
 on standard (sky) paper
-	draw the landscape
+draw the landscape
+animate the clouds
 
 ==================
+
+draw the landscape :
+	draw the back mountains
+	draw the front mountains
+
+draw the back mountains :
+	draw on layer 2
+	repeat 30 times
+		draw a (coal) mountain of max height (200) based at 200
+	draw (coal) box from {0, std-height} to {std-width, std-height - 200}
+
+draw the front mountains :
+	draw on layer 3
+	repeat 20 times
+		if (heads) [ no outline ] otherwise [ draw with (coal) pen ]
+		draw a (gray) mountain of max height (150) based at 150
+
+draw a (colour) mountain of max height (max-height) based at (level) :
+	centre : random (std-width)
+	height : random (max-height)
+	peak : std-height - (height + level)
+	width : random 100 + 250
+	mountain : make shape of {
+		{ centre, peak },
+		{ centre + width ÷ 2, std-height - level },
+		{ centre - width ÷ 2, std-height - level }
+	} with size 1
+	mountain [colour] : colour
+	fill (mountain)
+
+==================
+
+the-clouds : apply [create a cloud] 10 times
 
 create a cloud :
 	base : random (std-height)
@@ -35,10 +68,6 @@ draw cloud of (radius1) and (radius2) at (pos1) and (pos2) :
 	draw (white) circle of (radius2) at (pos2)
 	draw (white) box from {pos1 [1], pos1 [2] + radius1} to (pos2)
 
-draw the landscape :
-	animate the clouds
-	draw the middleground
-
 animate the clouds :
 	animate 10 times per sec
 		clear layer 1
@@ -48,31 +77,4 @@ animate the clouds :
 			cloud [move-x2]
 			cloud [draw]
 
-draw the middleground :
-	draw the back mountains
-	draw the front mountains
-
-draw the back mountains :
-	draw on layer 2
-	repeat 30 times
-		draw a (coal) mountain of height (200) based at 200
-	draw (coal) box from {0, std-height} to {std-width, std-height - 200}
-
-draw the front mountains :
-	draw on layer 3
-	repeat 20 times
-		if (heads) [ no outline ] otherwise [ draw with (coal) pen ]
-		draw a (gray) mountain of height (150) based at 150
-
-draw a (colour) mountain of height (max-height) based at (level) :
-	centre : random (std-width)
-	height : random (max-height)
-	peak : std-height - (height + level)
-	width : random 100 + 250
-	mountain : make shape of {
-		{ centre, peak },
-		{ centre + width ÷ 2, std-height - level },
-		{ centre - width ÷ 2, std-height - level }
-	} with size 1
-	mountain [colour] : colour
-	fill (mountain)
+show paper
