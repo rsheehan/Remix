@@ -23,7 +23,7 @@ comment {
 function-object: object [
     template: [] ; filled in when defined
     formal-parameters: [] ; For a Remix code function, this provides the parameter names. Strings.
-    ref-parameters: [] ; filled in when transpiled, the "#" characters are removed. Words.
+    ; ref-parameters: [] ; filled in when transpiled, the "#" characters are removed. Words.
     return-higher: false
     block: none ; filled in when defined - this is Remix AST code
     fnc-def: [] ; if a reference function, filled in when transpiled
