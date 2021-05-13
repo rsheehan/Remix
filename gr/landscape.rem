@@ -61,7 +61,7 @@ draw the back mountains :
 draw the front mountains :
 	draw on layer 3
 	repeat 20 times
-		if (random 2 = 1) [ no outline ] otherwise [ draw with (coal) pen ]
+		if (heads) [ no outline ] otherwise [ draw with (coal) pen ]
 		draw a (gray) mountain of height (150) based at 150
 
 draw a (colour) mountain of height (max-height) based at (level) :
