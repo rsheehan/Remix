@@ -40,6 +40,10 @@ draw a (colour) mountain of max height (max-height) based at (level) :
 
 the-clouds : apply [create a cloud] 10 times
 
+advance cloud positions (#x1) and (#x2) :
+	inc (x1)
+	inc (x2)
+
 create a cloud :
 	base : random (std-height)
 	across : random (std-width)
@@ -47,9 +51,8 @@ create a cloud :
 	radius2 : random 10 + 20
 	distance : 10
 	if (heads)
-		(radius1) ⟺ (radius2)
+		(radius1)⇆(radius2)
 	{
-		base : base,
 		radius1 : radius1,
 		radius2 : radius2,
 		x1 : (across - radius1) + distance,
@@ -57,8 +60,7 @@ create a cloud :
 		y1 : base - radius1,
 		y2 : base - radius2,
 		draw : [draw cloud of (radius1) and (radius2) at {x1, y1} and {x2, y2}],
-		move-x1 : [inc (x1)],
-		move-x2 : [inc (x2)]
+		move : [advance cloud positions (x1) and (x2)]
 	}
 
 draw cloud of (radius1) and (radius2) at (pos1) and (pos2) :
@@ -71,8 +73,7 @@ animate the clouds :
 		clear layer 1
 		no outline
 		for each (cloud) in (the-clouds)
-			cloud [move-x1]
-			cloud [move-x2]
+			cloud [move]
 			cloud [draw]
 
 show paper

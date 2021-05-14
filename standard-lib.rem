@@ -378,7 +378,7 @@ heads :
 	random 2 = 1
 
 Swap the values of "a" and "b".
-(#a) ⟺ (#b) :
+(#a) ⇆ (#b) :
 	temp : #b
 	#b : #a
 	#a : temp
