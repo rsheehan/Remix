@@ -1,10 +1,5 @@
 Swap example.
 
-(#a) ⟺ (#b) :
-	temp : #b
-	#b : #a
-	#a : temp
-
 x : 3
 y : 4
 

@@ -47,9 +47,7 @@ create a cloud :
 	radius2 : random 10 + 20
 	distance : 10
 	if (heads)
-		temp : radius1
-		radius1 : radius2
-		radius2 : temp
+		(radius1) ⟺ (radius2)
 	{
 		base : base,
 		radius1 : radius1,
