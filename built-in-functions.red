@@ -928,9 +928,7 @@ animate-fnc: make function-object [
 animation-rate: function [
     { Set the animation rate per second. }
     rate
-    /extern animation-per-sec
 ][
-    ; animation-per-sec: rate
     paper/rate: rate
     none
 ]
