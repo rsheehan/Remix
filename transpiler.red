@@ -313,35 +313,76 @@ create-param-lists: function [
 	reduce [param-words ref-param-words]
 ]
 
+create-function-body: function [
+	{ Return the transpiled body of the function. }
+	the-fnc [object!]
+	fnc-params [block!]
+][
+	statements: create-red-statements the-fnc/block/list-of-stmts
+	body-sequence: create-sequence statements the-fnc/return-higher
+	compose/deep [function [(fnc-params)] [(body-sequence)]]
+]
+
+transpile-normal-function: function [
+	{ Transpile this normal function. }
+	fnc-name [string!]
+	the-fnc [object!]
+	fnc-params [block!]
+][
+	body: create-function-body the-fnc fnc-params
+	name: to-word fnc-name
+	set name do body ; this is where the red equivalent function is defined
+	the-fnc/red-code: reduce [name]
+]
+
+transpile-reference-function: function [
+	{ Transpile this reference function. }
+	the-fnc [object!]
+	fnc-params [block!]
+	ref-params [block!]
+][
+	body: create-function-body the-fnc fnc-params
+	the-fnc/fnc-def: body
+]
+
 transpile-functions: function [
 	{ Transpile all of the Remix code functions.
+	  Now deals with all reference functions first to prevent ordering issues.
+	  Still have to be careful if a reference function calls another reference function.
+	  	In this case ordering is still important.
 	  The resulting Red statements get stored in the red-code path. }
 	function-map [map!]
 ][
+	normal-functions: copy []
+	reference-functions: copy []
 	foreach fnc keys-of function-map [
 		the-fnc: select function-map fnc
-		if the-fnc/red-code = none [ ; was :the-fnc/red-code
+		if the-fnc/red-code = none [ ; built-in functions have a value here
 			if the-fnc/block/type <> "sequence" [
 				print ["Error:" fnc "is not a sequence."]
 				quit
 			]
-			statements: create-red-statements the-fnc/block/list-of-stmts
-			body-sequence: create-sequence statements the-fnc/return-higher
 			param-lists: create-param-lists the-fnc/formal-parameters
 			fnc-params: first param-lists
 			ref-params: second param-lists
-			body: compose/deep [function [(fnc-params)] [(body-sequence)]]
-			; print ["^/Transpile function name:" fnc]
-			; prin ["function body: "] probe body
-			; print [mold to-set-word fnc mold/only body "^/"]
-			either ref-params = [] [ ; not a reference function
-				name: to-word fnc
-				set name do body ; this is where the red equivalent function is defined
-				the-fnc/red-code: reduce [name]
-			][ ; it is a reference function
-				the-fnc/fnc-def: body
+			either ref-params = [] [
+				repend/only normal-functions [fnc the-fnc fnc-params]
+			][
+				repend/only reference-functions [the-fnc fnc-params ref-params]
 			]
 		]
+	]
+	foreach fnc-info reference-functions [
+		the-fnc: first fnc-info
+		fnc-params: second fnc-info
+		ref-params: third fnc-info
+		transpile-reference-function the-fnc fnc-params ref-params
+	]
+	foreach fnc-info normal-functions [
+		fnc-name: first fnc-info
+		the-fnc: second fnc-info
+		fnc-params: third fnc-info
+		transpile-normal-function fnc-name the-fnc fnc-params
 	]
 ]
 
@@ -356,4 +397,3 @@ transpile-main: function [
 	statements: create-red-statements ast/list-of-stmts
 	create-sequence statements false
 ]
-
