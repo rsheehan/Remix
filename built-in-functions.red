@@ -12,7 +12,6 @@ comment {
     a template of the name e.g. ["display" "|"]
     the list of formal parameters (if not a built-in function)
         could include them for built-ins for help purposes
-    a list of reference parameters (if any)
     whether this function returns or passes returns higher
         this is useful for control structures
     a block of Remix code (if not a built-in function)
@@ -23,7 +22,6 @@ comment {
 function-object: object [
     template: [] ; filled in when defined
     formal-parameters: [] ; For a Remix code function, this provides the parameter names. Strings.
-    ; ref-parameters: [] ; filled in when transpiled, the "#" characters are removed. Words.
     return-higher: false
     block: none ; filled in when defined - this is Remix AST code
     fnc-def: [] ; if a reference function, filled in when transpiled
