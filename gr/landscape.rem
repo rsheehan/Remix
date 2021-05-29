@@ -75,5 +75,9 @@ draw cloud of (radius1) and (radius2) at (pos1) and (pos2) :
 advance cloud positions (#x1) and (#x2) :
 	inc (x1)
 	inc (x2)
+	if ((x1 - radius1) > std-width)
+		back : 0 - radius2
+		#x1 : back - (x2 - x1)
+		#x2 : back
 
 show paper
