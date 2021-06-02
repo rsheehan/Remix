@@ -199,7 +199,6 @@ apply (block) to each (#item) from (list):
 	result : {}
 	for each (#item) in (list)
 		append (do (block)) to (result)
-	result
 
 Create a new list by applying "block" "n" times.
 apply (block) (n) times:
