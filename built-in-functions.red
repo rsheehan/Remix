@@ -346,6 +346,12 @@ string-fnc: make function-object [
     red-code: [item-string]
 ]
 
+probe-fnc: make function-object [
+    template: ["probe" "|"]
+    ; formal-parameters ["thing"]
+    red-code: [??]
+]
+
 insert-function based-on-fnc
 insert-function show-fnc
 insert-function ask-fnc
@@ -355,6 +361,7 @@ insert-function do-fnc
 insert-function type-fnc
 insert-function integer-fnc
 insert-function string-fnc
+insert-function probe-fnc
 
 ; ********* list and range functions ********
 
@@ -949,6 +956,12 @@ animation-off-fnc: make function-object [
     red-code: [animation-off]
 ]
 
+wait-fnc: make function-object [
+    template: ["wait" "|" "secs"]
+    ; formal-parameters ["seconds"]
+    red-code: [wait]
+]
+
 insert-function draw-layer-fnc
 insert-function clear-layer-fnc
 insert-function setup-paper-fnc
@@ -964,6 +977,7 @@ insert-function draw-shape-fnc
 insert-function animate-fnc
 insert-function animation-rate-fnc
 insert-function animation-off-fnc
+insert-function wait-fnc
 
 ; ********* event functions ********
 
