@@ -502,16 +502,13 @@ turtle: make shape of {
 	{ 2, 2}
 } with size 5
 
-hide-turtles : false
-
-hide turtles:
-	append {
-		command : "hide"
-	} to (turtle-commands)
+turtle [show] : true
 
 turtle-commands : {} ; the list of sub commands to execute each clock tick
+Groups enable multiple commands to be drawn in the same animation tick.
+current-group : turtle-commands ; group to currently add commands to 
 
-turtle-rate: 60
+turtle-rate : 60
 
 add continuing command for (turtle) from (start) to (finish):
 	add true command for (turtle) from (start) to (finish)
@@ -529,7 +526,18 @@ add (continuing) command for (turtle) from (start) to (finish):
 		start      : start, 
 		finish     : finish, 
 		heading    : turtle [heading]
-	} to (turtle-commands)
+	} to (current-group)
+
+Group commands so that they all execute together.
+group together (command-block):
+	group together into (current-group) (command-block)
+
+group together into (#current-group) (command-block):
+	this-group : {}
+	append (this-group) to (turtle-commands)
+	#current-group : this-group
+	do (command-block)
+	#current-group : turtle-commands
 
 random turtle point:
 	{random (std-width) - centre-x, random (std-height) - centre-y}
@@ -550,19 +558,14 @@ turtle graphics on (background) paper (turtle-block):
 
 Start running the turtle command list.
 turtles go:
-	if (hide-turtles) [
-		do all commands
-	] otherwise [
-		start (turtle-commands)
-		animate (turtle-rate) times per sec
-			if (not at end of (turtle-commands)) [
-				do one command
-			] otherwise [
-				animation off
-			]
-	]
+	start (turtle-commands)
+	animate (turtle-rate) times per sec
+		if (not at end of (turtle-commands)) [
+			do command (next(turtle-commands))
+		] otherwise [
+			animation off
+		]
 	show paper
-	animation off
 
 Draw a permanent line if the pen is down.
 draw (pen-down) with (pen) from (start) to (finish):
@@ -571,39 +574,41 @@ draw (pen-down) with (pen) from (start) to (finish):
 		draw with (pen)
 		draw line from (start) to (finish)
 
-Execute all permanent commands. This is on layer 1.
-do all commands:
-	for each (command) in (turtle-commands)
-		if not (command [continuing])
-			turtle : command [turtle]
-			draw (turtle [pen-down]) with ((command [colour]) pen) from (command [start]) to (command [finish])
+Execute all commands in the list.
+do all commands in (commands):
+	for each (command) in (commands)
+		do command (command)
 
 Execute one command from the commands list.
-do one command:
-	command : next (turtle-commands)
-	choose from
-		[command [command] = "clear"] do
-			clear layer 1
-			clear layer 2
+do command (command):
+	if (type of (command) = "list") [
+		do all commands in (command)
+	] otherwise [
+		choose from
+			[command [command] = "clear"] do
+				clear layer 1
+				clear layer 2
 
-		[command [command] = "hide"] do
-			clear layer 2
+			[command [command] = "pause"] do
+				wait (command [time]) secs
 
-		turtle : command [turtle]
+			turtle : command [turtle]
 
-		[command [continuing]] do
-			clear layer 2
-			turtle [colour] : command [colour]
-			if (turtle [pen-down])
-				draw with (turtle [colour]) pen
-				draw line from (command [start]) to (command [finish])
-			turtle [position] : command [finish]
-			turtle [heading] : command [heading]
-			no outline
-			fill (turtle)
+			[command [continuing]] do
+				clear layer 2
+				turtle [colour] : command [colour]
+				if (turtle [pen-down])
+					draw with (turtle [colour]) pen
+					draw line from (command [start]) to (command [finish])
+				turtle [position] : command [finish]
+				turtle [heading] : command [heading]
+				if (turtle [show])
+					no outline
+					fill (turtle)
 
-		pen : (command [colour]) pen
-		draw (turtle [pen-down]) with (pen) from (command [start]) to (command [finish])
+			pen : (command [colour]) pen
+			draw (turtle [pen-down]) with (pen) from (command [start]) to (command [finish])
+	]
 
 Move the base turtle.
 move (steps) steps:
@@ -667,11 +672,29 @@ draw (colour) circle of (radius) centred on (turtle):
 	draw with (colour) pen
 	draw circle of (radius) at (turtle[position])
 
+.Hide the turtle.
+.hide (turtle):
+.	turtle [show] : false
+
+.See the turtle.
+.see (turtle):
+.	turtle [show] : true
+
 Clear the turtle lines.
 erase turtles:
 	append {
 		command : "clear"
-	} to (turtle-commands)
+	} to (current-group)
+
+Pause the turtles for a time.
+pause turtles for (time) secs:
+	append {
+		command : "pause",
+		time : time
+	} to (current-group)
+
+pause turtle for (time) secs:
+	pause turtles for (time) secs
 
 The distance between two points.
 distance from (pt1) to (pt2):

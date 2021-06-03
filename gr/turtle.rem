@@ -7,11 +7,12 @@ For the purposes of turtle graphics.
 
 turtle graphics on (black) paper
 	turtle [speed] : 500
-
 	for each (angle) from 90 to 270 in steps of 5
 		erase turtle
 		turtle [position] : centre
-		move 10 turn (angle) change by 5 count down 100
+		group together
+			move 10 turn (angle) change by 5 count down 100
+		pause turtle for 1 sec
 
 ========================================
 
