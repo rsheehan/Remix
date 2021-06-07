@@ -207,7 +207,7 @@ create-red-function-call: function [
 			print ["Careful:" remix-call/fnc-name "renamed." ]
 		][
 			print ["Error:" remix-call/fnc-name "not declared."]
-			quit
+			return ; changed from quit for live coding
 		]
 	]
 	if all [ ; check if it is a recursive call

@@ -37,8 +37,8 @@ comments: [
 	ahead newline
 ]
 
-string: [
-	{"} copy str_value any non-quote {"}
+remix-string: [ ; changed from "string" for live coding
+	dbl-quote copy str_value any non-quote dbl-quote
 	keep (
 		make token [
 			name: <string>
@@ -235,7 +235,7 @@ char-sequence: [
 split-words: [                  ; parse block
     collect [
         any [
-            [string | comments | number | tokens | char-sequence]
+            [remix-string | comments | number | tokens | char-sequence]
             any white-space
         ]
     ]
@@ -254,7 +254,7 @@ tidy-up: function [
       Removes all of the indent lines and puts consecutive same levels between brackets. }
     block   [block!]    "A block with tokens, strings and characters etc"
 ][
-    lex-output: []
+    lex-output: copy []
     current-block: lex-output
     indent-stack: []
     append/only indent-stack lex-output
