@@ -67,10 +67,8 @@ function-signature: [
 ]
 
 function-statements: [
-	[
-		ahead block! 
-		collect set fnc-block into block-of-statements
-	]
+	ahead block! 
+	collect set fnc-block into block-of-statements
 	(
 		new-function/block: first fnc-block
 	)
@@ -189,6 +187,8 @@ simple-expression: [
 	list-element-assignment
 	|
 	list-element
+	|
+	create-call
 	|  
 	function-call
 	|
@@ -206,12 +206,7 @@ simple-expression: [
 	| 
 	<boolean> keep logic!
 	|
-	collect set new-list literal-list
-	keep (
-		make remix-list [
-			value: to-hash new-list
-		]
-	)
+	literal-list
 ]
 
 ; e.g. a-list [ any ] : value
@@ -265,6 +260,104 @@ list-element: [
 	)
 ]
 
+; e.g. 
+;create
+;	a : 4
+;	pr _ :
+;		show (a)
+create-call: [
+	<word> "create" 
+	(
+		new-object: make remix-object [] ; safe as no nested objects
+	)
+	ahead block! into [object-body]
+	[end | ahead END-OF-FN-CALL]
+	keep (
+		append object-list new-object
+		new-object
+	)
+]
+
+object-body: [
+	any [
+		object-field END-OF-STATEMENT
+		|
+		object-method
+	]
+]
+
+object-field: [
+	collect set parts [
+		<word> keep string! 
+		<colon> 
+		keep expression
+	]
+	(
+		field-name: first parts
+		expr: second parts
+		append new-object/fields make field-initializer [
+			name: field-name
+			expression: expr
+		]
+	)
+]
+
+object-method: [
+	; create a method-object, safe as not nested
+	(
+		new-method: make method-object []
+	)
+	method-signature
+	<colon>
+	method-statements 
+	END-OF-LINE
+	(
+		append new-object/methods new-method
+	)
+]
+
+method-signature: [ ; same as function-signature, but different actions
+	some [ ; gather the signature
+		[
+			<lparen> <rparen> ; the object reference
+			(param-name: "_")
+			| 
+			<lparen> <word> set param-name string! <rparen>
+		]
+		(
+			append new-method/template "|"
+			append new-method/formal-parameters param-name			
+		) 
+		|
+		<word> set name-part string!
+		(
+			append new-method/template name-part
+		)
+	]
+	; check to see if one of the parameters is "_" for the object reference
+	(
+		self-param: false
+		foreach param new-method/formal-parameters [
+			if param = "_" [
+				self-param: true
+				break
+			]
+		]
+		unless self-param [
+			print [{Error: method "} new-method/template {" without _ parameter.}]
+			quit
+		] 
+	)
+]
+
+method-statements: [
+	ahead block! 
+	collect set method-block into block-of-statements ; add the block to the method-object
+	(
+		new-method/block: first method-block
+	)
+]
+
 function-call: [
 	[
 		collect set fnc-template [
@@ -293,12 +386,7 @@ function-call: [
 					(
 						expr: bool
 					)
-					| collect set lit-list literal-list
-					(
-						expr: make remix-list [
-							value: to-hash lit-list
-						]
-					)
+					| collect set expr literal-list
 
 					; the next 4 are block parameters
 
@@ -327,7 +415,12 @@ function-call: [
 ]
 
 literal-list: [
-	<lbrace> list <rbrace>
+	<lbrace> collect set lit-list list <rbrace>
+	keep (
+		expr: make remix-list [
+			value: to-hash lit-list
+		]
+	)
 ]
 
 key-value: [

@@ -28,6 +28,20 @@ function-object: object [
     red-code: none ; filled in if not a reference function
 ] 
 
+; even though not necessary here, included because of similarity
+; to function-object
+
+object-list: [] ; all created objects
+
+method-object: object [
+    ; remix-object: none ; the associated object, I don't know if I need this yet
+    template: []
+    formal-parameters: []
+    ; return-higher: false ; not currently used
+    block: none
+    red-code: none
+]
+
 ; ********* function functions ********
 
 function-name: [                            ; parse block
@@ -544,40 +558,46 @@ get-item: function [
       If the value from an object is a block of code it is evaluated in the 
       context of the object. 
       Currently doesn't throw an error if passed a range. }
-    list [hash! map!]
+    list [hash! map! object!]
     index-key
 ][
-    either map? list [
-        result: attempt [select list index-key]
-        if block? result [ ; it was a deferred block
-            obj: object to-block list ; convert the map to an object
-            value: do bind result obj ; execute in the context of obj
-            extend list to-block obj ; replace possibly changed values
-            return value
-        ]
-        if not result [ ; see if it could be an index
-            ; in this case a block value is currently not evaluated
-            attempt [
-                index: index-to-value index-key
-                if (index > length list) or (index < 1) [
-                    print "Error: array out of bounds"
-                    quit
+    case [
+        map? list [
+            result: attempt [select list index-key]
+            if block? result [ ; it was a deferred block
+                obj: object to-block list ; convert the map to an object
+                value: do bind result obj ; execute in the context of obj
+                extend list to-block obj ; replace possibly changed values
+                return value
+            ]
+            if not result [ ; see if it could be an index
+                ; in this case a block value is currently not evaluated
+                attempt [
+                    index: index-to-value index-key
+                    if (index > length list) or (index < 1) [
+                        print "Error: array out of bounds"
+                        quit
+                    ]
+                    keys: keys-of list
+                    remove find keys '_iter
+                    key: pick keys index
+                    result: reduce [to-set-word key select list key]
                 ]
-                keys: keys-of list
-                remove find keys '_iter
-                key: pick keys index
-                result: reduce [to-set-word key select list key]
             ]
         ]
-    ][
-        list: at list 3; adjust for _iter
-        index: index-to-value index-key
-        if (index > length? list) or (index < 1) [
-            print "Error: array out of bounds"
-            quit
+        hash? list [
+            list: at list 3; adjust for _iter
+            index: index-to-value index-key
+            if (index > length? list) or (index < 1) [
+                print "Error: array out of bounds"
+                quit
+            ]
+            result: list/:index
         ]
-        result: list/:index
-    ]
+        object? list [
+            result: list/:index-key
+        ]
+    ] 
     if any [
         paren? result 
         word? result
@@ -596,24 +616,30 @@ set-item: function [
       A list uses an index, an object uses a key.
       Extends the object if the key doesn't already exist.
       Currently doesn't throw an error if passed a range. }
-    list [hash! map!]
+    list [hash! map! object!]
     index-key
     value
 ][
-    either map? list [
-        if integer? index-key [
-            print "Error: Can't set object with an index."
-            quit
+    case [
+        map? list [
+            if integer? index-key [
+                print "Error: Can't set object with an index."
+                quit
+            ]
+            put list index-key value
         ]
-        put list index-key value
-    ][
-        list: at list 3 ; adjust for _iter
-        index: index-to-value index-key
-        if (index > length? list) or (index < 1) [
-            print "Error: array out of bounds"
-            quit
+        hash? list [
+            list: at list 3 ; adjust for _iter
+            index: index-to-value index-key
+            if (index > length? list) or (index < 1) [
+                print "Error: array out of bounds"
+                quit
+            ]
+            list/:index: value
         ]
-        list/:index: value
+        object? list [
+            list/:index-key: value
+        ]
     ]
 ]
 

@@ -173,7 +173,38 @@ create-red-expression: function [
 			]
 			return to-paren list
 		]
+		"object" [
+			obj: object [] ; really does make a red object!
+			foreach field expression/fields [
+				obj: make obj compose [(to-set-word field/name) (create-red-expression field/expression)]
+			]
+			; now set the obj for each of its methods
+			foreach method expression/methods [
+				; transpile each of the methods
+				body: create-method-body method
+				name: to-function-name method/template
+				fnc: reduce [to-set-word name]
+				append fnc body
+				obj: make obj fnc
+			]
+			return obj
+		]
 	]
+]
+
+create-method-body: function [
+	{ Return the transpiled body of the method. }
+	the-method [object!]
+][
+	method-params: copy []
+	foreach name the-method/formal-parameters [
+		unless name = "_" [
+			append method-params to-word name
+		]
+	]
+	statements: create-red-statements the-method/block/list-of-stmts
+	body-sequence: create-sequence statements false
+	compose/deep [function [(method-params)] [(body-sequence)]]
 ]
 
 deal-with-word-key: function [
@@ -200,6 +231,7 @@ create-red-function-call: function [
 	{ Return the red equivalent of a function call. }
 	remix-call "Includes the name and parameter list"
 ][
+	; this needs to be changed to deal with method calls
 	the-fnc: select function-map remix-call/fnc-name
 	if the-fnc = none [
 		; check if the name can be pluralised.
@@ -207,7 +239,7 @@ create-red-function-call: function [
 			print ["Careful:" remix-call/fnc-name "renamed." ]
 		][
 			print ["Error:" remix-call/fnc-name "not declared."]
-			return ; changed from quit for live coding
+			quit ; change to return for live coding
 		]
 	]
 	if all [ ; check if it is a recursive call

@@ -54,10 +54,22 @@ remix-list: object [
     ; converted to a hash or a map (object) when creating red-code in the transpiler
 ]
 
+remix-object: object [
+    type: "object"
+    fields: [] ; list of key-value pairs?
+    methods: [] ; list of method-objects
+]
+
 assignment-stmt: object [
     type: "assignment"
     name: ""
     expression: none ; the expression to evaluate and assign
+]
+
+field-initializer: object [
+    type: "field"
+    name: ""
+    expression: none ; the initial value of the field
 ]
 
 sequence-stmt: object [

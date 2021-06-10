@@ -111,6 +111,7 @@ unary-expression: [
 simple-expression: [
 	list-element-assignment
 	| list-element
+	| create-call
 	| function-call 
 	| <word> string!
 	| <string> string! 
@@ -132,6 +133,53 @@ list-element: [
 	<word> string!
 	<LBRACKET> expression <RBRACKET>
 	[end | ahead END-OF-FN-CALL]
+]
+
+; e.g. 
+;create
+;	a : 4
+;	pr _ :
+;		show (a)
+create-call: [
+	<word> "create"
+	ahead block! into [object-body]
+	[end | ahead END-OF-FN-CALL]
+]
+
+object-body: [
+	any [
+		object-field END-OF-STATEMENT
+		|
+		object-method
+	]
+]
+
+object-field: [
+	<word> string! <colon> expression
+]
+
+object-method: [
+	method-signature
+	<colon>
+	method-statements 
+	END-OF-LINE
+]
+
+method-signature: [ ; same as function-signature, but different actions
+	some [
+		[
+			<lparen> <rparen>
+			|
+			<lparen> <word> string! <rparen> 
+		]
+		|
+		<word> string!	
+	]
+]
+
+method-statements: [ ; same as function-statements, but different actions
+	ahead block! 
+	into block-of-statements
 ]
 
 function-call: [

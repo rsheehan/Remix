@@ -40,6 +40,7 @@ files: [
 	%gr/squares.rem
 	%gr/bounce.rem
 	%temp.rem
+	%ob/obj-demo.rem
 ]
 
 foreach file files [

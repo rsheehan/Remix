@@ -1,0 +1,19 @@
+An Object Demo.
+
+create greeting : 
+	showline "From the function."
+
+create greeting
+
+person : create
+	name : "Robert"
+	age : 62 + 5
+	say hi to () :
+		show {"Hello ", name}
+	add (year) to () :
+		age : age + year
+
+x: 2 + 3
+showline (person [name])
+showline (person [age])
+say hi to (person)
