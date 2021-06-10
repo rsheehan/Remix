@@ -42,6 +42,27 @@ method-object: object [
     red-code: none
 ]
 
+objects-with-matching-method: function [
+    { Return a list of objects which match this method template. }
+    method-name [string!]
+][
+    objects: copy []
+    foreach obj object-list [
+        foreach method obj/methods [
+            if (to-function-name method/template) = method-name [
+                append objects obj
+            ]
+        ]
+    ]
+    objects
+]
+
+; A method-function keeps all possible references to a function call.
+method-function: object [
+    objects: copy []
+    fnc: none
+]
+
 ; ********* function functions ********
 
 function-name: [                            ; parse block

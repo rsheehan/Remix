@@ -228,12 +228,21 @@ deal-with-word-key: function [
 ]
 
 create-red-function-call: function [
-	{ Return the red equivalent of a function call. }
+	{ Return the red equivalent of a function call. 
+	  Also deals with method calls. }
 	remix-call "Includes the name and parameter list"
 ][
-	; this needs to be changed to deal with method calls
+	; this needs to deal with method calls
+	method-fnc: make method-function []
+	matching-objects: objects-with-matching-method remix-call/fnc-name
+	if (length? matching-objects) > 0 [
+		method-fnc/objects: matching-objects
+	]
 	the-fnc: select function-map remix-call/fnc-name
-	if the-fnc = none [
+	if all [
+		the-fnc = none
+		0 = length? matching-objects
+	][
 		; check if the name can be pluralised.
 		either (the-fnc: pluralised remix-call/fnc-name) [
 			print ["Careful:" remix-call/fnc-name "renamed." ]
@@ -242,14 +251,20 @@ create-red-function-call: function [
 			quit ; change to return for live coding
 		]
 	]
+	method-fnc/fnc: the-fnc
 	if all [ ; check if it is a recursive call
+		the-fnc
 		the-fnc/red-code = none
 		the-fnc/fnc-def = []
 	][ ; at the moment no reference parameters in recursive calls
+	   ; also currently don't handle recursive method calls
 		red-stmt: to-word remix-call/fnc-name
 		red-params: create-red-parameters remix-call/actual-params
 		return compose [(red-stmt) (red-params)]
 	]
+
+	; if there are no method call equivalents we can just do a normal function call
+
 	either the-fnc/red-code [ ; an ordinary function call
 		red-stmt: first the-fnc/red-code
 		either (red-stmt = 'get-item) or (red-stmt = 'set-item) [
