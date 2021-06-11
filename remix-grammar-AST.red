@@ -345,7 +345,7 @@ method-signature: [ ; same as function-signature, but different actions
 			]
 		]
 		unless self-param [
-			print [{Error: method "} new-method/template {" without _ parameter.}]
+			print [{Error: method "} new-method/template {" without () parameter.}]
 			quit
 		] 
 	)

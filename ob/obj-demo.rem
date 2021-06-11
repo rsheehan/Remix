@@ -6,9 +6,8 @@ make person called (the-name) of age (years) :
 		age : years
 
 		say hi to () :
-			part : {"Hello ", name}
-			append {". You are ", age, " years old."} to (part)
-			showline (part)
+			show {"Hello ", name, ". "}
+			showline {"You are ", age, " years old."}
 
 		make () (year) years older :
 			age : year + age		
@@ -23,6 +22,11 @@ make (person) 3 years older
 person [name] : "David"
 say hi to (person)
 
-another : make person called "Pauline" of age 61
+another : make person called "Pauline" of age 37
+
+yet-another : based on (person) ; this still works
+yet-another [name] : "Stephen"
+
 say hi to (another)
 say hi to (person)
+say hi to (yet-another)

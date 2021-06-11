@@ -127,7 +127,6 @@ create-red-expression: function [
 			return append/only copy [] sequence
 		]
 		"function" [
-			; probe to-paren create-red-function-or-method-call expression
 			return to-paren create-red-function-or-method-call expression
 		]
 		"list" [
@@ -192,7 +191,7 @@ create-red-expression: function [
 				append fnc body
 				append object-code fnc
 			]
-			object-code: append/only [object] object-code
+			object-code: append/only copy [object] object-code
 			return object-code
 		]
 	]
@@ -251,37 +250,33 @@ create-method-call: function [
 ]
 
 call-method: function [
+	{ Call the correct method. 
+	  This is only called at runtime. }
 	name [string!] "the method name"
 	parameters		"the actual parameters"
 ][
-	; need to somehow get the formal parameters
 	; find the first parameter with a matching method
 	method: to-word name
 	the-object: none
-	forall parameters [
-		param: first parameters
+	method-parameters: copy parameters ; because I am going to remove the object ref
+	forall method-parameters [
+		param: first method-parameters
 		if all [
 			object? param
 			param/type = "variable"
 		][
 			the-object: get to-word param/name
 			if select the-object method [
-				remove parameters
+				remove method-parameters
 				break
 			]
 		]
 		the-object: none
 	]
-	parameters: head parameters
-	; ?? parameters
-	red-params: create-red-parameters parameters
-	; ?? red-params
-	the-call: append [the-object/:method] red-params
+	method-parameters: head method-parameters
+	red-params: create-red-parameters method-parameters
+	the-call: append copy [the-object/:method] red-params
 	do the-call
-	; THE PROBLEM IS THAT ASSIGNING TO AN OBJECT FIELD IN A METHOD
-	; CREATES A LOCAL VERSION OF THAT.
-	; WE NEED TO BIND METHOD TO THE OBJECT?
-	; do compose [the-object/:method (red-params)]
 ]
 
 create-red-function-call: function [

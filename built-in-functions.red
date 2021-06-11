@@ -342,6 +342,9 @@ type: function [
         map? thing [ ; NEEDS CHANGING NOW WITH REAL OBJECTS
             "object"
         ]
+        object? thing [
+            "remix object"
+        ]
         block? thing [
             "deferred"
         ]
@@ -378,10 +381,17 @@ string-fnc: make function-object [
     red-code: [item-string]
 ]
 
+remix-probe: function [
+    item
+][
+    ?? item
+    none
+]
+
 probe-fnc: make function-object [
     template: ["probe" "|"]
     ; formal-parameters ["thing"]
-    red-code: [??]
+    red-code: [remix-probe]
 ]
 
 insert-function based-on-fnc

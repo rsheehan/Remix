@@ -3,7 +3,11 @@ randomize
 
 on standard (sky) paper
 draw the landscape
+
+the-clouds : apply [create a cloud] 10 times
+
 animate the clouds
+show paper
 
 ==================
 
@@ -38,46 +42,40 @@ draw a (colour) mountain of max height (max-height) based at (level) :
 
 ==================
 
-the-clouds : apply [create a cloud] 10 times
-
 animate the clouds :
-	animate 10 times per sec
+	animate 20 times per sec
 		clear layer 1
 		no outline
 		for each (cloud) in (the-clouds)
-			cloud [move]
-			cloud [draw]
+			move the (cloud)
+			draw the (cloud)
 
 create a cloud :
 	base : random (std-height)
 	across : random (std-width)
-	radius1 : random 10 + 30
-	radius2 : random 10 + 20
+	r1 : random 10 + 30
+	r2 : random 10 + 20
 	distance : 10
 	if (heads)
-		(radius1) ⇆ (radius2)
-	{
-		radius1 : radius1,
-		radius2 : radius2,
-		x1 : (across - radius1) + distance,
-		x2 : (across + radius2) - distance,
-		y1 : base - radius1,
-		y2 : base - radius2,
-		draw : [ draw cloud of (radius1) and (radius2) at {x1, y1} and {x2, y2} ],
-		move : [ advance cloud positions (x1) and (x2) ]
-	}
+		(r1) ⇆ (r2)
 
-draw cloud of (radius1) and (radius2) at (pos1) and (pos2) :
-	draw (white) circle of (radius1) at (pos1)
-	draw (white) circle of (radius2) at (pos2)
-	draw (white) box from {pos1 [1], pos1 [2] + radius1} to (pos2)
+	create
+		a-radius : r1
+		b-radius : r2
+		x1 : (across - r1) + distance
+		x2 : (across + r2) - distance
+		y1 : base - r1
+		y2 : base - r2
 
-advance cloud positions (#x1) and (#x2) :
-	inc (x1)
-	inc (x2)
-	if ((x1 - radius1) > std-width)
-		back : 0 - radius2
-		#x1 : back - (x2 - x1)
-		#x2 : back
+		draw the () :
+			draw (white) circle of (a-radius) at {x1, y1}
+			draw (white) circle of (b-radius) at {x2, y2}
+			draw (white) box from {x1, y1 + a-radius} to {x2, y2}
 
-show paper
+		move the () :
+			inc (x1)
+			inc (x2)
+			if ((x1 - a-radius) > std-width)
+				back : 0 - b-radius
+				x1 : back - (x2 - x1)
+				x2 : back
