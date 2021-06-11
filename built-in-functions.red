@@ -28,39 +28,30 @@ function-object: object [
     red-code: none ; filled in if not a reference function
 ] 
 
-; even though not necessary here, included because of similarity
-; to function-object
+; even though not necessary here, included because of similarity to function-object
 
-object-list: [] ; all created objects
+method-list: copy [] ; all methods, so we can check if a function name is unique
+; it is possible for the same method name to be used by different objects
+
+add-to-method-list: function [
+    { Add new-method to the method list. 
+      Currently an error if a function exists with the same name. }
+    new-method
+][
+    name: to-function-name new-method/template
+    if select function-map name [
+        print [{Error: existing function with method name "} name {".}]
+        quit
+    ]
+    unless find method-list name [
+        append method-list name
+    ]
+]
 
 method-object: object [
-    ; remix-object: none ; the associated object, I don't know if I need this yet
-    template: []
+    template: [] ; filled in when defined
     formal-parameters: []
-    ; return-higher: false ; not currently used
-    block: none
-    red-code: none
-]
-
-objects-with-matching-method: function [
-    { Return a list of objects which match this method template. }
-    method-name [string!]
-][
-    objects: copy []
-    foreach obj object-list [
-        foreach method obj/methods [
-            if (to-function-name method/template) = method-name [
-                append objects obj
-            ]
-        ]
-    ]
-    objects
-]
-
-; A method-function keeps all possible references to a function call.
-method-function: object [
-    objects: copy []
-    fnc: none
+    block: none ; filled in when defined - this is Remix AST code
 ]
 
 ; ********* function functions ********
@@ -128,11 +119,17 @@ insert-function: function [
     func-object [object!]   {the function object}
 ][
     name: to-function-name func-object/template
-    either select function-map name [
-        print [name "function is already defined."]
-    ][
-        put function-map name func-object
+    case [
+        find method-list name [
+            print [{Error: existing method with function name "} name {".}]
+            quit 
+        ]
+        select function-map name [
+            print [{Error: "} name {"function is already defined.}]
+            quit
+        ]
     ]
+    put function-map name func-object
 ]
 
 create-function-call: function [
@@ -173,13 +170,13 @@ assist-create-function-call: function [
 
 ; ********* built-in functions ********
 
-compose-only-block: function [
-    expression
-][
-    either block? expression [
-        compose expression
-    ]
-]
+; compose-only-block: function [
+;     expression
+; ][
+;     either block? expression [
+;         compose expression
+;     ]
+; ]
 
 based-on-fnc: make function-object [
     template: ["based" "on" "|"]
@@ -342,7 +339,7 @@ type: function [
         hash? thing [
             "list"
         ]
-        map? thing [
+        map? thing [ ; NEEDS CHANGING NOW WITH REAL OBJECTS
             "object"
         ]
         block? thing [
