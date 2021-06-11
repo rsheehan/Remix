@@ -127,8 +127,8 @@ create-red-expression: function [
 			return append/only copy [] sequence
 		]
 		"function" [
-			; probe to-paren create-red-function-call expression
-			return to-paren create-red-function-call expression
+			; probe to-paren create-red-function-or-method-call expression
+			return to-paren create-red-function-or-method-call expression
 		]
 		"list" [
 			list-type: determine-list-type first expression/value
@@ -174,20 +174,26 @@ create-red-expression: function [
 			return to-paren list
 		]
 		"object" [
-			obj: object [] ; really does make a red object!
+			; can't fill the fields in until called
+			object-code: copy []
+			field-names: copy []
 			foreach field expression/fields [
-				obj: make obj compose [(to-set-word field/name) (create-red-expression field/expression)]
+				; collect field assignments
+				field-name: to-word field/name
+				append field-names field-name
+				append object-code compose [(to-set-word field-name) (create-red-expression field/expression)]
 			]
-			; now set the obj for each of its methods
+			; now the methods
 			foreach method expression/methods [
 				; transpile each of the methods
-				body: create-method-body method
+				body: create-method-body method field-names
 				name: to-function-name method/template
 				fnc: reduce [to-set-word name]
 				append fnc body
-				obj: make obj fnc
+				append object-code fnc
 			]
-			return obj
+			object-code: append/only [object] object-code
+			return object-code
 		]
 	]
 ]
@@ -195,6 +201,7 @@ create-red-expression: function [
 create-method-body: function [
 	{ Return the transpiled body of the method. }
 	the-method [object!]
+	field-names ; these must be global (object) scope
 ][
 	method-params: copy []
 	foreach name the-method/formal-parameters [
@@ -204,7 +211,7 @@ create-method-body: function [
 	]
 	statements: create-red-statements the-method/block/list-of-stmts
 	body-sequence: create-sequence statements false
-	compose/deep [function [(method-params)] [(body-sequence)]]
+	compose/deep [function [(method-params) /extern (field-names)] [(body-sequence)]]
 ]
 
 deal-with-word-key: function [
@@ -227,50 +234,78 @@ deal-with-word-key: function [
 	create-red-parameters params
 ]
 
-create-red-function-call: function [
-	{ Return the red equivalent of a function call. 
-	  Also deals with method calls. }
-	remix-call "Includes the name and parameter list"
+create-method-call: function [
+	{ Return the code to indirectly call the correct method. }
+	name			"the name of the method"
+	actual-params	"the parameters to evaluate and pass"
 ][
-	; this needs to deal with method calls
-	method-fnc: make method-function []
-	matching-objects: objects-with-matching-method remix-call/fnc-name
-	if (length? matching-objects) > 0 [
-		method-fnc/objects: matching-objects
+	; don't currently handle recursive or reference method calls
+	; or get item, set items as functions do <- need TO DO
+	unless find method-list name [
+		print [{Error: "} name {" not declared.} ]
+		quit ; change to "return" for live coding
 	]
-	the-fnc: select function-map remix-call/fnc-name
-	if all [
-		the-fnc = none
-		0 = length? matching-objects
-	][
-		; check if the name can be pluralised.
-		either (the-fnc: pluralised remix-call/fnc-name) [
-			print ["Careful:" remix-call/fnc-name "renamed." ]
+	compose/deep [
+		call-method (name) [(actual-params)]
+	]
+]
+
+call-method: function [
+	name [string!] "the method name"
+	parameters		"the actual parameters"
+][
+	; need to somehow get the formal parameters
+	; find the first parameter with a matching method
+	method: to-word name
+	the-object: none
+	forall parameters [
+		param: first parameters
+		if all [
+			object? param
+			param/type = "variable"
 		][
-			print ["Error:" remix-call/fnc-name "not declared."]
-			quit ; change to return for live coding
+			the-object: get to-word param/name
+			if select the-object method [
+				remove parameters
+				break
+			]
 		]
+		the-object: none
 	]
-	method-fnc/fnc: the-fnc
+	parameters: head parameters
+	; ?? parameters
+	red-params: create-red-parameters parameters
+	; ?? red-params
+	the-call: append [the-object/:method] red-params
+	do the-call
+	; THE PROBLEM IS THAT ASSIGNING TO AN OBJECT FIELD IN A METHOD
+	; CREATES A LOCAL VERSION OF THAT.
+	; WE NEED TO BIND METHOD TO THE OBJECT?
+	; do compose [the-object/:method (red-params)]
+]
+
+create-red-function-call: function [
+	{ Return the red equivalent of a function call. }
+	name			"the name of the function"
+	the-fnc			"the function-object to call"
+	actual-params	"the parameters to evaluate and pass"
+][
 	if all [ ; check if it is a recursive call
-		the-fnc
 		the-fnc/red-code = none
 		the-fnc/fnc-def = []
 	][ ; at the moment no reference parameters in recursive calls
 	   ; also currently don't handle recursive method calls
-		red-stmt: to-word remix-call/fnc-name
-		red-params: create-red-parameters remix-call/actual-params
+		red-stmt: to-word name
+		red-params: create-red-parameters actual-params
 		return compose [(red-stmt) (red-params)]
 	]
-
-	; if there are no method call equivalents we can just do a normal function call
 
 	either the-fnc/red-code [ ; an ordinary function call
 		red-stmt: first the-fnc/red-code
 		either (red-stmt = 'get-item) or (red-stmt = 'set-item) [
-			red-params: deal-with-word-key remix-call/actual-params
+			red-params: deal-with-word-key actual-params
 		][
-			red-params: create-red-parameters remix-call/actual-params
+			red-params: create-red-parameters actual-params
 		]
 		return compose [(red-stmt) (red-params)]
 	][ ; a reference function call
@@ -280,7 +315,7 @@ create-red-function-call: function [
 		bind-word: none
 		forall formals [
 			formal-param: first formals
-			actual-param: pick remix-call/actual-params (index? formals)
+			actual-param: pick actual-params (index? formals)
 			either (first formal-param) = #"#" [
 				if actual-param/type <> "variable" [
 					print "Error: The actual parameter for a reference parameter must be a variable."
@@ -297,6 +332,25 @@ create-red-function-call: function [
 		]
 		red-params: create-red-parameters actual-parameters
 		compose/deep [do reduce [do bind [(copy-fnc)] quote (bind-word) (red-params)]]
+	]
+]
+
+create-red-function-or-method-call: function [
+	{ Return the red equivalent of a function or method call. }
+	remix-call "Includes the name and parameter list"
+][
+	name: remix-call/fnc-name
+	the-fnc: select function-map name
+	if the-fnc = none [
+		; check if the name can be pluralised.
+		if (the-fnc: pluralised name) [
+			print ["Careful:" name "renamed." ]
+		]
+	]
+	either the-fnc [
+		create-red-function-call name the-fnc remix-call/actual-params
+	][
+		create-method-call name remix-call/actual-params
 	]
 ]
 

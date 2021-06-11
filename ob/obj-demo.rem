@@ -1,19 +1,28 @@
 An Object Demo.
 
-create greeting : 
-	showline "From the function."
+make person called (the-name) of age (years) :
+	create
+		name : the-name
+		age : years
 
-create greeting
+		say hi to () :
+			part : {"Hello ", name}
+			append {". You are ", age, " years old."} to (part)
+			showline (part)
 
-person : create
-	name : "Robert"
-	age : 62 + 5
-	say hi to () :
-		show {"Hello ", name}
-	add (year) to () :
-		age : age + year
+		make () (year) years older :
+			age : year + age		
 
-x: 2 + 3
+person : make person called "Robert" of age 52
+
 showline (person [name])
 showline (person [age])
+
+say hi to (person)
+make (person) 3 years older
+person [name] : "David"
+say hi to (person)
+
+another : make person called "Pauline" of age 61
+say hi to (another)
 say hi to (person)

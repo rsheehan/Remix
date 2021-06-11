@@ -273,7 +273,7 @@ create-call: [
 	ahead block! into [object-body]
 	[end | ahead END-OF-FN-CALL]
 	keep (
-		append object-list new-object
+		; append object-list new-object ; currently replaced with method-list
 		new-object
 	)
 ]
@@ -312,6 +312,7 @@ object-method: [
 	method-statements 
 	END-OF-LINE
 	(
+		add-to-method-list new-method
 		append new-object/methods new-method
 	)
 ]
