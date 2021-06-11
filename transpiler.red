@@ -273,6 +273,10 @@ call-method: function [
 		]
 		the-object: none
 	]
+	unless the-object [
+		print [{Error: no caller object reference in "} name {"}]
+		quit ; change to "return" for live coding
+	]
 	method-parameters: head method-parameters
 	red-params: create-red-parameters method-parameters
 	the-call: append copy [the-object/:method] red-params
