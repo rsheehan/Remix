@@ -198,9 +198,10 @@ create-red-expression: function [
 ]
 
 create-method-body: function [
-	{ Return the transpiled body of the method. }
+	{ Return the transpiled body of the method.
+	  Need to take into account a self reference (). name = "_" }
 	the-method [object!]
-	field-names ; these must be global (object) scope
+	field-names ; these must be object scope/context
 ][
 	method-params: copy []
 	foreach name the-method/formal-parameters [
@@ -211,6 +212,69 @@ create-method-body: function [
 	statements: create-red-statements the-method/block/list-of-stmts
 	body-sequence: create-sequence statements false
 	compose/deep [function [(method-params) /extern (field-names)] [(body-sequence)]]
+]
+
+create-method-call: function [
+	{ Return the code to indirectly call the correct method. }
+	name			"the name of the method"
+	actual-params	"the parameters to evaluate and pass"
+][
+	; don't currently handle recursive or reference method calls
+	; or get item, set items as functions do <- need TO DO
+	unless find method-list name [
+		print [{Error: "} name {" not declared.} ]
+		quit ; change to "return" for live coding
+	]
+	; is the call from a method to a method of the same object?
+	; if so generate a simple method call
+	self-location: find actual-params 'self
+	if self-location [
+		remove self-location
+		method-call: reduce [to-word name]
+		append method-call actual-params
+		return method-call
+	]
+	; otherwise have to dynamically dispatch
+	compose/deep [
+		call-method (name) [(actual-params)]
+	]
+]
+
+call-method: function [
+	{ Call the correct method. 
+	  This is only called at runtime. }
+	name [string!] "the method name"
+	parameters		"the actual parameters"
+][
+	; currently finds the first parameter with a matching method
+	; don't want to do this really
+	method: to-word name
+	the-object: none
+	method-parameters: copy parameters ; because I am going to remove the object ref
+	parameter-number: 0
+	forall method-parameters [
+		parameter-number: parameter-number + 1
+		param: first method-parameters
+		if all [
+			object? param
+			param/type = "variable"
+		][
+			the-object: get to-word param/name
+			if select the-object method [ ; this object has a matching method
+			; need to check if the parameter-number matches the self-position of the method
+			; Currently the technique to check the position of the object position.
+				if (select method-list name) = parameter-number [
+					remove method-parameters
+					break
+				]
+			]
+		]
+		the-object: none
+	]
+	method-parameters: head method-parameters
+	red-params: create-red-parameters method-parameters
+	the-call: append copy [the-object/:method] red-params
+	do the-call
 ]
 
 deal-with-word-key: function [
@@ -231,52 +295,6 @@ deal-with-word-key: function [
 		return red-params
 	]
 	create-red-parameters params
-]
-
-create-method-call: function [
-	{ Return the code to indirectly call the correct method. }
-	name			"the name of the method"
-	actual-params	"the parameters to evaluate and pass"
-][
-	; don't currently handle recursive or reference method calls
-	; or get item, set items as functions do <- need TO DO
-	unless find method-list name [
-		print [{Error: "} name {" not declared.} ]
-		quit ; change to "return" for live coding
-	]
-	compose/deep [
-		call-method (name) [(actual-params)]
-	]
-]
-
-call-method: function [
-	{ Call the correct method. 
-	  This is only called at runtime. }
-	name [string!] "the method name"
-	parameters		"the actual parameters"
-][
-	; find the first parameter with a matching method
-	method: to-word name
-	the-object: none
-	method-parameters: copy parameters ; because I am going to remove the object ref
-	forall method-parameters [
-		param: first method-parameters
-		if all [
-			object? param
-			param/type = "variable"
-		][
-			the-object: get to-word param/name
-			if select the-object method [
-				remove method-parameters
-				break
-			]
-		]
-		the-object: none
-	]
-	method-parameters: head method-parameters
-	red-params: create-red-parameters method-parameters
-	the-call: append copy [the-object/:method] red-params
-	do the-call
 ]
 
 create-red-function-call: function [
