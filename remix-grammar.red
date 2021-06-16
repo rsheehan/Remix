@@ -188,6 +188,9 @@ function-call: [
 		|
 		2 20 [ ; currently a max of 20 parts to a function call
 			<word> string!
+			|
+			; for a self method call
+			<lparen> <rparen>
 			; a literal parameter
 			| <string> string! | <number> number! | <boolean> logic! | literal-list
 

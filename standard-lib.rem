@@ -287,8 +287,8 @@ show line (list) as list:
 (list) as list ↲:
 	showline (list) as list
 
-Output a pretty printed "object".
-show (object) as object:
+Output a pretty printed "map".
+show (object) as map:
 	show "{"
 	for each (n) from 1 to (length of (object))
 		show (object [n])
@@ -296,15 +296,15 @@ show (object) as object:
 			show ", "
 	show "}"
 
-showline (object) as object:
-	show (object) as object
+showline (object) as map:
+	show (object) as map
 	nl
 
-show line (object) as object:
-	showline (object) as object
+show line (object) as map:
+	showline (object) as map
 
-(object) as object ↲:
-	showline (object) as object
+(object) as map ↲:
+	showline (object) as map
 
 ========================================
 

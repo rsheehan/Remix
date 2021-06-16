@@ -1,47 +1,43 @@
 A first attempt at object like behaviour.
-
+Now changed to deal with real objects.
 ==== begin person object ====
 
-person : {
-	name : "Robert",
-	age : 61,
-	name-age : [concatenate {name, " - ", age}],
-	incr-age : [ age : age + 1 ],
-	bump-age : [ age : age + bump ]
-}
+create person (the-name) (years) years old :
+	create
+		name : the-name
+		age : years
 
-bump (person) age by (value):
-	person [bump] : value
-	person [bump-age]
+		name and age of () : 
+			showline {name, " - ", age}
 
-show (person) values:
-	{ "name: ", person[name] } ↲
-	{ "age: ", person[age] } ↲
-	{"name-age: ", person [name-age]} ↲
+		increment age of () :
+			age : age + 1
 
-another (original) with (name) and (age):
-	person : based on (original)
-	person[name] : name
-	person[age] : age
-	return person
+		bump age of () by (bump) :
+			age : age + bump
+
+		show () values:
+			{ "name: ", name } ↲
+			{ "age: ", age } ↲
+			name and age of ()
 
 ==== end person object ====
 
+person : create person "Alice" 61 years old 
 show (person) values
 
-person[incr-age]
-
+increment age of (person)
 show (person) values
 
-bump (person) age by 5
-
+bump age of (person) by 5
 show (person) values
+↲
 
-another : another (person) with "Stephanie" and 19
-another[incr-age]
-
+another : create person "Bob" 19 years old
 show (another) values
-show (person) values
+name and age of (another)
 
-showline (another) as list
-showline (another) as object
+increment age of (another)
+show (another) values
+
+show (person) values

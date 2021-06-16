@@ -263,7 +263,7 @@ list-element: [
 ; e.g. 
 ;create
 ;	a : 4
-;	pr _ :
+;	pr () :
 ;		show (a)
 create-call: [
 	<word> "create" 
@@ -273,7 +273,6 @@ create-call: [
 	ahead block! into [object-body]
 	[end | ahead END-OF-FN-CALL]
 	keep (
-		; append object-list new-object ; currently replaced with method-list
 		new-object
 	)
 ]
@@ -318,16 +317,28 @@ object-method: [
 ]
 
 method-signature: [ ; same as function-signature, but different actions
+	(
+		param-position: 1
+		self-position: 0
+	)
 	some [ ; gather the signature
 		[
 			<lparen> <rparen> ; the object reference
-			(param-name: "_")
+			(
+				if self-position <> 0 [
+					print [{Error: method "} new-method/template {" more than one self reference ().}]
+					quit ; return if live coding
+				]
+				self-position: param-position
+				param-name: "_"
+			)
 			| 
 			<lparen> <word> set param-name string! <rparen>
 		]
 		(
 			append new-method/template "|"
-			append new-method/formal-parameters param-name			
+			append new-method/formal-parameters param-name
+			param-position: param-position + 1
 		) 
 		|
 		<word> set name-part string!
@@ -335,19 +346,14 @@ method-signature: [ ; same as function-signature, but different actions
 			append new-method/template name-part
 		)
 	]
-	; check to see if one of the parameters is "_" for the object reference
+	; check to see if one of the parameters is the object reference
 	(
-		self-param: false
-		foreach param new-method/formal-parameters [
-			if param = "_" [
-				self-param: true
-				break
-			]
-		]
-		unless self-param [
+		either self-position = 0 [
 			print [{Error: method "} new-method/template {" without () parameter.}]
-			quit
-		] 
+			quit ; return if live coding
+		][
+			new-method/self-position: self-position
+		]
 	)
 ]
 
@@ -375,10 +381,16 @@ function-call: [
 				<word> keep string! ; part of the function name the rest are actual parameters
 				| 
 				[
-					<string> set string string! 
+					<lparen> <rparen> ; for a self method call
+					(
+						; need to record this for checking in the transpiler
+						expr: 'self
+					)
+					| <string> set string string! 
 					(
 						expr: string
 					)
+
 					| <number> set num number! 
 					(
 						expr: num

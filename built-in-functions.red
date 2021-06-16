@@ -43,14 +43,21 @@ add-to-method-list: function [
         print [{Error: existing function with method name "} name {".}]
         quit
     ]
-    unless find method-list name [
-        append method-list name
+    position: select method-list name
+    either position = none [
+        append append method-list name new-method/self-position
+    ][
+        if position <> new-method/self-position [
+            print [{Error: method "} name {" inconsistent object positions.}]
+            quit
+        ]
     ]
 ]
 
 method-object: object [
     template: [] ; filled in when defined
     formal-parameters: []
+    self-position: 0 ; which parameter is the object reference
     block: none ; filled in when defined - this is Remix AST code
 ]
 
@@ -583,8 +590,6 @@ index-to-value: function [
 get-item: function [
     { Get an item from a list or object. 
       The index-key can either be an index or a key. 
-      If the value from an object is a block of code it is evaluated in the 
-      context of the object. 
       Currently doesn't throw an error if passed a range. }
     list [hash! map! object!]
     index-key
@@ -592,12 +597,6 @@ get-item: function [
     case [
         map? list [
             result: attempt [select list index-key]
-            if block? result [ ; it was a deferred block
-                obj: object to-block list ; convert the map to an object
-                value: do bind result obj ; execute in the context of obj
-                extend list to-block obj ; replace possibly changed values
-                return value
-            ]
             if not result [ ; see if it could be an index
                 ; in this case a block value is currently not evaluated
                 attempt [

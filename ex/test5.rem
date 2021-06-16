@@ -13,19 +13,3 @@ if (true) [
 ] otherwise [
 	show "no"
 ]
-
-.a: "yesterday"
-
-.either false [
-.	prin a
-.][
-.	prin "no"
-.	print ""
-.]
-
-.either true [
-.	prin a
-.	print ""
-.][
-.	prin "no"
-.]
