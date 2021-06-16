@@ -346,11 +346,11 @@ type: function [
         hash? thing [
             "list"
         ]
-        map? thing [ ; NEEDS CHANGING NOW WITH REAL OBJECTS
-            "object"
+        map? thing [
+            "map"
         ]
         object? thing [
-            "remix object"
+            "object"
         ]
         block? thing [
             "deferred"
