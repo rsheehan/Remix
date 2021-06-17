@@ -11,9 +11,8 @@ on standard (maroon) paper
 .draw on layer 1
 no outline
 
-starting with [size : 100] repeat 4 times
+for each (size) from 100 to 400 in steps of 100
 	plot (arrow) around centre with (size)
-	size : size + 100
 
 arrow [heading]	 : 0
 arrow [colour]	 : red

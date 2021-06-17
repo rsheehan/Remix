@@ -1,15 +1,16 @@
 Show a grid of everchanging squares.
 ====================================
 
-make a square of (size) at (grid-position) :
+make a square of (size) at (grid-pos) :
 	square : make shape of {
 		{-1, -1},
 		{ 1, -1},
 		{ 1,  1},
 		{-1,  1}
 	} with size (size)
-	square [position] : grid-position
-	square [colour]   : random colour
+	x : (2 × base-size × grid-pos [1]) - (base-size)
+	y : (2 × base-size × grid-pos [2]) - (base-size)
+	square [position] : {x, y}
 
 	create
 		shape : square
@@ -20,17 +21,14 @@ make a square of (size) at (grid-position) :
 		change colour of () :
 			shape [colour] : random colour
 
-base-size : 50
-columns   : std-width ÷ base-size × 2
-rows      : std-height ÷ base-size × 2
+base-size : 25
+columns   : std-width ÷ (base-size × 2)
+rows      : std-height ÷ (base-size × 2)
 
 squares : an empty list
 
-make (rows) (down) [
-	y-pos : (2 × base-size × down) - (base-size)
-] and (columns) (across)
-	x-pos : (2 × base-size × across) - (base-size)
-	append (make a square of (base-size) at { x-pos, y-pos }) to (squares)
+for (rows) (down) and (columns) (across)
+	append (make a square of (base-size) at {across, down}) to (squares)
 
 on standard paper
 	no outline
