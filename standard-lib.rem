@@ -156,6 +156,15 @@ A for each with a definite "start" and "finish" value.
 for each (#item) from (start) to (finish) (block):
 	for each (#item) in ((start) to (finish)) (block)
 
+A 2 dimensional for loop over "rows" and "columns".
+"row-block" can refer to "row".
+"col-block" can refer to "row" and "col".
+make (rows) (#row) (row-block) and (columns) (#col) (col-block) :
+	for each (#row) from 1 to (rows)
+		do (row-block)
+		for each (#col) from 1 to (columns)
+			do (col-block)
+
 A for each with "start", "finish" and a "step".
 for each (#item) from (start) to (finish) in steps of (step) (block):
 	list : (start) to (finish)
