@@ -27,6 +27,12 @@ show (what) ↲:
 	showline (what)
 
 ========================================
+Just trying out a more verbal version.
+
+an empty list :
+	{}
+
+========================================
 
 Negate the "value".
 not (value):

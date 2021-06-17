@@ -1,0 +1,39 @@
+Show a grid of everchanging squares.
+====================================
+
+make a square of (size) at (grid-position) :
+	square : make shape of {
+		{-1, -1},
+		{ 1, -1},
+		{ 1,  1},
+		{-1,  1}
+	} with size (size)
+	square [position] : grid-position
+	square [colour]   : random colour
+
+	create
+		shape : square
+
+		draw the () :
+			fill (shape)
+
+		change colour of () :
+			shape [colour] : random colour
+
+base-size : 50
+columns   : std-width ÷ base-size × 2
+rows      : std-height ÷ base-size × 2
+squares   : an empty list
+
+for each (row) from 1 to (rows)
+	y-pos : (2 × base-size × row) - (base-size)
+	for each (col) from 1 to (columns)
+		x-pos : (2 × base-size × col) - (base-size)
+		append (make a square of (base-size) at { x-pos, y-pos }) to (squares)
+	
+on standard paper
+	no outline
+	animate 1 time per sec
+		for each (square) in (squares)
+			change colour of (square)
+			draw the (square)
