@@ -36,7 +36,7 @@ draw a (colour) mountain of max height (max-height) based at (level) :
 		{ centre, peak },
 		{ centre + width ÷ 2, std-height - level },
 		{ centre - width ÷ 2, std-height - level }
-	} with size 1
+	}
 	mountain [colour] : colour
 	fill (mountain)
 

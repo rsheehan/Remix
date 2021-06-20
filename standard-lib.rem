@@ -451,7 +451,7 @@ draw (colour) box from (bottom-left) to (top-right) :
 shape : {
 	position : {0, 0},
 	heading  : 0, ; straight up
-	size     : 5,
+	size     : 1,
 	colour   : black,
 	points   : {}
 }
