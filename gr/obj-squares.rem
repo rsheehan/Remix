@@ -23,13 +23,14 @@ make a square of (size) at (grid-pos) :
 			shape [colour] : random colour
 
 base-size : 20
-columns   : std-width ÷ base-size
-rows      : std-height ÷ base-size
+num-cols : std-width ÷ base-size
+num-rows : std-height ÷ base-size
 
 squares : an empty list
 
-for (rows) (down) and (columns) (across)
-	append (make a square of (base-size) at {across, down}) to (squares)
+for (num-rows) rows (down) and (num-cols) columns (across)
+	a-square : make a square of (base-size) at {across, down}
+	append (a-square) to (squares)
 
 on standard paper
 	animate 1 time per sec

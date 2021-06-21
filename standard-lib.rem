@@ -166,18 +166,18 @@ for each (#item) from (start) to (finish) in steps of (step) (block):
 		#item : #item + step
 	last
 
-A 2 dimensional for loop over "rows" and "columns".
-"row-block" can refer to "row".
-"col-block" can refer to "row" and "col".
-for (rows) (#row) (row-block) and (columns) (#col) (col-block) :
-	for each (#row) from 1 to (rows)
+A 2 dimensional for loop over "num-rows" and "num-cols".
+"row-block" can refer to "#row".
+"col-block" can refer to "#row" and "#col".
+for (num-rows) rows (#row) (row-block) and (num-cols) columns (#col) (col-block) :
+	for each (#row) from 1 to (num-rows)
 		do (row-block)
-		for each (#col) from 1 to (columns)
+		for each (#col) from 1 to (num-cols)
 			do (col-block)
 
 A 2 dimensional for loop with no "row-block".
-for (rows) (#row) and (columns) (#col) (col-block) :
-	for (rows) (#row) [] and (columns) (#col) (col-block)
+for (num-rows) rows (#row) and (num-cols) columns (#col) (col-block) :
+	for (num-rows) rows (#row) [] and (num-cols) columns (#col) (col-block)
 
 ========================================
 
