@@ -37,7 +37,7 @@ a new arrow :
 	arrow
 
 an arrow shape :
-	make shape of (arrow-shape)
+	make shape of (arrow-shape) with size 5
 
 set the (arrow) colour :
 	arrow [colour] : random colour
