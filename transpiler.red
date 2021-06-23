@@ -235,19 +235,19 @@ create-method-call: function [
 		return method-call
 	]
 	; otherwise have to dynamically dispatch
+	actual-params: create-red-parameters actual-params
 	compose/deep [
-		call-method (name) [(actual-params)]
+		call-method (name) [(actual-params)] 
 	]
 ]
 
 call-method: function [
 	{ Call the correct method. 
 	  This is only called at runtime. }
-	name [string!] "the method name"
-	parameters		"the actual parameters"
+	name 			[string!]	"the method name"
+	parameters		[block!]	"the actual parameters"
 ][
 	; currently finds the first parameter with a matching method
-	; don't want to do this really
 	method: to-word name
 	the-object: none
 	method-parameters: copy parameters ; because I am going to remove the object ref
@@ -255,14 +255,12 @@ call-method: function [
 	forall method-parameters [
 		parameter-number: parameter-number + 1
 		param: first method-parameters
-		if all [
-			object? param
-			param/type = "variable"
-		][
-			the-object: get to-word param/name
-			if select the-object method [ ; this object has a matching method
-			; need to check if the parameter-number matches the self-position of the method
-			; Currently the technique to check the position of the object position.
+		if word? param [
+			the-object: reduce param
+			if all [
+				object? the-object
+				select the-object method
+			][
 				if (select method-list name) = parameter-number [
 					remove method-parameters
 					break
@@ -276,8 +274,7 @@ call-method: function [
 		quit ; change to "return" for live coding
 	]
 	method-parameters: head method-parameters
-	red-params: create-red-parameters method-parameters
-	the-call: append copy [the-object/:method] red-params
+	the-call: append copy [the-object/:method] method-parameters
 	do the-call
 ]
 
