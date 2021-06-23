@@ -219,7 +219,6 @@ create-method-call: function [
 	actual-params	"the parameters to evaluate and pass"
 ][
 	; don't currently handle recursive or reference method calls
-	; or get item, set items as functions do <- need TO DO
 	unless find method-list name [
 		print [{Error: "} name {" not declared.} ]
 		quit ; change to "return" for live coding
@@ -228,8 +227,13 @@ create-method-call: function [
 	; if so generate a simple method call
 	self-location: find actual-params 'self
 	if self-location [
+		unless (index? self-location) = (select method-list name) [
+			print [{Error: method call "} name {" inconsistent () position.} ]
+			quit ; change to "return" for live coding
+		]
 		remove self-location
 		method-call: reduce [to-word name]
+		actual-params: create-red-parameters actual-params
 		append method-call actual-params
 		return method-call
 	]
