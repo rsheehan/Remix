@@ -32,6 +32,7 @@ function-object: object [
 
 method-list: copy [] ; all methods, so we can check if a function name is unique
 ; it is possible for the same method name to be used by different objects
+; The list contains names followed by the position of the object variable.
 
 add-to-method-list: function [
     { Add new-method to the method list. 
