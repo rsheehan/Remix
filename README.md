@@ -43,7 +43,7 @@ Here is an animated random landscape program in Remix.
     		{ centre, peak },
     		{ centre + width ÷ 2, std-height - level },
     		{ centre - width ÷ 2, std-height - level }
-    	} with size 1
+    	}
     	mountain [colour] : colour
     	fill (mountain)
     
