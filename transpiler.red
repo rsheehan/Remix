@@ -144,7 +144,6 @@ create-red-expression: function [
 					if not attempt [
 						if item/type = "key-value" [
 							list: append copy [extend] list
-							; append/only list compose [(to-set-word item/key) (create-red-expression item/value)]
 							append list 'compose
 							append/only list compose [(to-set-word item/key) (create-red-expression item/value)]
 

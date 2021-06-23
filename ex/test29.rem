@@ -16,7 +16,7 @@ make person called (the-name) of age (years) :
 			say hi to ()
 			showline (farewell)
 
-		same (another) as () :
+		same () as (another) :
 			showline {"This person is ", name}
 			all of {
 				[name = another [name]],
