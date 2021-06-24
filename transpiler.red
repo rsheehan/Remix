@@ -25,7 +25,7 @@ create-sequence: function [
 		][
 			need-a-loop: true
 		]
-		append seq-list statement ;first list-of-statements
+		append seq-list statement
 		list-of-statements: next list-of-statements
 	]
 	last-statement: first list-of-statements
@@ -41,11 +41,11 @@ create-sequence: function [
 
 	either need-a-loop [
 		either return-higher [
-			sequence: reduce [ ;compose/deep [ ; and forever not quoted
+			sequence: reduce [
 				'forever compose [(seq-list)]
 			]
 		][
-			sequence: reduce [ ;compose/deep [
+			sequence: reduce [
 				'catch/name reduce [
 					'forever compose [(seq-list)]
 				] quote 'return
@@ -53,11 +53,11 @@ create-sequence: function [
 		]
 	][ ; doesn't need a loop
 		either return-higher [
-			sequence: compose [ ;compose/deep [
+			sequence: compose [
 				(seq-list)
 			]
 		][
-			sequence: reduce [ ;compose/deep [
+			sequence: reduce [
 				'catch/name compose [
 					(seq-list)
 				] quote 'return
@@ -191,7 +191,7 @@ create-red-expression: function [
 				append object-code fnc
 			]
 			object-code: append/only copy [object] object-code
-			return object-code
+			return to-paren object-code
 		]
 	]
 ]
