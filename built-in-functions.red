@@ -1,6 +1,6 @@
 Red [Title: "Built-in functions"
 	Author: "Robert Sheehan"
-	Version: 0.2
+	Version: 0.3
 	Purpose: "Red built-in functions for Remix and helper functions."
 ]
 

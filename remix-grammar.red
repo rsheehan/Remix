@@ -1,7 +1,7 @@
 Red [
 	Title: "The Remix Grammar"
 	Author: "Robert Sheehan"
-	Version: 0.2
+	Version: 0.3
 	Purpose: { The grammar of Remix.
 	Some <tags> are followed by the <tag>'s value. }
 ]

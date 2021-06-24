@@ -1,7 +1,7 @@
 Red [
 	Title: "Abstact Syntax Tree"
 	Author: "Robert Sheehan"
-	Version: 0.2
+	Version: 0.3
 	Purpose: "Nodes for the AST."
 ]
 

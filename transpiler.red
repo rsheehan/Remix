@@ -1,7 +1,7 @@
 Red [
 	Title: "The Remix Red code generator"
 	Author: "Robert Sheehan"
-	Version: 0.2
+	Version: 0.3
 	Purpose: "Converts an AST of Remix code into Red code."
 ]
 

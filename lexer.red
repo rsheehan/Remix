@@ -1,7 +1,7 @@
 Red [
 	Title: "Lexer revision 2"
 	Author: "Robert Sheehan"
-	Version: 0.2
+	Version: 0.3
 	Purpose: "Produce the sequence of tokens for the Remix grammar."
 ]
 
