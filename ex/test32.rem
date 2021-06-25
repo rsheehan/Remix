@@ -1,0 +1,31 @@
+
+a : create
+	x : 3
+	b : create
+		x : 8
+
+		double () :
+			x : x + x
+	z : 4
+
+	add () to bx :
+		x : x + b [x]
+
+	to () add all :
+		double (b)
+		x : x + b [x] + z
+
+showline (a [x])
+
+b : a [b]
+showline (b [x])
+
+add (a) to bx
+
+showline (a [x])
+
+showline (b [x])
+
+double (b)
+to (a) add all
+showline {"a [x] should be 47 and is ", a [x]}

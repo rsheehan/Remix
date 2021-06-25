@@ -24,6 +24,7 @@ program: [
 	(
 		; the function-map is in %built-in-functions.red
 		program-statements: make sequence-stmt []
+		object-stack: copy [] ; to included nested objects
 	)
 	some [
 		<LINE> | end
@@ -268,12 +269,13 @@ list-element: [
 create-call: [
 	<word> "create" 
 	(
-		new-object: make remix-object [] ; safe as no nested objects
+		new-object: make remix-object [] ; can nest objects
+		append object-stack new-object
 	)
 	ahead block! into [object-body]
 	[end | ahead END-OF-FN-CALL]
 	keep (
-		new-object
+		take/last object-stack
 	)
 ]
 
@@ -294,6 +296,7 @@ object-field: [
 	(
 		field-name: first parts
 		expr: second parts
+		new-object: last object-stack
 		append new-object/fields make field-initializer [
 			name: field-name
 			expression: expr
@@ -312,6 +315,7 @@ object-method: [
 	END-OF-LINE
 	(
 		add-to-method-list new-method
+		new-object: last object-stack
 		append new-object/methods new-method
 	)
 ]
