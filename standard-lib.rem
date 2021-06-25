@@ -527,7 +527,7 @@ add (continuing) command for (turtle) from (start) to (finish):
 		continuing : continuing,
 		turtle     : turtle, 
 		colour     : turtle [colour],
-		pendown    : turtle [pendown],
+		pen-down   : turtle [pen-down],
 		start      : start, 
 		finish     : finish, 
 		heading    : turtle [heading]

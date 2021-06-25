@@ -610,10 +610,7 @@ get-item: function [
 					key: pick keys index
 					result: reduce [to-set-word key select list key]
 				]
-				unless result [
-					print [{Error: map "} quote list {" does not have "} index-key {".}]
-					quit					
-				]
+				; if key does not exist it returns none
 			]
 		]
 		hash? list [
