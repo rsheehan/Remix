@@ -140,7 +140,7 @@ create-red-expression: function [
 				]
 			]
 			foreach item expression/value [
-				either list-type = "map" [ ; object
+				either list-type = "map" [ ; map
 					if not attempt [
 						if item/type = "key-value" [
 							list: append copy [extend] list
@@ -149,7 +149,7 @@ create-red-expression: function [
 
 						]
 					][
-						print "Error: Cannot add item to object."
+						print "Error: Cannot add item to map."
 						quit
 					]	
 				][ ; list
