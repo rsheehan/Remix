@@ -52,6 +52,16 @@ run-remix: function [
 	do red-code
 ]
 
+; memory: ""
+; save: function [][
+; 	memory: commands/text
+; 	print "ASD"
+; ]
+
+; show: function [][
+; 	commands/text: memory 
+; ]
+
 view/tight [
 	title "Live"
 	commands: area 
@@ -63,4 +73,10 @@ view/tight [
 		]
 	output-area: area 
 		400x600
+	version-area: panel
+		1x600
+		below button "Old" [commands/text: "Hello!"]
+		below button "Save" [save]
+		below button "Show" [show]
+		button "latest"
 ]
