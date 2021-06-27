@@ -52,14 +52,14 @@ run-remix: function [
 	do red-code
 ]
 
-; memory: ""
-; save: function [][
-; 	memory: commands/text
-; 	print "ASD"
-; ]
+memory: ""
+save: function [saveText][
+	memory: saveText
+	print memory
+]
 
 ; show: function [][
-; 	commands/text: memory 
+; 	[commands/text: "memory"]
 ; ]
 
 view/tight [
@@ -76,7 +76,7 @@ view/tight [
 	version-area: panel
 		1x600
 		below button "Old" [commands/text: "Hello!"]
-		below button "Save" [save]
+		below button "Save" [save commands/text]
 		below button "Show" [show]
 		button "latest"
 ]
