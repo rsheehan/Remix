@@ -214,6 +214,7 @@ plot the solution :
 
 go closer than (distance) from (position) :
 	if [position ≠ start]
+		wait 0.25 secs
 		mark the (position) with (green)
 	if [distance > 1] 
 		distance : distance - 1

@@ -890,6 +890,7 @@ draw-line: function [
 	][
 		line-command: compose [line (start) (finish)]
 		append/only draw-command-layers/:draw-layer line-command
+		possibly-show-immediately
 	]
 	none
 ]
@@ -913,6 +914,7 @@ draw-box: function [
 	][
 		box-command: compose [box (top-left) (bottom-right)]
 		append/only draw-command-layers/:draw-layer box-command
+		possibly-show-immediately
 	]
 	none
 ]
@@ -935,6 +937,7 @@ draw-circle: function [
 	][
 		circle-command: reduce ['circle centre radius]
 		append/only draw-command-layers/:draw-layer circle-command
+		possibly-show-immediately
 	]
 	none
 ]
@@ -966,7 +969,7 @@ draw-shape: function [
 	][
 		rotate-command: compose/deep [rotate (shape/heading) (centre) [(commands)]]
 		append/only draw-command-layers/:draw-layer rotate-command
-		; do-events/no-wait
+		possibly-show-immediately
 	]
 	none
 ]
@@ -975,6 +978,11 @@ draw-shape-fnc: make function-object [
 	template: ["draw" "|"]
 	; formal-parameters ["shape"]
 	red-code: [draw-shape]
+]
+
+possibly-show-immediately: does [
+	; Don't show immediately if animation is active.
+	unless paper/rate [do-events/no-wait]
 ]
 
 animate: function [
