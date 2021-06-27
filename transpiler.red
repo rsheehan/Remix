@@ -253,22 +253,19 @@ call-method: function [
 	; currently finds the first parameter with a matching method
 	method: to-word name
 	the-object: none
-	method-parameters: copy parameters ; because I am going to remove the object ref
+	method-parameters: reduce parameters ;find the values, one should be the receiver
 	parameter-number: 0
 	forall method-parameters [
 		parameter-number: parameter-number + 1
-		param: first method-parameters
-		if word? param [
-			the-object: reduce param
-			if all [
-				object? the-object
-				select the-object method
-			][
-				if (select method-list name) = parameter-number [
-					remove method-parameters
-					break
-				]
-			]
+		the-object: first method-parameters
+		if all [
+			object? the-object
+			select the-object method
+		][
+			if (select method-list name) = parameter-number [
+				remove method-parameters
+				break
+			]			
 		]
 		the-object: none
 	]
