@@ -17,3 +17,6 @@ msg-text: text "some text here" return
 
 ]
 
+red: [
+    value:1
+]
