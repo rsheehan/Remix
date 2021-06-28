@@ -52,15 +52,16 @@ run-remix: function [
 	do red-code
 ]
 
-memory: ""
-save: function [saveText][
-	memory: saveText
+memory: "test"
+saveText: function [text /extern memory][
+	set 'memory text
 	print memory
 ]
 
-; show: function [][
-; 	[commands/text: "memory"]
-; ]
+displaySaved: function [/extern memory][
+	print memory
+	; set commands/text memory
+]
 
 view/tight [
 	title "Live"
@@ -75,8 +76,8 @@ view/tight [
 		400x600
 	version-area: panel
 		1x600
-		below button "Old" [commands/text: "Hello!"]
-		below button "Save" [save commands/text]
-		below button "Show" [show]
-		button "latest"
+		; below button "Old" [commands/text: "Hello!"]
+		below button "Save" [saveText commands/text]
+		below button "Show" [displaySaved]
+		; button "latest"
 ]
