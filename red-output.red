@@ -60,7 +60,12 @@ transpile-functions function-map
 user-fncs: exclude (keys-of function-map) built-in-fncs
 foreach fnc user-fncs [
 	the-fnc: select function-map fnc
-	prin "^/" probe the-fnc
+	prin "^/" print fnc
+	either the-fnc/red-code [
+		probe get first the-fnc/red-code
+	][
+		probe the-fnc/fnc-def
+	]
 ]
 
 print "^/TRANSPILED MAIN SEQUENCE"
