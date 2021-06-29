@@ -66,8 +66,11 @@ version-selection: function [] [
 	either drop-down/selected = none [
 		print "Nothing selected"
 	] [
-		print ["Selected: " mold pick drop-down/data drop-down/selected]
+		; print ["Selected: " mold pick drop-down/data drop-down/selected]
 		commands/text: copy (memory-list/(to-integer (pick drop-down/data drop-down/selected)))
+	
+		; update output of associated code
+		run-remix commands/text 
 	]
 ]
 
@@ -85,18 +88,15 @@ view/tight [
 	version-area: panel
 		1x300
 		below 
-		; button "Save" on-down [saveText commands/text]
-		; button "Show" [commands/text: copy memory]
-		drop-down: drop-down "Choose Code" data []
-		add-version: button "Save New Version" [
+		drop-down: drop-down 120 "Choose Code" data []
+		add-version: button 120 "Save New Version" [
 				attempt [
 					save-text commands/text
 					append drop-down/data (to-string (length? memory-list))
 				]
 			]
-		button "Show" [version-selection]
+		show-version: button 120 "Show" [version-selection]
 
-		test: button "Print memory list" [print memory-list]
-
-		; button "Reset"
+		;  for testing
+		test: button 120 "Print memory list" [print memory-list]
 ]
