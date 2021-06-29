@@ -1026,6 +1026,30 @@ animation-off-fnc: make function-object [
 	red-code: [animation-off]
 ]
 
+hide-all-drawing: func [
+	{ Hide the drawing. }
+][
+	system/view/auto-sync?: off
+]
+
+show-all-drawing: func [
+	{ Show the drawing. }
+][
+	system/view/auto-sync?: on
+	show paper
+	do-events/no-wait
+]
+
+hide-drawing-fnc: make function-object [
+	template: ["hide" "drawing"]
+	red-code: [hide-all-drawing]
+]
+
+show-drawing-fnc: make function-object [
+	template: ["show" "drawing"]
+	red-code: [show-all-drawing]
+]
+
 wait-fnc: make function-object [
 	template: ["wait" "|" "secs"]
 	; formal-parameters ["seconds"]
@@ -1047,6 +1071,8 @@ insert-function draw-shape-fnc
 insert-function animate-fnc
 insert-function animation-rate-fnc
 insert-function animation-off-fnc
+insert-function hide-drawing-fnc
+insert-function show-drawing-fnc
 insert-function wait-fnc
 
 ; ********* event functions ********

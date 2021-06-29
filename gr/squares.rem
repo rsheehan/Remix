@@ -7,13 +7,14 @@ square : make shape of {
 }
 
 scatter squares :
-	no outline
-	repeat 100 times
-		square [position] : random point
-		square [size]	  : random 100
-		square [colour]   : random colour
-		square [heading]  : random 90
-		fill (square)
+	draw together
+		no outline
+		repeat 100 times
+			square [position] : random point
+			square [size]	  : random 100
+			square [colour]   : random colour
+			square [heading]  : random 90
+			fill (square)
 
 on standard paper
 	scatter squares

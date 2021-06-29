@@ -492,7 +492,13 @@ draw (colour) circle of (size) at (centre):
 	fill colour (colour)
 	draw circle of (size) at (centre)
 
-=== Animation Control ===
+=== Animation and Drawing Control ===
+
+Groups all the drawing in the "draw-block".
+draw together (draw-block) :
+	hide drawing
+	do (draw-block)
+	show drawing
 
 animate (rate) times per sec (block):
 	(rate) times per sec
