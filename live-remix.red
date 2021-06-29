@@ -76,12 +76,19 @@ version-selection: function [] [
 
 view/tight [
 	title "Live"
+
+	; on-key [
+	; 	print event/type
+	; 	print event/offset
+	; 	print event/key
+	; ]
 	commands: area 
 		400x300 
 		on-key-up [
 			attempt [
 				run-remix commands/text 
 			]
+
 		]
 	output-area: area 
 		400x300
