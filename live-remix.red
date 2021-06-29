@@ -53,10 +53,22 @@ run-remix: function [
 ]
 
 memory:	"Empty"
-saveText: function [text /extern memory][
+memory-list: []
+
+
+save-text: function [text /extern memory][
 	memory: copy text
-	; print memory
+	append memory-list (copy text)
 	exit
+]
+
+version-selection: function [] [
+	either drop-down/selected = none [
+		print "Nothing selected"
+	] [
+		print ["Selected: " mold pick drop-down/data drop-down/selected]
+		commands/text: copy (memory-list/(to-integer (pick drop-down/data drop-down/selected)))
+	]
 ]
 
 view/tight [
@@ -65,7 +77,6 @@ view/tight [
 		400x300 
 		on-key-up [
 			attempt [
-				print memory
 				run-remix commands/text 
 			]
 		]
@@ -73,11 +84,19 @@ view/tight [
 		400x300
 	version-area: panel
 		1x300
-		; below button "Old" [commands/text: "Hello!"]
 		below 
-		button "Save" on-down [saveText commands/text]
-		button "Show" [commands/text: copy memory]
+		; button "Save" on-down [saveText commands/text]
+		; button "Show" [commands/text: copy memory]
+		drop-down: drop-down "Choose Code" data []
+		add-version: button "Save New Version" [
+				attempt [
+					save-text commands/text
+					append drop-down/data (to-string (length? memory-list))
+				]
+			]
+		button "Show" [version-selection]
 
-		; button "Show" [displaySaved]
-		; button "latest"
+		test: button "Print memory list" [print memory-list]
+
+		; button "Reset"
 ]
