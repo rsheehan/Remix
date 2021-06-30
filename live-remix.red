@@ -60,12 +60,18 @@ run-remix: function [
 stdlib: read %standard-lib.rem
 run-remix/running-first-time stdlib
 
+; loading the graphics statements which should be executed everytime
+precursor-statements: read %precusor-graphics-statements.rem
+
 view/tight [
 	title "Live"
 	commands: area 
 		400x600 
 		on-key-up [
 			attempt [
+				; first execute the necessary graphics related statements
+				run-remix precursor-statements
+				; run the code
 				run-remix commands/text 
 			]
 		]
