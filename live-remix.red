@@ -28,6 +28,7 @@ run-remix: function [
 	{ Execute the remix code in "code". 
 	  Put the output in the output area. }
 	code [string!]
+	/running-first-time
 	/extern successful-parse
 ][
 	; N.B. remember to include the standard-lib
@@ -48,9 +49,16 @@ run-remix: function [
 	transpile-functions function-map
 	red-code: transpile-main ast
 	; run
-	output-area/text: copy ""
+	; use output-area only after it has been defined
+	if not running-first-time [
+		output-area/text: copy ""
+	]
 	do red-code
 ]
+
+; run (load into Red runtime) the standard remix library
+stdlib: read %standard-lib.rem
+run-remix/running-first-time stdlib
 
 view/tight [
 	title "Live"
