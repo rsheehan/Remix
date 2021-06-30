@@ -7,19 +7,19 @@ create person (the-name) (years) years old :
 		name : the-name
 		age : years
 
-		name and age of () : 
+		name and age of (me) : 
 			showline {name, " - ", age}
 
-		increment age of () :
+		increment age of (me) :
 			age : age + 1
 
-		bump age of () by (bump) :
+		bump age of (me) by (bump) :
 			age : age + bump
 
-		show () values:
+		show (me) values:
 			{ "name: ", name } ↲
 			{ "age: ", age } ↲
-			name and age of ()
+			name and age of (me)
 
 ==== end person object ====
 

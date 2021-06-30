@@ -74,12 +74,12 @@ Here is an animated random landscape program in Remix.
     		y1 : base - r1
     		y2 : base - r2
     
-    		draw the () :
+    		draw the (me) :
     			draw (white) circle of (a-radius) at {x1, y1}
     			draw (white) circle of (b-radius) at {x2, y2}
     			draw (white) box from {x1, y1 + a-radius} to {x2, y2}
     
-    		move the () :
+    		move the (me) :
     			inc (x1)
     			inc (x2)
     			if ((x1 - a-radius) > std-width)

@@ -327,7 +327,7 @@ method-signature: [ ; same as function-signature, but different actions
 	)
 	some [ ; gather the signature
 		[
-			<lparen> <rparen> ; the object reference
+			<lparen> <word> "me" <rparen> ; the object reference
 			(
 				if self-position <> 0 [
 					print [{Error: method "} new-method/template {" more than one self reference ().}]
@@ -385,7 +385,7 @@ function-call: [
 				<word> keep string! ; part of the function name the rest are actual parameters
 				| 
 				[
-					<lparen> <rparen> ; for a self method call
+					<lparen> <word> "me" <rparen> ; for a self method call
 					(
 						; need to record this for checking in the transpiler
 						expr: 'self

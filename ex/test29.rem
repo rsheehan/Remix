@@ -5,18 +5,18 @@ make person called (the-name) of age (years) :
 		name : the-name
 		age : years
 
-		say hi to () :
+		say hi to (me) :
 			show {"Hello ", name, ". "}
 			showline {"You are ", age, " years old."}
 
-		make () (how-many) years older :
+		make (me) (how-many) years older :
 			age : how-many + age
 
-		hi to () and farewell with (farewell) :
-			say hi to ()
+		hi to (me) and farewell with (farewell) :
+			say hi to (me)
 			showline (farewell)
 
-		same () as (another) :
+		same (me) as (another) :
 			showline {"This person is ", name}
 			all of {
 				[name = another [name]],

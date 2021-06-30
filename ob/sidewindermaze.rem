@@ -36,17 +36,17 @@ create a maze cell at (the-row) and (the-col) :
 			centre-y + ((2 × the-row) - (num-rows + 1)) × SIZE
 		}
 
-		remove the right wall in the () :
+		remove the right wall in (me) :
 			right-open : true
 
-		remove the bottom wall in the () :
+		remove the bottom wall in (me) :
 			bottom-open : true
 
-		draw the () :
+		draw cell (me) :
 			draw with (red) pen
 			draw (square) at (centre)
 
-		draw the exits on the () :
+		draw the exits on (me) :
 			draw with (black) pen
 			if (right-open)
 				x : centre [1] + SIZE
@@ -63,80 +63,80 @@ create a maze cell at (the-row) and (the-col) :
 				finish : { x, y }
 				draw line from (start) to (finish)
 
-		(colour) dot in the () :
+		(colour) dot in (me) :
 			fill colour (colour)
 			draw circle of (SIZE ÷ 2) at (centre)
 
-		right from the () :
+		right from (me) :
 			cell at { column + 1, row }
 
-		left from the () :
+		left from (me) :
 			cell at { column - 1, row}
 
-		up from the () :
+		up from (me) :
 			cell at { column, row - 1 }
 
-		down from the () :
+		down from (me) :
 			cell at { column, row + 1 }
 
-		can move right from the () :
+		can move right from (me) :
 			right-open
 
-		can move left from the () :
+		can move left from (me) :
 			if (column = 1)
 				return false
 			left-cell : cell at { column - 1, row }
-			can move right from the (left-cell)
+			can move right from (left-cell)
 
-		can move down from the () :
+		can move down from (me) :
 			bottom-open
 
-		can move up from the () :
+		can move up from (me) :
 			if (row = 1)
 				return false
 			up-cell : cell at { column, row - 1}
-			can move down from the (up-cell)
+			can move down from (up-cell)
 
-		not visited () :
+		not visited (me) :
 			distance = -1
 
-		() is (new-distance) away :
+		(me) is (new-distance) away :
 			distance = new-distance
 
-		move outwards from the () :
+		move outwards from (me) :
 			new-distance : distance + 1
 			if all of {
-				[can move right from the ()],
-				[not visited (right from the ())]
+				[can move right from (me)],
+				[not visited (right from (me))]
 			}
-				move (RIGHT) from () with (new-distance)
+				move (RIGHT) from (me) with (new-distance)
 			if all of {
-				[can move down from the ()],
-				[not visited (down from the ())]
+				[can move down from (me)],
+				[not visited (down from (me))]
 			}
-				move (DOWN) from () with (new-distance)
+				move (DOWN) from (me) with (new-distance)
 			if all of {
-				[can move left from the ()],
-				[not visited (left from the ())]
+				[can move left from (me)],
+				[not visited (left from (me))]
 			}
-				move (LEFT) from () with (new-distance)
+				move (LEFT) from (me) with (new-distance)
 			if all of {
-				[can move up from the ()],
-				[not visited (up from the ())]
+				[can move up from (me)],
+				[not visited (up from (me))]
 			}
-				move (UP) from () with (new-distance)
+				move (UP) from (me) with (new-distance)
 
-		move (direction) from () with (new-distance) :
-			new-cell : cell going (direction) from ()
+		move (direction) from (me) with (new-distance) :
+			new-cell : cell going (direction) from (me)
 			new-cell [distance] : new-distance
-			move outwards from the (new-cell)
+			move outwards from (new-cell)
 
-		cell going (direction) from () :
+		cell going (direction) from (me) :
 			choose from
-				[direction = RIGHT] do [right from the ()]
-				[direction = LEFT]  do [left from the ()]
-				[direction = UP]    do [up from the ()]
-				[direction = DOWN]  do [down from the ()]
+				[direction = RIGHT] do [right from (me)]
+				[direction = LEFT]  do [left from (me)]
+				[direction = UP]    do [up from (me)]
+				[direction = DOWN]  do [down from (me)]
 
 find the middle :
 	middle-x : convert (num-cols ÷ 2) to integer + 1
@@ -149,20 +149,20 @@ on standard (black) paper
 		make the sidewinder maze
 	wait 1 sec
 	draw together
-		(blue) dot in the (cell at (start))
-		(orange) dot in the (cell at (finish))
+		(blue) dot in (cell at (start))
+		(orange) dot in (cell at (finish))
 	solve the maze from (start) to (finish)
 
 prepare the maze grid :
 	for (num-rows) rows (this-row) [append {} to (the-maze)] and (num-cols) columns (this-col)
 		cell : create a maze cell at (this-row) and (this-col)
 		append (cell) to (the-maze [this-row])
-		draw the (cell)
+		draw cell (cell)
 
 show the maze :
 	for (num-rows) rows (this-row) and (num-cols) columns (this-col)
 		cell : cell at { this-col, this-row }
-		draw the exits on the (cell)
+		draw the exits on (cell)
 
 make the sidewinder maze :
 	deal with all rows except the bottom
@@ -171,26 +171,26 @@ make the sidewinder maze :
 
 deal with all rows except the bottom :
 	for each (row) from 1 to (num-rows - 1)
-		deal with all columns in the (row) except the right
-		deal with the right cell in the (row)
+		deal with all columns in (row) except the right
+		deal with the right cell in (row)
 
-deal with all columns in the (row) except the right :
+deal with all columns in (row) except the right :
 	start-run : 1
 	for each (col) from 1 to (num-cols - 1)
 		if (heads) [
-			remove the right wall in the (cell at { col, row })
+			remove the right wall in (cell at { col, row })
 		] otherwise [
 			gap : choose from (start-run) to (col)
-			remove the bottom wall in the (cell at { gap, row })
+			remove the bottom wall in (cell at { gap, row })
 			start-run : col + 1
 		]
 
-deal with the right cell in the (row) :
-	remove the bottom wall in the (cell at { num-cols, row })
+deal with the right cell in (row) :
+	remove the bottom wall in (cell at { num-cols, row })
 
 deal with the bottom row : 
 	for each (col) from 1 to (num-cols - 1)
-		remove the right wall in the (cell at { col, num-rows })
+		remove the right wall in (cell at { col, num-rows })
 
 cell at (position) :
 	Return the cell object at "position".
@@ -203,7 +203,7 @@ choose from (start) to (finish) :
 solve the maze from (start) to (finish) :
 	beginning : cell at (finish) ; going backwards
 	beginning [distance] : 0
-	move outwards from the (beginning)
+	move outwards from (beginning)
 	plot the solution
 
 plot the solution :
@@ -213,27 +213,27 @@ plot the solution :
 go closer than (distance) from (cell) :
 	if [cell ≠ cell at (start)]
 		wait 0.25 sec
-		(green) dot in the (cell)
+		(green) dot in (cell)
 	if [distance > 1] 
 		distance : distance - 1
 		choose from
 			[all of {
-				[can move right from the (cell)], 
-				[(right from the (cell)) is (distance) away]
+				[can move right from (cell)], 
+				[(right from (cell)) is (distance) away]
 			}] do
-				go closer than (distance) from (right from the (cell))
+				go closer than (distance) from (right from (cell))
 			[all of {
-				[can move left from the (cell)], 
-				[(left from the (cell)) is (distance) away]
+				[can move left from (cell)], 
+				[(left from (cell)) is (distance) away]
 			}] do
-				go closer than (distance) from (left from the (cell))
+				go closer than (distance) from (left from (cell))
 			[all of {
-				[can move down from the (cell)], 
-				[(down from the (cell)) is (distance) away]
+				[can move down from (cell)], 
+				[(down from (cell)) is (distance) away]
 			}] do
-				go closer than (distance) from (down from the (cell))
+				go closer than (distance) from (down from (cell))
 			[all of {
-				[can move up from the (cell)], 
-				[(up from the (cell)) is (distance) away]
+				[can move up from (cell)], 
+				[(up from (cell)) is (distance) away]
 			}] do
-				go closer than (distance) from (up from the (cell))
+				go closer than (distance) from (up from (cell))

@@ -4,17 +4,17 @@ make person called (the-name) of age (years) :
 		name : the-name
 		age : years
 
-		say hi to () :
+		say hi to (me) :
 			show {"Hello ", name, ". "}
 			showline {"You are ", age, " years old."}
 
-		make () another year older :
+		make (me) another year older :
 			age : age + 1
 
-		(other) is this many years older than () :
+		(other) is this many years older than (me) :
 			age - other [age]
 
-		() same as (other) :
+		(me) same as (other) :
 			all of {
 				[name = other [name]],
 				[age = other [age]]

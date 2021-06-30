@@ -4,14 +4,14 @@ a : create
 	b : create
 		x : 8
 
-		double () :
+		double (me) :
 			x : x + x
 	z : 4
 
-	add () to bx :
+	add (me) to bx :
 		x : x + b [x]
 
-	to () add all :
+	to (me) add all :
 		double (b)
 		x : x + b [x] + z
 

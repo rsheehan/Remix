@@ -3,12 +3,12 @@ make object :
 	create
 		x : 4
 
-		show object () plus (y) :
+		show object (me) plus (y) :
 			showline {x, y}
 
-		call show () :
+		call show (me) :
 			z : "extra"
-			show object () plus (append (z) to " more ")
+			show object (me) plus (append (z) to " more ")
 
 a : make object
 call show (a)

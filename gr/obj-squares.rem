@@ -16,10 +16,10 @@ make a square of (size) at (grid-pos) :
 	create
 		shape : square
 
-		draw the () :
+		draw the (me) :
 			fill (shape)
 
-		change colour of () :
+		change colour of (me) :
 			shape [colour] : random colour
 
 base-size : 20
