@@ -52,12 +52,12 @@ run-remix: function [
 	do red-code
 ]
 
-memory:	"Empty"
+; memory:	"Empty"
 memory-list: []
 
 
 save-text: function [text /extern memory][
-	memory: copy text
+	; memory: copy text
 	append memory-list (copy text)
 	exit
 ]
@@ -103,6 +103,8 @@ view/tight [
 				]
 			]
 		show-version: button 120 "Show" [version-selection]
+
+
 
 		;  for testing
 		test: button 120 "Print memory list" [print memory-list]
