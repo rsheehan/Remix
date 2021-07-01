@@ -52,12 +52,9 @@ run-remix: function [
 	do red-code
 ]
 
-; memory:	"Empty"
 memory-list: []
 
-
 save-text: function [text /extern memory][
-	; memory: copy text
 	append memory-list (copy text)
 	exit
 ]
@@ -66,22 +63,40 @@ version-selection: function [] [
 	either drop-down/selected = none [
 		print "Nothing selected"
 	] [
-		; print ["Selected: " mold pick drop-down/data drop-down/selected]
-		commands/text: copy (memory-list/(to-integer (pick drop-down/data drop-down/selected)))
+		commands/text: copy (memory-list/(to-integer (drop-down/selected))) ; allows non-integer values
 	
 		; update output of associated code
-		run-remix commands/text 
+		attempt [
+			run-remix commands/text 
+		]
 	]
 ]
 
+rename-version: function [] [
+	either drop-down/selected = none [
+		print "No Version Selected"
+	] [
+		; print new-name/text
+		; print (to-integer (drop-down/selected))
+		print drop-down/data
+		print (drop-down/selected)
+		print (copy new-name/text)
+
+		replace drop-down/data (to-string(drop-down/selected)) (to-string(copy new-name/text))
+		; replace drop-down/data "1" 5
+		print drop-down/data
+	]
+]
+
+; Allow naming of certain versions (might need to change)
+; Up down buttons
+; Latest version
+; Play, pause, speed control.
+; Output file 
+
+
 view/tight [
 	title "Live"
-
-	; on-key [
-	; 	print event/type
-	; 	print event/offset
-	; 	print event/key
-	; ]
 	commands: area 
 		400x300 
 		on-key-up [
@@ -95,8 +110,11 @@ view/tight [
 	version-area: panel
 		1x300
 		below 
+
+		; drop-down: drop-down 120 "Choose Code" data []
 		drop-down: drop-down 120 "Choose Code" data []
-		add-version: button 120 "Save New Version" [
+
+		add-version: button 120 "Save Version" [
 				attempt [
 					save-text commands/text
 					append drop-down/data (to-string (length? memory-list))
@@ -104,8 +122,14 @@ view/tight [
 			]
 		show-version: button 120 "Show" [version-selection]
 
-
+		space: text
+		space: text
+		new-name: area 120x20
+		rename-name: button 120 "Rename" [rename-version]
+		space: text
+		space: text
 
 		;  for testing
+		test2: button 120 "Print memory naming" [print drop-down/data]
 		test: button 120 "Print memory list" [print memory-list]
 ]
