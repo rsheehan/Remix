@@ -54,8 +54,8 @@ Here is an animated random landscape program in Remix.
     		clear layer 1
     		no outline
     		for each (cloud) in (the-clouds)
-    			move the (cloud)
-    			draw the (cloud)
+    			move (cloud)
+    			draw (cloud)
     
     create a cloud :
     	base : random (std-height)
@@ -74,12 +74,12 @@ Here is an animated random landscape program in Remix.
     		y1 : base - r1
     		y2 : base - r2
     
-    		draw the (me) :
+    		draw (me) :
     			draw (white) circle of (a-radius) at {x1, y1}
     			draw (white) circle of (b-radius) at {x2, y2}
     			draw (white) box from {x1, y1 + a-radius} to {x2, y2}
     
-    		move the (me) :
+    		move (me) :
     			inc (x1)
     			inc (x2)
     			if ((x1 - a-radius) > std-width)

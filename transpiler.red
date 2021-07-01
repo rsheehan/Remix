@@ -220,16 +220,14 @@ create-method-call: function [
 ][
 	; don't currently handle recursive or reference method calls
 	unless find method-list name [
-		print [{Error: "} name {" not declared.} ]
-		quit ; change to "return" for live coding
+		return false
 	]
 	; is the call from a method to a method of the same object?
 	; if so generate a simple method call
 	self-location: find actual-params 'self
 	if self-location [
 		unless (index? self-location) = (select method-list name) [
-			print [{Error: method call "} name {" inconsistent () position.} ]
-			quit ; change to "return" for live coding
+			return false
 		]
 		remove self-location
 		method-call: reduce [to-word name]
@@ -238,6 +236,7 @@ create-method-call: function [
 		return method-call
 	]
 	; otherwise have to dynamically dispatch
+	; this could now be dynamic dispatch of an ordinary function call
 	actual-params: create-red-parameters actual-params
 	compose/deep [
 		call-method (name) [(actual-params)] 
@@ -269,12 +268,19 @@ call-method: function [
 		]
 		the-object: none
 	]
-	unless the-object [
-		print [{Error: no caller object reference in "} name {"}]
-		quit ; change to "return" for live coding
-	]
 	method-parameters: head method-parameters
-	the-call: append copy [the-object/:method] method-parameters
+	either the-object [
+		the-call: append copy [the-object/:method] method-parameters
+	][
+		; we either have an error or a function call
+		; doesn't currently deal with reference functions
+		the-fnc: select function-map name
+		unless the-fnc [
+			print [{Error: on method or function call "} name {".} ]
+			quit
+		]
+		the-call: append copy the-fnc/red-code method-parameters
+	]
 	do the-call
 ]
 
@@ -354,6 +360,11 @@ create-red-function-or-method-call: function [
 	remix-call "Includes the name and parameter list"
 ][
 	name: remix-call/fnc-name
+	method-call: create-method-call name remix-call/actual-params 
+	if method-call [
+		return method-call
+	]
+	; possibly a function call
 	the-fnc: select function-map name
 	if the-fnc = none [
 		; check if the name can be pluralised.
@@ -361,11 +372,11 @@ create-red-function-or-method-call: function [
 			print ["Careful:" name "renamed." ]
 		]
 	]
-	either the-fnc [
-		create-red-function-call name the-fnc remix-call/actual-params
-	][
-		create-method-call name remix-call/actual-params
+	if the-fnc [
+		return create-red-function-call name the-fnc remix-call/actual-params
 	]
+	print [{Error: no method or function "} name {".} ]
+	quit
 ]
 
 create-red-statements: function [

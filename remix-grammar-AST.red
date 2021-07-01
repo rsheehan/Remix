@@ -6,8 +6,9 @@ Red [
 ]
 
 do %lexer.red
-do %built-in-functions.red
 do %ast.red
+do %function-functions.red
+do %built-in-functions.red
 
 END-OF-LINE: [<LINE> | <*LINE>]
 
@@ -327,7 +328,7 @@ method-signature: [ ; same as function-signature, but different actions
 	)
 	some [ ; gather the signature
 		[
-			<lparen> <word> "me" <rparen> ; the object reference
+			<lparen> <word> ["me" | "my"] <rparen> ; the object reference
 			(
 				if self-position <> 0 [
 					print [{Error: method "} new-method/template {" more than one self reference ().}]
@@ -385,7 +386,7 @@ function-call: [
 				<word> keep string! ; part of the function name the rest are actual parameters
 				| 
 				[
-					<lparen> <word> "me" <rparen> ; for a self method call
+					<lparen> <word> ["me" | "my"] <rparen> ; for a self method call
 					(
 						; need to record this for checking in the transpiler
 						expr: 'self

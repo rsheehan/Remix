@@ -42,11 +42,11 @@ create a maze cell at (the-row) and (the-col) :
 		remove the bottom wall in (me) :
 			bottom-open : true
 
-		draw cell (me) :
+		draw (me) :
 			draw with (red) pen
 			draw (square) at (centre)
 
-		draw the exits on (me) :
+		draw (my) exits :
 			draw with (black) pen
 			if (right-open)
 				x : centre [1] + SIZE
@@ -157,12 +157,12 @@ prepare the maze grid :
 	for (num-rows) rows (this-row) [append {} to (the-maze)] and (num-cols) columns (this-col)
 		cell : create a maze cell at (this-row) and (this-col)
 		append (cell) to (the-maze [this-row])
-		draw cell (cell)
+		draw (cell)
 
 show the maze :
 	for (num-rows) rows (this-row) and (num-cols) columns (this-col)
 		cell : cell at { this-col, this-row }
-		draw the exits on (cell)
+		draw (cell) exits
 
 make the sidewinder maze :
 	deal with all rows except the bottom

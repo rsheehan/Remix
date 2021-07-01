@@ -40,10 +40,6 @@ add-to-method-list: function [
 	new-method
 ][
 	name: to-function-name new-method/template
-	if select function-map name [
-		print [{Error: existing function with method name "} name {".}]
-		quit
-	]
 	position: select method-list name
 	either position = none [
 		append append method-list name new-method/self-position
