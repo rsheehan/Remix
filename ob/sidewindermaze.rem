@@ -42,7 +42,7 @@ create a maze cell at (the-row) and (the-col) :
 		remove the bottom wall in (me) :
 			bottom-open : true
 
-		draw cell (me) :
+		draw (me) :
 			draw with (red) pen
 			draw (square) at (centre)
 
@@ -157,7 +157,7 @@ prepare the maze grid :
 	for (num-rows) rows (this-row) [append {} to (the-maze)] and (num-cols) columns (this-col)
 		cell : create a maze cell at (this-row) and (this-col)
 		append (cell) to (the-maze [this-row])
-		draw cell (cell)
+		draw (cell)
 
 show the maze :
 	for (num-rows) rows (this-row) and (num-cols) columns (this-col)

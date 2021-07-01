@@ -16,10 +16,10 @@ make a square of (size) at (grid-pos) :
 	create
 		shape : square
 
-		draw the (me) :
+		draw (me) :
 			fill (shape)
 
-		change colour of (me) :
+		change (my) colour :
 			shape [colour] : random colour
 
 base-size : 20
@@ -37,5 +37,5 @@ on standard paper
 		clear layer 1
 		no outline
 		for each (square) in (squares)
-			change colour of (square)
-			draw the (square)
+			change (square) colour
+			draw (square)
