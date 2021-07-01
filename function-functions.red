@@ -113,11 +113,7 @@ to-function-name: function [
 ][
 	name: copy ""
 	foreach part block [
-		join-name name either string? part [
-			part
-		][
-			"|"
-		]
+		join-name name part
 	]
 	name
 ]
