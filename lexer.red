@@ -184,7 +184,7 @@ colon: [
 	)
 ]
 
-nl: [
+nline: [
     some [
 		newline opt some comments
 	]
@@ -201,7 +201,7 @@ nl: [
 ]
 
 tokens: [left-p | right-p | left-b | right-b | left-curly-b | right-curly-b
-		| comma-char | colon | operator | nl]
+		| comma-char | colon | operator | nline]
 
 
 char-sequence: [
