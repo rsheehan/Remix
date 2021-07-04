@@ -1,4 +1,4 @@
-Draw a sidewinder  maze and solve it.
+Draw a sidewinder maze and solve it.
 This version uses objects.
 	- sidewindermaze.rem
 	- Robert Sheehan
@@ -17,8 +17,8 @@ RIGHT : 2
 UP : 3
 DOWN : 4
 
-num-rows : 28
-num-cols : 38
+ROWS : 28
+COLUMNS : 38
 
 the-maze : {}  ; this will contain maze cells
 start : {1, 1} ; {random 39, random 29}
@@ -35,14 +35,14 @@ on standard (black) paper
 	solve the maze from (start) to (finish)
 
 find the middle :
-	middle-x : convert (num-cols ÷ 2) to integer + 1
-	middle-y : convert (num-rows ÷ 2) to integer + 1
+	middle-x : convert (COLUMNS ÷ 2) to integer + 1
+	middle-y : convert (ROWS ÷ 2) to integer + 1
 	{ middle-x, middle-y }
 
 prepare the maze grid :
-	for (num-rows) rows (this-row) [append {} to (the-maze)] and (num-cols) columns (this-col)
-		cell : create a maze cell at (this-row) and (this-col)
-		append (cell) to (the-maze [this-row])
+	for (column)(COLUMNS) and (row)(ROWS) on each row [append {} to (the-maze)] 
+		cell : create a maze cell at (row) and (column)
+		append (cell) to (the-maze [row])
 		draw (cell)
 
 make the sidewinder maze :
@@ -51,31 +51,31 @@ make the sidewinder maze :
 	show the maze
 
 deal with all rows except the bottom :
-	for each (row) from 1 to (num-rows - 1)
+	for each (row) from 1 to (ROWS - 1)
 		deal with all columns in (row) except the right
 		deal with the right cell in (row)
 
 deal with all columns in (row) except the right :
 	start-run : 1
-	for each (col) from 1 to (num-cols - 1)
+	for each (column) from 1 to (COLUMNS - 1)
 		if (heads) [
-			remove the right wall in (cell at { col, row })
+			remove the right wall in (cell at { column, row })
 		] otherwise [
-			gap : choose from (start-run) to (col)
+			gap : choose from (start-run) to (column)
 			remove the bottom wall in (cell at { gap, row })
-			start-run : col + 1
+			start-run : column + 1
 		]
 
 deal with the right cell in (row) :
-	remove the bottom wall in (cell at { num-cols, row })
+	remove the bottom wall in (cell at { COLUMNS, row })
 
 deal with the bottom row : 
-	for each (col) from 1 to (num-cols - 1)
-		remove the right wall in (cell at { col, num-rows })
+	for each (col) from 1 to (COLUMNS - 1)
+		remove the right wall in (cell at { col, ROWS })
 
 show the maze :
-	for (num-rows) rows (this-row) and (num-cols) columns (this-col)
-		cell : cell at { this-col, this-row }
+	for (column)(COLUMNS) and (row)(ROWS)
+		cell : cell at { column, row }
 		draw (cell) exits
 
 cell at (position) :
@@ -134,8 +134,8 @@ create a maze cell at (the-row) and (the-col) :
 		bottom-open : false
 		distance : -1
 		centre : {
-			centre-x + ((2 × the-col) - (num-cols + 1)) × SIZE,
-			centre-y + ((2 × the-row) - (num-rows + 1)) × SIZE
+			centre-x + ((2 × the-col) - (COLUMNS + 1)) × SIZE,
+			centre-y + ((2 × the-row) - (ROWS + 1)) × SIZE
 		}
 
 		remove the right wall in (me) :

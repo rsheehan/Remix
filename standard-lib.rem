@@ -167,17 +167,17 @@ for each (#item) from (start) to (finish) in steps of (step) (block):
 	last
 
 A 2 dimensional for loop over "num-rows" and "num-cols".
-"row-block" can refer to "#row".
-"col-block" can refer to "#row" and "#col".
-for (num-rows) rows (#row) (row-block) and (num-cols) columns (#col) (col-block) :
-	for each (#row) from 1 to (num-rows)
+"row-block" can refer to "#down".
+"col-block" can refer to "#down" and "#across".
+for (#across)(num-cols) and (#down)(num-rows) on each row (row-block) (col-block) :
+	for each (#down) from 1 to (num-rows)
 		do (row-block)
-		for each (#col) from 1 to (num-cols)
+		for each (#across) from 1 to (num-cols)
 			do (col-block)
 
 A 2 dimensional for loop with no "row-block".
-for (num-rows) rows (#row) and (num-cols) columns (#col) (col-block) :
-	for (num-rows) rows (#row) [] and (num-cols) columns (#col) (col-block)
+for (#across)(num-cols) and (#down)(num-rows) (col-block) :
+	for (#across)(num-cols) and (#down)(num-rows) on each row [] (col-block)
 
 ========================================
 

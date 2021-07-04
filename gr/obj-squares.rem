@@ -22,14 +22,14 @@ make a square of (size) at (grid-pos) :
 		change (my) colour :
 			shape [colour] : random colour
 
-size : 20
-num-cols : std-width ÷ size
-num-rows : std-height ÷ size
+SIZE : 20
+COLUMNS : STD-WIDTH ÷ SIZE
+ROWS : STD-HEIGHT ÷ SIZE
 
 squares : an empty list
 
-for (num-rows) rows (down) and (num-cols) columns (across)
-	square : make a square of (size) at {across, down}
+for (x)(COLUMNS) and (y)(ROWS)
+	square : make a square of (SIZE) at {x, y}
 	append (square) to (squares)
 
 on standard paper
