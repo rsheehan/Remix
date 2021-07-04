@@ -101,6 +101,9 @@ view/tight [
 			attempt [
 				; first execute the necessary graphics related statements
 				run-remix precursor-statements
+				; clean the graphics area
+				draw-command-layers: copy/deep [[]]
+				all-layers/2: draw-command-layers
 				; run the code
 				run-remix commands/text 
 			]
