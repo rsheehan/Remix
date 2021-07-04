@@ -60,6 +60,26 @@ run-remix: function [
 stdlib: read %standard-lib.rem
 run-remix/running-first-time stdlib
 
+; Setting up the graphics area by overriding the associated func
+setup-paper: func [
+    { Prepare the paper and drawing instructions.
+      At the moment I am using a 2x resolution background for the paper. }
+    colour [tuple!]
+    width [integer!]
+    height [integer!]
+][
+    paper-size: as-pair width height
+    background-template: reduce [paper-size * 2 colour]
+    background: make image! background-template
+		paper/color: colour
+		do [
+				all-layers/1: compose [image background 0x0 (paper-size)]
+				paper/draw: all-layers
+				paper/rate: none
+		]
+    none
+]
+
 ; loading the graphics statements which should be executed everytime
 precursor-statements: read %precusor-graphics-statements.rem
 
@@ -77,4 +97,5 @@ view/tight [
 		]
 	output-area: area 
 		400x600
+	paper: base 400x600 on-time [do-draw-animate]
 ]
