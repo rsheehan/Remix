@@ -1,36 +1,11 @@
 Show a grid of everchanging squares.
 ====================================
 
-make a square of (size) at (grid-pos) :
-	half : size ÷ 2
-	square : make shape of {
-		{-1, -1},
-		{ 1, -1},
-		{ 1,  1},
-		{-1,  1}
-	} with size (half)
-	x : (size × grid-pos [1]) - half
-	y : (size × grid-pos [2]) - half
-	square [position] : {x, y}
-
-	create
-		shape : square
-
-		draw (me) :
-			fill (shape)
-
-		change (my) colour :
-			shape [colour] : random colour
-
 SIZE : 20
 COLUMNS : STD-WIDTH ÷ SIZE
 ROWS : STD-HEIGHT ÷ SIZE
 
-squares : an empty list
-
-for (x)(COLUMNS) and (y)(ROWS)
-	square : make a square of (SIZE) at {x, y}
-	append (square) to (squares)
+squares : produce grid of (COLUMNS) by (ROWS) squares
 
 on standard paper
 	animate 1 time per sec
@@ -39,3 +14,29 @@ on standard paper
 		for each (square) in (squares)
 			change (square) colour
 			draw (square)
+
+========================================
+
+produce grid of (columns) by (rows) squares :
+	squares : an empty list
+	for (x)(columns) and (y)(rows)
+		square : make a square of (SIZE) at {x, y}
+		append (square) to (squares)
+		
+make a square of (size) at (grid-pos) :
+	grid-pos : enlarge (grid-pos) by (size)
+
+	create
+		colour : random colour
+		top-left : { grid-pos [1] - size, grid-pos [2] - size }
+		bottom-right : { grid-pos [1], grid-pos [2] }
+
+		draw (me) :
+			fill colour (colour)
+			draw box from (top-left) to (bottom-right)
+
+		change (my) colour :
+			colour : random colour
+
+enlarge (list) by (factor) :
+	apply [item × factor] to each (item) from (list)
