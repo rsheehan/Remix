@@ -80,6 +80,16 @@ setup-paper: func [
     none
 ]
 
+; Allowing functions to be redefined temporarily so that re-execution of code
+; does not create trouble
+insert-function: function [
+    { Insert a function into the function map table }
+    func-object [object!]   {the function object}
+][
+    name: to-function-name func-object/template
+    put function-map name func-object
+]
+
 ; loading the graphics statements which should be executed everytime
 precursor-statements: read %precusor-graphics-statements.rem
 
