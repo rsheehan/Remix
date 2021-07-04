@@ -6,14 +6,6 @@ Red [Title: "Built-in functions"
 
 ; ********* built-in functions ********
 
-; compose-only-block: function [
-;     expression
-; ][
-;     either block? expression [
-;         compose expression
-;     ]
-; ]
-
 based-on-fnc: make function-object [
 	template: ["based" "on" "|"]
 	; formal-parameters ["original"]
@@ -220,8 +212,8 @@ string-fnc: make function-object [
 remix-probe: function [
 	item
 ][
-	?? item
-	none
+	prin "Red value: "
+	probe item
 ]
 
 probe-fnc: make function-object [
@@ -858,6 +850,7 @@ hide-all-drawing: func [
 	{ Hide the drawing. }
 ][
 	system/view/auto-sync?: off
+	none
 ]
 
 show-all-drawing: func [
@@ -866,6 +859,7 @@ show-all-drawing: func [
 	system/view/auto-sync?: on
 	show paper
 	do-events/no-wait
+	none
 ]
 
 hide-drawing-fnc: make function-object [
