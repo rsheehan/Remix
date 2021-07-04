@@ -111,5 +111,10 @@ view/tight [
 	output-area: area 
 		400x600
 	paper: base 400x600 on-time [do-draw-animate]
+	on-down [
+		clear commands/text
+		commands/text: append (append (append (append copy "draw circle of (0) at ({" event/offset/x) ", ") event/offset/y) "})"
+		run-remix commands/text
+	]
 	do [setup-paper 255.255.255 400 600]
 ]
