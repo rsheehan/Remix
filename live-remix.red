@@ -111,4 +111,5 @@ view/tight [
 	output-area: area 
 		400x600
 	paper: base 400x600 on-time [do-draw-animate]
+	do [setup-paper 255.255.255 400 600]
 ]
