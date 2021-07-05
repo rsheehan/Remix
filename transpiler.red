@@ -483,11 +483,17 @@ transpile-functions: function [
 	reference-functions: copy []
 	foreach fnc keys-of function-map [
 		the-fnc: select function-map fnc
-		if the-fnc/red-code = none [ ; built-in functions have a value here
+		the-fnc/num-names: the-fnc/num-names - 1
+		if the-fnc/num-names > 0 [?? the-fnc]
+		if all [
+			the-fnc/red-code = none
+			the-fnc/num-names = 0
+		][ ; built-in functions have a value here
 			if the-fnc/block/type <> "sequence" [
 				print ["Error:" fnc "is not a sequence."]
 				quit
 			]
+			;TODO don't repeat work for multi-name functions
 			param-lists: create-param-lists the-fnc/formal-parameters
 			fnc-params: first param-lists
 			ref-params: second param-lists

@@ -40,6 +40,7 @@ files: [
 	"ex/test30.rem"
 	"ex/test31.rem"
 	"ex/test32.rem"
+	"ex/test33.rem"
 	; "ex/drawing.rem"
 ]
 

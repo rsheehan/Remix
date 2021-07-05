@@ -38,9 +38,12 @@ function-definition: [
 ]
 
 ; e.g. from (start) to (finish) do (block)
+; now includes multiple names
 function-signature: [
 	some [
 		<word> string!
+		|
+		<multi-word> string!
 		|
 		<lparen> <word> string! <rparen> 
 	]

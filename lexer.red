@@ -203,6 +203,17 @@ nl: [
 tokens: [left-p | right-p | left-b | right-b | left-curly-b | right-curly-b
 		| comma-char | colon | operator | nl]
 
+multi-word: [ ; used for function multiple names
+	copy first-word any characters
+	"/"
+	copy second-word some characters
+	keep (
+		make token [
+			name: <multi-word>
+			value: append append first-word "/" second-word
+		]
+	)
+]
 
 char-sequence: [
     copy chars any characters
@@ -235,7 +246,7 @@ char-sequence: [
 split-words: [                  ; parse block
     collect [
         any [
-            [remix-string | comments | number | tokens | char-sequence]
+            [remix-string | comments | number | tokens | multi-word | char-sequence]
             any white-space
         ]
     ]

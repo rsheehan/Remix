@@ -53,11 +53,19 @@ function-definition: [
 ]
 
 ; e.g. from (start) to (finish) do (block)
+; now includes multiple names
 function-signature: [
 	some [
 		<word> set name-part string!
 		(
 			append new-function/template name-part
+		)
+		|
+		<multi-word> set multi-name-part string!
+		(
+			; split the multi-name-part into its two strings
+			multi-names: split multi-name-part "/"
+			append/only new-function/template multi-names
 		)
 		|
 		<lparen> <word> set param-name string! <rparen> 

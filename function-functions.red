@@ -10,6 +10,7 @@ comment {
  The values are function objects.
  Function objects have:
 	a template of the name e.g. ["display" "|"]
+	with multi-name parts e.g. ["animate" "|", ["time" "times"] "per" "sec"]
 	the list of formal parameters (if not a built-in function)
 		could include them for built-ins for help purposes
 	whether this function returns or passes returns higher
@@ -21,12 +22,13 @@ comment {
 
 function-object: object [
 	template: [] ; filled in when defined
+	num-names: 1 ; number of names for this function
 	formal-parameters: [] ; For a Remix code function, this provides the parameter names. Strings.
 	return-higher: false
 	block: none ; filled in when defined - this is Remix AST code
 	fnc-def: [] ; if a reference function, filled in when transpiled
 	red-code: none ; filled in if not a reference function
-] 
+]
 
 ; even though not necessary here, included because of similarity to function-object
 
@@ -93,7 +95,7 @@ pluralised: function [
 ]
 
 join-name: function [
-	"Add the next part of a function name."
+	{ Add the next part of a function name. }
 	so-far  [string!]   "The function name so far"
 	part    [string!]   "The next part of the name to add"
 ][
@@ -104,7 +106,7 @@ join-name: function [
 ]
 
 to-function-name: function [
-	{ Convert a template, a block of name parts and parameter calls, into a string }
+	{ Convert a template, a block of name parts and parameter calls, into a string. }
 	block [block!]  "The block of parts and parameter blocks"
 ][
 	name: copy ""
@@ -114,22 +116,53 @@ to-function-name: function [
 	name
 ]
 
+to-function-def-names: function [
+	{ Convert a template, a block of name parts and parameter calls, into a string. 
+	  This deals with multi-names. }
+	block [block!]  "The block of parts and parameter blocks"
+][
+	names: copy reduce [ copy "" ] ; for multi-names
+	foreach part block [
+		case [
+			string? part [
+				foreach name names [
+					join-name name part
+				] 
+			]
+			block? part [ ; only two options for each word currently
+				append names copy/deep names
+				first-option: first part
+				i: 1
+				while [i <= ((length? names) / 2)][
+					if first-option <> "" [ ; only if first-option is not empty
+						join-name names/(i) first-option
+					]
+					i: i + 1
+				]
+				second-option: second part
+				while [i <= (length? names)][
+					join-name names/:i second-option
+					i: i + 1
+				]
+			]
+		]
+	]
+	names
+]
+
 insert-function: function [
 	{ Insert a function into the function map table }
 	func-object [object!]   {the function object}
 ][
-	name: to-function-name func-object/template
-	case [
-		find method-list name [
-			print [{Error: existing method with function name "} name {".}]
-			quit 
-		]
+	names: to-function-def-names func-object/template
+	func-object/num-names: length? names
+	foreach name names [
 		select function-map name [
 			print [{Error: "} name {"function is already defined.}]
 			quit
 		]
+		put function-map name func-object
 	]
-	put function-map name func-object
 ]
 
 create-function-call: function [
