@@ -91,20 +91,18 @@ version-change: function [change] [
 	] [
 		either change = "+" [
 			if (to-integer (drop-down/selected)) < (length? memory-list) [
-				commands/text: copy (memory-list/((to-integer (drop-down/selected) + 1)))
 				drop-down/selected: ((drop-down/selected) + 1)
 			]
-				; drop-down/selected (to-string(to-integer (drop-down/selected) +1))
-				; print (drop-down/selected)
 		] [
 			if (to-integer (drop-down/selected)) > 1 [
-				commands/text: copy (memory-list/((to-integer (drop-down/selected) - 1)))
 				drop-down/selected: ((drop-down/selected) - 1)
 			]
 		]
-		; attempt [
-		; 	run-remix commands/text 
-		; ]
+		commands/text: copy (memory-list/(to-integer (drop-down/selected) ))
+
+		attempt [
+			run-remix commands/text 
+		]
 	]
 ]
 
