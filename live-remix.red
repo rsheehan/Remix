@@ -85,8 +85,29 @@ latest-version: function [] [
 	]
 ]
 
-; Up down buttons
-; Latest version
+version-change: function [change] [
+	either (length? memory-list) = 0 [
+		print "No Versions Made"
+	] [
+		either change = "+" [
+			if (to-integer (drop-down/selected)) < (length? memory-list) [
+				commands/text: copy (memory-list/((to-integer (drop-down/selected) + 1)))
+				drop-down/selected: ((drop-down/selected) + 1)
+			]
+				; drop-down/selected (to-string(to-integer (drop-down/selected) +1))
+				; print (drop-down/selected)
+		] [
+			if (to-integer (drop-down/selected)) > 1 [
+				commands/text: copy (memory-list/((to-integer (drop-down/selected) - 1)))
+				drop-down/selected: ((drop-down/selected) - 1)
+			]
+		]
+		; attempt [
+		; 	run-remix commands/text 
+		; ]
+	]
+]
+
 ; Play, pause, speed control.
 ; Output file 
 
@@ -125,10 +146,9 @@ view/tight [
 			append drop-down/data (copy new-name/text)
 			]
 		space: text
-		space: text
 		latest: button 120 "Latest" [latest-version]
-		next: button 120 "/\ (Next)"
-		previous: button 120 "\/ (Previous)"
+		next: button 120 "/\ (Next)" [version-change "+"]
+		previous: button 120 "\/ (Previous)" [version-change "-"]
 
 		;  for testing
 		; test2: button 120 "Print memory naming" [print drop-down/data]
