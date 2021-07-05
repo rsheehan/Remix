@@ -72,22 +72,6 @@ version-selection: function [] [
 	]
 ]
 
-rename-version: function [] [
-	either drop-down/selected = none [
-		print "No Version Selected"
-	] [
-		; print new-name/text
-		; print (to-integer (drop-down/selected))
-		print drop-down/data
-		print (drop-down/selected)
-		print (copy new-name/text)
-
-		replace drop-down/data (to-string(drop-down/selected)) (to-string(copy new-name/text))
-		; replace drop-down/data "1" 5
-		print drop-down/data
-	]
-]
-
 ; Allow naming of certain versions (might need to change)
 ; Up down buttons
 ; Latest version
@@ -125,7 +109,10 @@ view/tight [
 		space: text
 		space: text
 		new-name: area 120x20
-		rename-name: button 120 "Rename" [rename-version]
+		rename-name: button 120 "Name Version" [
+			save-text commands/text
+			append drop-down/data (copy new-name/text)
+			]
 		space: text
 		space: text
 
