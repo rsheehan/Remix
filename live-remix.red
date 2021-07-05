@@ -54,7 +54,7 @@ run-remix: function [
 
 memory-list: []
 
-save-text: function [text /extern memory][
+save-text: function [text][
 	append memory-list (copy text)
 	exit
 ]
@@ -99,16 +99,25 @@ version-change: function [change] [
 			]
 		]
 		commands/text: copy (memory-list/(to-integer (drop-down/selected) ))
-
 		attempt [
 			run-remix commands/text 
 		]
 	]
 ]
 
-; Play, pause, speed control.
-; Output file 
+write-file: function [/extern memory-list] [
+	; save %Code.red memory-list/(length? memory-list)
 
+	either (length? memory-list) = 0 [
+		print "No Versions Saved"
+	] [
+		save %Code.red memory-list/(length? memory-list)	
+		
+		; attempt [
+		; 	run-remix commands/text 
+		; ]
+	]
+]
 view/tight [
 	title "Live"
 	commands: area 
@@ -136,17 +145,16 @@ view/tight [
 			]
 		show-version: button 120 "Show" [version-selection]
 
-		space: text
-		space: text
+
 		new-name: area 120x20
 		rename-name: button 120 "Name Version" [
 			save-text commands/text
 			append drop-down/data (copy new-name/text)
 			]
-		space: text
 		latest: button 120 "Latest" [latest-version]
 		next: button 120 "/\ (Next)" [version-change "+"]
 		previous: button 120 "\/ (Previous)" [version-change "-"]
+		write: button 120 "Write to File" [write-file]
 
 		;  for testing
 		; test2: button 120 "Print memory naming" [print drop-down/data]
