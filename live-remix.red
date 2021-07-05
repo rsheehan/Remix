@@ -72,12 +72,23 @@ version-selection: function [] [
 	]
 ]
 
-; Allow naming of certain versions (might need to change)
+latest-version: function [] [
+	either (length? memory-list) = 0 [
+		print "No Versions Made"
+	] [
+		commands/text: copy (memory-list/(to-integer (length? memory-list))) ; allows non-integer values
+	
+		; update output of associated code
+		attempt [
+			run-remix commands/text 
+		]
+	]
+]
+
 ; Up down buttons
 ; Latest version
 ; Play, pause, speed control.
 ; Output file 
-
 
 view/tight [
 	title "Live"
@@ -115,8 +126,11 @@ view/tight [
 			]
 		space: text
 		space: text
+		latest: button 120 "Latest" [latest-version]
+		next: button 120 "/\ (Next)"
+		previous: button 120 "\/ (Previous)"
 
 		;  for testing
-		test2: button 120 "Print memory naming" [print drop-down/data]
-		test: button 120 "Print memory list" [print memory-list]
+		; test2: button 120 "Print memory naming" [print drop-down/data]
+		; test: button 120 "Print memory list" [print memory-list]
 ]
