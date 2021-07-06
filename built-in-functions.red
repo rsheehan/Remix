@@ -28,7 +28,7 @@ range-string: function [
 ]
 
 list-string: function [
-	{ Create a string from a list or object. }
+	{ Create a string from a list or map. }
 	list [hash! map!]
 ][
 	str: copy ""
@@ -54,6 +54,9 @@ item-string: function [
 	item
 ][
 	case [
+		none? item [
+			"none"
+		]
 		word? item [ ; possibly a variable
 			to-string reduce item
 		]
@@ -68,10 +71,8 @@ item-string: function [
 			]
 		]
 		block? item [
-			; remove brackets
 			str: next mold item
 			str: copy/part str ((length? str) - 1)
-			; return str
 		]
 		true [
 			if none? item [item: ""]
@@ -88,7 +89,7 @@ show-range: function [
 ]
 
 show-block: function [
-	{ Display a list or object. }
+	{ Display a list or map. }
 	list [hash! map!]
 ][
 	prin list-string list
