@@ -15,7 +15,7 @@ print newline
 ; N.B. remember to include the standard-lib eventually
 ; source: append append "^/" read %standard-lib.rem "^/"
 source: "^/"
-source: append append source read rem-file "^/"
+append append source read rem-file "^/"
 
 first-pass: parse source split-words
 print [first-pass newline]

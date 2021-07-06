@@ -210,7 +210,7 @@ multi-word: [ ; used for function multiple names
 	keep (
 		make token [
 			name: <multi-word>
-			value: append append first-word "/" second-word
+			value: rejoin [first-word "/" second-word]
 		]
 	)
 ]

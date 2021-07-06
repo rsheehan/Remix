@@ -13,8 +13,8 @@ print ["input file:" rem-file]
 ; print read rem-file
 
 ; N.B. remember to include the standard-lib
-source: append append "^/" read %standard-lib.rem "^/"
-source: append append source read rem-file "^/"
+source: rejoin ["^/" read %standard-lib.rem "^/"]
+append append source read rem-file "^/"
 
 first-pass: parse source split-words
 clean-lex: tidy-up first-pass
