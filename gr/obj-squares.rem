@@ -5,7 +5,7 @@ SIZE : 20
 COLUMNS : STD-WIDTH ÷ SIZE
 ROWS : STD-HEIGHT ÷ SIZE
 
-squares : produce grid of (COLUMNS) by (ROWS) squares
+squares : produce a grid of (COLUMNS) by (ROWS) squares
 
 on standard paper
 	animate 1 time per sec
@@ -17,7 +17,7 @@ on standard paper
 
 ========================================
 
-produce grid of (columns) by (rows) squares :
+produce a grid of (columns) by (rows) squares :
 	squares : an empty list
 	for (x)(columns) and (y)(rows)
 		square : make a square of (SIZE) at {x, y}

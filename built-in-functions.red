@@ -263,7 +263,7 @@ length: function [
 ]
 
 length-fnc: make function-object [
-	template: ["length" "of" "|"]
+	template: ["length" "of" ["" "the"] "|"]
 	; formal-parameters: ["list"]
 	red-code: [length]
 ]
@@ -356,7 +356,7 @@ end-of-iterator: function [
 ]
 
 end-of-iterator-fnc: make function-object [
-	template: ["end" "of" "|"]
+	template: ["end" "of" ["" "the"] "|"]
 	; formal-parameters: ["list"]
 	red-code: [end-of-iterator]
 ]
@@ -375,7 +375,7 @@ append-to: function [
 ]
 
 append-fnc: make function-object [
-	template: ["append" "|" "to" "|"]
+	template: [["append" "add"] ["" "the"] "|" "to" ["" "the"] "|"]
 	; formal-parameters: ["value" "list"]
 	red-code: [append-to]
 ]
@@ -829,7 +829,7 @@ animation-rate: function [
 ]
 
 animation-rate-fnc: make function-object [
-	template: ["|" "times" "per" "sec"]
+	template: ["|" ["time" "times"] "per" "sec"]
 	; formal-parameters ["rate"]
 	red-code: [animation-rate]
 ]
@@ -873,7 +873,7 @@ show-drawing-fnc: make function-object [
 ]
 
 wait-fnc: make function-object [
-	template: ["wait" "|" "secs"]
+	template: ["wait" "|" ["secs" "sec"]]
 	; formal-parameters ["seconds"]
 	red-code: [wait]
 ]
@@ -955,7 +955,7 @@ atan2-fnc: make function-object [
 ]
 
 square-root-fnc: make function-object [
-	template: ["√" "|"]
+	template: [["√" "sqrt"] "|"]
 	; formal-parameters ["value"]
 	red-code: [square-root]
 ]

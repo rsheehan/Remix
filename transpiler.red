@@ -366,12 +366,6 @@ create-red-function-or-method-call: function [
 	]
 	; possibly a function call
 	the-fnc: select function-map name
-	if the-fnc = none [
-		; check if the name can be pluralised.
-		if (the-fnc: pluralised name) [
-			print ["Careful:" name "renamed." ]
-		]
-	]
 	if the-fnc [
 		return create-red-function-call name the-fnc remix-call/actual-params
 	]
@@ -450,25 +444,33 @@ create-function-body: function [
 ]
 
 transpile-normal-function: function [
-	{ Transpile this normal function. }
+	{ Transpile this normal function. 
+	  Now handles multi-named functions. }
 	fnc-name [string!]
 	the-fnc [object!]
 	fnc-params [block!]
 ][
-	body: create-function-body the-fnc fnc-params
 	name: to-word fnc-name
-	set name do body ; this is where the red equivalent function is defined
-	the-fnc/red-code: reduce [name]
+	either the-fnc/red-code [
+		set name do body ; this is where the red equivalent function is defined
+	][
+		body: create-function-body the-fnc fnc-params
+		set name do body ; this is where the red equivalent function is defined
+		the-fnc/red-code: reduce [name]
+	]
 ]
 
 transpile-reference-function: function [
-	{ Transpile this reference function. }
+	{ Transpile this reference function. 
+	  Now handles multi-name ref functions. }
 	the-fnc [object!]
 	fnc-params [block!]
 	ref-params [block!]
 ][
-	body: create-function-body the-fnc fnc-params
-	the-fnc/fnc-def: body
+	if (length? the-fnc/fnc-def) = 0 [
+		body: create-function-body the-fnc fnc-params
+		the-fnc/fnc-def: body
+	]
 ]
 
 transpile-functions: function [
@@ -483,17 +485,11 @@ transpile-functions: function [
 	reference-functions: copy []
 	foreach fnc keys-of function-map [
 		the-fnc: select function-map fnc
-		the-fnc/num-names: the-fnc/num-names - 1
-		if the-fnc/num-names > 0 [?? the-fnc]
-		if all [
-			the-fnc/red-code = none
-			the-fnc/num-names = 0
-		][ ; built-in functions have a value here
+		if the-fnc/red-code = none [ ; built-in functions have a value here
 			if the-fnc/block/type <> "sequence" [
 				print ["Error:" fnc "is not a sequence."]
 				quit
 			]
-			;TODO don't repeat work for multi-name functions
 			param-lists: create-param-lists the-fnc/formal-parameters
 			fnc-params: first param-lists
 			ref-params: second param-lists

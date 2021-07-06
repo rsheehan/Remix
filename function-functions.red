@@ -22,7 +22,7 @@ comment {
 
 function-object: object [
 	template: [] ; filled in when defined
-	num-names: 1 ; number of names for this function
+	num-names: 0 ; number of names for this function
 	formal-parameters: [] ; For a Remix code function, this provides the parameter names. Strings.
 	return-higher: false
 	block: none ; filled in when defined - this is Remix AST code
@@ -69,29 +69,6 @@ function-name: [                            ; parse block
 	copy part some characters
 	(if part <> "" [append name-list part])
 	function-name
-]
-
-pluralised: function [
-	{ Attempt all plural versions of function name to find an existing function. 
-	  Returns none or the reference to the function object which matches. }
-	fnc-name [string!]
-	/extern name-list
-][
-	name-list: copy []
-	parse fnc-name function-name
-	forall name-list [
-		full-name: copy head name-list
-		next-part: copy first name-list
-		if next-part <> "|" [
-			poke full-name index? name-list append next-part "s"
-			full-name: to-function-name full-name
-			the-fnc: select function-map full-name
-			if the-fnc <> none [
-				return the-fnc
-			]
-		]
-	]
-	none
 ]
 
 join-name: function [
