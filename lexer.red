@@ -12,7 +12,7 @@ token: object [
 
 ; newline: #"^/" ; because I have a newline function in Remix
 white-space: charset reduce [space tab]
-special: charset "()[]{,}:—_|§@/"    ; can add to this as required
+special: charset "()[]{,}:—_|§@/…"    ; can add to this as required
 ; everything apart from white space, newline or special is a character
 characters: complement union union special white-space charset newline
 operators: charset "+-×÷%=≠<≤>≥"
@@ -184,6 +184,15 @@ colon: [
 	)
 ]
 
+cont: [
+	#"…"
+	keep (
+		make token [
+			name: <cont>
+		]
+	)
+]
+
 nl: [
     some [
 		newline opt some comments
@@ -201,7 +210,7 @@ nl: [
 ]
 
 tokens: [left-p | right-p | left-b | right-b | left-curly-b | right-curly-b
-		| comma-char | colon | operator | nl]
+		| comma-char | colon | operator | cont | nl]
 
 multi-word: [ ; used for function multiple names
 	copy first-word any characters
