@@ -61,11 +61,10 @@ deal with all rows except the bottom :
 
 deal with all columns in the (row) except the right :
 	for each (col) from 1 to (cols - 1)
-		if (heads) [
+		if (heads)
 			remove the right wall in the cell at {col, row}
-		] otherwise [
+		… otherwise
 			remove the bottom wall in the cell at {col, row}
-		]
 
 deal with the right cell in the (row) :
 	remove the bottom wall in the cell at {cols, row}

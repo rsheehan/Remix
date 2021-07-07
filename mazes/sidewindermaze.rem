@@ -63,13 +63,12 @@ deal with all rows except the bottom :
 deal with all columns in the (row) except the right :
 	start-run : 1
 	for each (col) from 1 to (cols - 1)
-		if (heads) [
+		if (heads)
 			remove the right wall in the cell at {col, row}
-		] otherwise [
+		… otherwise
 			gap : choose from (start-run) to (col)
 			remove the bottom wall in the cell at {gap, row}
 			start-run : col + 1
-		]
 
 deal with the right cell in the (row) :
 	remove the bottom wall in the cell at {cols, row}
