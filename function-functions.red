@@ -47,7 +47,7 @@ add-to-method-list: function [
 		append append method-list name new-method/self-position
 	][
 		if position <> new-method/self-position [
-			print [{Error: method "} name {" inconsistent object positions.}]
+			print rejoin [{Error: method "} name {" inconsistent object positions.}]
 			quit
 		]
 	]
@@ -135,7 +135,7 @@ insert-function: function [
 	func-object/num-names: length? names
 	foreach name names [
 		select function-map name [
-			print [{Error: "} name {"function is already defined.}]
+			print rejoin [{Error: "} name {"function is already defined.}]
 			quit
 		]
 		put function-map name func-object

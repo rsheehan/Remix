@@ -423,7 +423,7 @@ get-item: function [
 				attempt [
 					index: index-to-value index-key
 					if (index > length list) or (index < 1) [
-						print [{Error: map "} quote list {" out of bounds}]
+						print rejoin [{Error: map "} quote list {" out of bounds}]
 						quit
 					]
 					keys: keys-of list
@@ -438,7 +438,7 @@ get-item: function [
 			list: at list 3; adjust for _iter
 			index: index-to-value index-key
 			if (index > length? list) or (index < 1) [
-				print [{Error: list "} quote list {" out of bounds}]
+				print rejoin [{Error: list "} quote list {" out of bounds}]
 				quit
 			]
 			result: list/:index
@@ -446,7 +446,7 @@ get-item: function [
 		object? list [
 			result: attempt [list/:index-key]
 			unless result [
-				print [{Error: object "} quote list {" does not have "} index-key {".}]
+				print rejoin [{Error: object "} quote list {" does not have "} index-key {".}]
 				quit
 			]
 		]
@@ -477,7 +477,7 @@ set-item: function [
 	case [
 		map? list [
 			if integer? index-key [
-				print [{Error: Can't set map "} quote list {" with an index.}]
+				print rejoin [{Error: Can't set map "} quote list {" with an index.}]
 				quit
 			]
 			put list index-key value
@@ -486,14 +486,14 @@ set-item: function [
 			list: at list 3 ; adjust for _iter
 			index: index-to-value index-key
 			if (index > length? list) or (index < 1) [
-				print [{Error: list "} quote list {" out of bounds}]
+				print rejoin [{Error: list "} quote list {" out of bounds}]
 				quit
 			]
 			list/:index: value
 		]
 		object? list [
 			unless attempt [list/:index-key: value][
-				print [{Error: object "} quote list {" does not have "} index-key {".}] 
+				print rejoin [{Error: object "} quote list {" does not have "} index-key {".}] 
 				quit
 			]
 		]

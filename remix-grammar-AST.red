@@ -339,7 +339,7 @@ method-signature: [ ; same as function-signature, but different actions
 			<lparen> <word> ["me" | "my"] <rparen> ; the object reference
 			(
 				if self-position <> 0 [
-					print [{Error: method "} new-method/template {" more than one self reference ().}]
+					print rejoin [{Error: method "} new-method/template {" more than one self reference (me/my).}]
 					quit ; return if live coding
 				]
 				self-position: param-position
@@ -362,7 +362,7 @@ method-signature: [ ; same as function-signature, but different actions
 	; check to see if one of the parameters is the object reference
 	(
 		either self-position = 0 [
-			print [{Error: method "} new-method/template {" without () parameter.}]
+			print rejoin [{Error: method "} new-method/template {" without (me/my) parameter.}]
 			quit ; return if live coding
 		][
 			new-method/self-position: self-position

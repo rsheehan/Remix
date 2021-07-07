@@ -276,7 +276,7 @@ call-method: function [
 		; doesn't currently deal with reference functions
 		the-fnc: select function-map name
 		unless the-fnc [
-			print [{Error: on method or function call "} name {".} ]
+			print rejoin [{Error: on method or function call "} name {".} ]
 			quit
 		]
 		the-call: append copy the-fnc/red-code method-parameters
@@ -369,7 +369,7 @@ create-red-function-or-method-call: function [
 	if the-fnc [
 		return create-red-function-call name the-fnc remix-call/actual-params
 	]
-	print [{Error: no method or function "} name {".} ]
+	print rejoin [{Error: no method or function "} name {".} ]
 	quit
 ]
 
@@ -487,7 +487,7 @@ transpile-functions: function [
 		the-fnc: select function-map fnc
 		if the-fnc/red-code = none [ ; built-in functions have a value here
 			if the-fnc/block/type <> "sequence" [
-				print ["Error:" fnc "is not a sequence."]
+				print rejoin [{Error:"} fnc {"is not a sequence.}]
 				quit
 			]
 			param-lists: create-param-lists the-fnc/formal-parameters
