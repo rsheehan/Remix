@@ -58,13 +58,12 @@ deal with all rows except the bottom :
 deal with all columns in (row) except the right :
 	start-run : 1
 	for each (column) from 1 to (COLUMNS - 1)
-		if (heads) [
+		if (heads)
 			remove the right wall in (cell at { column, row })
-		] otherwise [
+		… otherwise
 			gap : choose from (start-run) to (column)
 			remove the bottom wall in (cell at { gap, row })
 			start-run : column + 1
-		]
 
 deal with the right cell in (row) :
 	remove the bottom wall in (cell at { COLUMNS, row })
@@ -207,21 +206,25 @@ create a maze cell at (the-row) and (the-col) :
 
 		move outwards from (me) :
 			new-distance : distance + 1
+
 			if all of {
 				[can move right from (me)],
 				[not visited (right from (me))]
 			}
 				move (RIGHT) from (me) with (new-distance)
+
 			if all of {
 				[can move down from (me)],
 				[not visited (down from (me))]
 			}
 				move (DOWN) from (me) with (new-distance)
+
 			if all of {
 				[can move left from (me)],
 				[not visited (left from (me))]
 			}
 				move (LEFT) from (me) with (new-distance)
+				
 			if all of {
 				[can move up from (me)],
 				[not visited (up from (me))]
