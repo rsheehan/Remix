@@ -119,9 +119,10 @@ write-file: function [/extern memory-list] [
 	]
 ]
 
-count-enters: function[text /extern new-line] [
+count-enters: function[text /extern new-line /extern detection-rate] [
 	length: (length? split text newline)
-	if not (length = new-line) [
+	if (length = (new-line + detection-rate)) [
+	; if not (length = new-line) [
 		new-line: length
 		return true
 	] 
@@ -129,6 +130,7 @@ count-enters: function[text /extern new-line] [
 ]
 
 new-line: 1
+detection-rate: 5
 
 view/tight [
 	title "Live"
