@@ -270,7 +270,7 @@ create-call: [
 		new-object: make remix-object [] ; can nest objects
 		append object-stack new-object
 	)
-	ahead block! into [object-body]
+	ahead block! into object-body
 	[end | ahead END-OF-FN-CALL]
 	keep (
 		take/last object-stack
@@ -278,26 +278,116 @@ create-call: [
 ]
 
 object-body: [
-	any [
-		object-field END-OF-STATEMENT
+	some [
+		collect set not-used [object-field] END-OF-STATEMENT
+		|
+		object-field-getter END-OF-STATEMENT
+		|
+		object-field-setter END-OF-STATEMENT
+		|
+		object-field-getter-setter END-OF-STATEMENT
 		|
 		object-method
 	]
 ]
 
 object-field: [
-	collect set parts [
-		<word> keep string! 
-		<colon> 
-		keep expression
-	]
+	collect set field-info [<word> keep string! <colon>  expression] ; expression keeps by definition
 	(
-		field-name: first parts
-		expr: second parts
 		new-object: last object-stack
 		append new-object/fields make field-initializer [
-			name: field-name
-			expression: expr
+			name: first field-info
+			expression: second field-info
+		]
+	)
+	keep (first field-info)
+]
+
+create-a-getter: function [
+	"Create a getter function for the field in the current object."
+	field-name [string!]
+][
+	field: make variable [
+		name: field-name
+	]
+	getter: make method-object [
+		template: reduce ["|" field-name]
+		formal-parameters: ["_"]
+		self-position: 1
+		block: make sequence-stmt [
+			list-of-stmts: reduce [field]
+		]
+	]
+	add-to-method-list getter
+	new-object: last object-stack
+	append new-object/methods getter
+]
+
+create-a-setter: function [
+	"Create a setter function for the field in the current object."
+	field-name [string!]
+][
+	field: make variable [
+		name: field-name
+	]
+	setter: make method-object [
+		template: reduce ["|" field-name "set" "|"]
+		formal-parameters: ["_" "new-value"]
+		self-position: 1
+		block: make sequence-stmt [
+			list-of-stmts: reduce [
+				make assignment-stmt [
+					name: field-name
+					expression: make variable [
+						name: "new-value"
+					]
+				]
+			]
+		]
+	]
+	add-to-method-list setter
+	new-object: last object-stack
+	append new-object/methods setter
+]
+
+; Just a list of field names
+get-fields-list: [
+	any [<word> keep string! END-OF-STATEMENT]
+]
+
+; e.g.
+; getter
+; 	x : 4
+object-field-getter: [
+	<word> ["getter" | "getters"] ahead block! collect set name-list into get-fields-list
+	(
+		foreach name name-list [
+			create-a-getter name
+		]
+	)
+]
+
+; e.g.
+; setter
+; 	x : 4
+object-field-setter: [
+	<word> ["setter" | "setters"] ahead block! collect set name-list into get-fields-list
+		(
+		foreach name name-list [
+			create-a-setter name
+		]
+	)
+]
+
+; e.g.
+; getter/setter
+; 	x : 4
+object-field-getter-setter: [
+	<multi-word> ["getter/setter" | "getters/setters"] ahead block! collect set name-list into get-fields-list
+	(
+		foreach name name-list [
+			create-a-getter name
+			create-a-setter name
 		]
 	)
 ]
@@ -358,7 +448,7 @@ method-signature: [ ; same as function-signature, but different actions
 	opt [
 		<colon> <lparen> <word> set param-name string! <rparen> ; for setter methods
 		(
-			append new-method/template "*colon*"
+			append new-method/template "set"
 			append new-method/template "|"
 			append new-method/formal-parameters param-name
 		) 
@@ -397,7 +487,7 @@ setter-call: [
 		)
 		<word> keep string! 
 		<colon> 
-		keep ("*colon*")
+		keep ("set")
 		keep ("|")
 		expression
 		[end | ahead END-OF-FN-CALL]

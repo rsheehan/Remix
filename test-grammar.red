@@ -39,8 +39,9 @@ files: [
 	%gr/arrows.rem
 	%gr/squares.rem
 	%gr/bounce.rem
-	%temp.rem
 	%ob/obj-demo.rem
+	%ex/test35.rem
+	%temp.rem
 ]
 
 foreach file files [

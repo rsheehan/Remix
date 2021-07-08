@@ -176,7 +176,7 @@ create a maze cell at (the-row) and (the-col) :
 			centre-y + ((2 × the-row) - (ROWS + 1)) × SIZE
 		}
 
-		(my) distance :
+		getter
 			distance
 
 		set (my) distance to (new-distance) :

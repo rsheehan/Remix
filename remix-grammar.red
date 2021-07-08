@@ -154,12 +154,44 @@ object-body: [
 	any [
 		object-field END-OF-STATEMENT
 		|
+		object-field-getter END-OF-STATEMENT
+		|
+		object-field-setter END-OF-STATEMENT
+		|
+		object-field-getter-setter END-OF-STATEMENT
+		|
 		object-method
 	]
 ]
 
 object-field: [
 	<word> string! <colon> expression
+]
+
+; Just a list of field names
+get-fields-list: [
+	any [<word> string! END-OF-STATEMENT]
+]
+
+; e.g.
+; getter
+; 	x : 4
+object-field-getter: [
+	<word> ["getter" | "getters"] ahead block! into get-fields-list
+]
+
+; e.g.
+; setter
+; 	x : 4
+object-field-setter: [
+	<word> ["setter" | "setters"] ahead block! into get-fields-list
+]
+
+; e.g.
+; getter/setter
+; 	x : 4
+object-field-getter-setter: [
+	<multi-word> ["getter/setter" | "getters/setters"] ahead block! into get-fields-list
 ]
 
 object-method: [
@@ -212,8 +244,8 @@ function-call: [
 
 			; the next 4 are block parameters
 
-			| <LBRACKET> ahead block! into [deferred-block-of-statements] <*LINE> <RBRACKET> 
-			| ahead block! [into deferred-block-of-statements] opt [<*LINE> <cont>]
+			| <LBRACKET> ahead block! into deferred-block-of-statements <*LINE> <RBRACKET> 
+			| ahead block! into deferred-block-of-statements opt [<*LINE> <cont>]
 			| <LBRACKET> deferred-block-of-statements <RBRACKET> 
 			| <lparen> <LBRACKET> deferred-block-of-statements <RBRACKET> <rparen>
 
