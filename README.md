@@ -13,6 +13,24 @@ is the function signature for a function which can be called with any of the fol
     pause turtle for 6 secs
     pause turtle for 1 sec
 
+Objects are created using the following syntax, and can have optional automatically generated getter and setter methods for fields (which are otherwise private). Methods must include a "me" or "my" parameter indicating the receiver.
+
+    create
+        field1 : value
+        field2 : value
+
+        getter
+            field1
+
+        setter
+            field
+
+        (my) method1 :
+            body of method
+
+        another type of method on (me) with (param) :
+            body of method
+
 Here is an animated random landscape program in Remix.
 
     

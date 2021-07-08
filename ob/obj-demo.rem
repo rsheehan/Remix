@@ -3,6 +3,8 @@ An Object Demo.
 make person called (the-name) of age (years) :
 	create
 		name : the-name
+		
+		The following methods are explicit getters and setters.
 		(my) name :
 			name
 		(my) name : (new-name) :

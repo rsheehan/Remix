@@ -87,7 +87,7 @@ choose from (start) to (finish) :
 
 solve the maze from (start) to (finish) :
 	beginning : cell at (finish) ; going backwards
-	set (beginning) distance to 0
+	(beginning) distance : 0
 	move outwards from (beginning)
 	plot the solution
 
@@ -120,7 +120,7 @@ move outwards from (cell) :
 
 move (direction) from (cell) with (new-distance) :
 	new-cell : cell going (direction) from (cell)
-	set (new-cell) distance to (new-distance)
+	(new-cell) distance : new-distance
 	move outwards from (new-cell)
 
 cell going (direction) from (cell) :
@@ -176,11 +176,8 @@ create a maze cell at (the-row) and (the-col) :
 			centre-y + ((2 × the-row) - (ROWS + 1)) × SIZE
 		}
 
-		(my) distance :
+		getter/setter
 			distance
-
-		set (my) distance to (new-distance) :
-			distance : new-distance
 
 		remove the right wall in (me) :
 			right-open : true

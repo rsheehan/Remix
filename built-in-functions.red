@@ -443,13 +443,6 @@ get-item: function [
 			]
 			result: list/:index
 		]
-		; object? list [
-		; 	result: attempt [list/:index-key]
-		; 	unless result [
-		; 		print rejoin [{Error: object "} quote list {" does not have "} index-key {".}]
-		; 		quit
-		; 	]
-		; ]
 	] 
 	if any [
 		paren? result 
