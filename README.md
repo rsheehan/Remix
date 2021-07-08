@@ -1,7 +1,7 @@
 # Remix
 <img width="410" alt="Landscape" src="https://user-images.githubusercontent.com/3459269/118350983-80372780-b5ad-11eb-80ba-7072962a29ef.png">
 
-Remix is a flexible programming language based around the idea of mix-fix (as opposed to post-fix) function names, with as many space-separated words and parameters as you want. This means that there is a very straightforward path from designing a program in natural language pseudocode and transitioning it to running Remix code.
+Remix is a flexible programming language based around the idea of mix-fix (as opposed to pre-fix or post-fix) function names, with as many space-separated words and parameters as you want. This means that there is a very straightforward path from designing a program in natural language pseudocode and transitioning it to running Remix code.
 
 To keep function calls as readable as possible, there can be many names for the same function. Multiple names are defined with a simple syntax. e.g.
 
