@@ -2,7 +2,11 @@
 make person called (the-name) of age (years) :
 	create
 		name : the-name
+		(my) name : 
+			name
 		age : years
+		(my) age :
+			age
 
 		say hi to (me) :
 			show {"Hello ", name, ". "}
@@ -12,17 +16,17 @@ make person called (the-name) of age (years) :
 			age : age + 1
 
 		(other) is this many years older than (me) :
-			age - other [age]
+			age - (other) age
 
 		(me) same as (other) :
 			all of {
-				[name = other [name]],
-				[age = other [age]]
+				[name = (other) name],
+				[age = (other) age]
 			}
 
 show which is older (person-a) or (person-b) :
 	age-difference : (person-a) is this many years older than (person-b)
-	{ person-a [name], " is ", age-difference, " years older than ", person-b [name]} ↲
+	{ (person-a) name, " is ", age-difference, " years older than ", (person-b) name} ↲
 	↲
 
 warren : make person called "Warren" of age 25
@@ -35,12 +39,11 @@ show which is older (warren) or (josephine)
 
 joseph : make person called "Josephine" of age 32
 
-show (josephine [name])
-if ((josephine) same as (joseph)) [
+show ((josephine) name)
+if ((josephine) same as (joseph))
 	show " is the same as "
-] otherwise [
+… otherwise
 	show " is different from "
-]
-show (joseph [name]) ↲
+show ((joseph) name) ↲
 
 (type of (warren)) ↲

@@ -68,6 +68,7 @@ statement: [
 		assignment-statement 
 		| return-statement
 		| redo-statement
+		| setter-call
 		| expression
 	]
 	END-OF-STATEMENT
@@ -170,19 +171,31 @@ object-method: [
 
 method-signature: [ ; same as function-signature, but different actions
 	some [
+		<word> string!
+		|
+		<multi-word> string!
+		|
 		[
-			<lparen> <rparen>
+			<lparen> <word> ["me" | "my"] <rparen>
 			|
 			<lparen> <word> string! <rparen> 
 		]
-		|
-		<word> string!	
 	]
+	opt [<colon> <lparen> <word> string! <rparen>] ; for setter methods
 ]
 
 method-statements: [ ; same as function-statements, but different actions
 	ahead block! 
 	into block-of-statements
+]
+
+; e.g.
+; (x) number : 7
+setter-call: [
+	; Not designed to allow callee to be "me" or "my".
+	; Assuming if in the object we just use the field directly.
+	<lparen> <word> string! <rparen> <word> string! <colon> expression
+	[end | ahead END-OF-FN-CALL]
 ]
 
 function-call: [

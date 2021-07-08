@@ -108,19 +108,8 @@ statement: [
 		assignment-statement ; this keeps an "assignment-stmt"
 		| return-statement ; this keeps a "return-stmt"
 		| redo-statement ; this keeps a "redo-stmt"
+		| setter-call ; this keeps the function call to a setter method
 		| expression ; this keeps an expression - a variety of statements
-		; collect set expr expression
-		; (
-		; 	expr: first expr
-		; 	attempt [
-		; 		if expr/type <> "function" [
-		; 			fnc-template: copy ["|"]
-		; 			append fnc-template expr
-		; 			probe fnc-template
-		; 		]
-		; 	]
-		; )
-		; keep (expr)
 	]
 	END-OF-STATEMENT
 ]
@@ -366,6 +355,14 @@ method-signature: [ ; same as function-signature, but different actions
 			param-position: param-position + 1
 		) 
 	]
+	opt [
+		<colon> <lparen> <word> set param-name string! <rparen> ; for setter methods
+		(
+			append new-method/template "*colon*"
+			append new-method/template "|"
+			append new-method/formal-parameters param-name
+		) 
+	]
 	; check to see if one of the parameters is the object reference
 	(
 		either self-position = 0 [
@@ -382,6 +379,31 @@ method-statements: [
 	collect set method-block into block-of-statements ; add the block to the method-object
 	(
 		new-method/block: first method-block
+	)
+]
+
+; e.g.
+; (x) number : 7
+setter-call: [
+	; Not designed to allow callee to be "me" or "my".
+	; Assuming if in the object we just use the field directly.
+	collect set fnc-template [
+		<lparen> <word> set callee string! <rparen>
+		keep ("|")
+		keep (
+			make variable [
+				name: callee
+			]		
+		)
+		<word> keep string! 
+		<colon> 
+		keep ("*colon*")
+		keep ("|")
+		expression
+		[end | ahead END-OF-FN-CALL]
+	]
+	keep (
+		assist-create-function-call fnc-template
 	)
 ]
 
@@ -410,7 +432,6 @@ function-call: [
 					(
 						expr: string
 					)
-
 					| <number> set num number! 
 					(
 						expr: num

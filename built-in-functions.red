@@ -413,7 +413,7 @@ get-item: function [
 	{ Get an item from a list, map or object. 
 	  The index-key can either be an index or a key. 
 	  Currently doesn't throw an error if passed a range. }
-	list [hash! map! object!]
+	list [hash! map!] ; no longer works with object!
 	index-key
 ][
 	case [
@@ -443,13 +443,13 @@ get-item: function [
 			]
 			result: list/:index
 		]
-		object? list [
-			result: attempt [list/:index-key]
-			unless result [
-				print rejoin [{Error: object "} quote list {" does not have "} index-key {".}]
-				quit
-			]
-		]
+		; object? list [
+		; 	result: attempt [list/:index-key]
+		; 	unless result [
+		; 		print rejoin [{Error: object "} quote list {" does not have "} index-key {".}]
+		; 		quit
+		; 	]
+		; ]
 	] 
 	if any [
 		paren? result 
