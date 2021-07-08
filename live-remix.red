@@ -120,6 +120,9 @@ write-file: function [/extern memory-list] [
 ]
 
 count-enters: function[text /extern new-line /extern detection-rate] [
+	; print save-rate/text
+	print save-rate
+
 	length: (length? split text newline)
 	if (length = (new-line + detection-rate)) [
 	; if not (length = new-line) [
@@ -156,14 +159,15 @@ view/tight [
 		below 
 
 		; drop-down: drop-down 120 "Choose Code" data []
-		drop-down: drop-down 120 "Choose Code" data []
+		save-rate: drop-down 120 "Save Rate" data ["5" "10" "15" "20" "Never"]
+		drop-down: drop-down 120 "Code Versions" data []
 
-		add-version: button 120 "Save Version" [
-				attempt [
-					save-text commands/text
-					append drop-down/data (to-string (length? memory-list))
-				]
-			]
+		; add-version: button 120 "Save Version" [
+		; 		attempt [
+		; 			save-text commands/text
+		; 			append drop-down/data (to-string (length? memory-list))
+		; 		]
+		; 	]
 		show-version: button 120 "Show" [version-selection]
 
 
