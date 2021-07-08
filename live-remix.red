@@ -112,22 +112,37 @@ write-file: function [/extern memory-list] [
 		print "No Versions Saved"
 	] [
 		save %Code.red memory-list/(length? memory-list)	
-		
+		write/append %Code.red "TEST"
 		; attempt [
 		; 	run-remix commands/text 
 		; ]
 	]
 ]
+
+count-enters: function[text /extern new-line] [
+	; print text
+	length: (length? split text newline)
+
+	if not (length = new-line) [
+		new-line: length
+		print "different"
+	] 
+]
+
+new-line: 1
+
 view/tight [
 	title "Live"
 	commands: area 
 		400x300 
 		on-key-up [
+			count-enters commands/text
 			attempt [
 				run-remix commands/text 
 			]
 
 		]
+
 	output-area: area 
 		400x300
 	version-area: panel
@@ -152,8 +167,8 @@ view/tight [
 			append drop-down/data (copy new-name/text)
 			]
 		latest: button 120 "Latest" [latest-version]
-		next: button 120 "/\ (Next)" [version-change "+"]
-		previous: button 120 "\/ (Previous)" [version-change "-"]
+		next: button 120 "(Next)" [version-change "+"]
+		previous: button 120 "(Previous)" [version-change "-"]
 		write: button 120 "Write to File" [write-file]
 
 		;  for testing
