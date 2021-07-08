@@ -185,10 +185,12 @@ create-red-expression: function [
 			foreach method expression/methods [
 				; transpile each of the methods
 				body: create-method-body method field-names
-				name: to-function-name method/template
-				fnc: reduce [to-set-word name]
-				append fnc body
-				append object-code fnc
+				names: to-function-def-names method/template
+				foreach name names [
+					fnc: reduce [to-set-word name]
+					append fnc body
+					append object-code fnc
+				]
 			]
 			object-code: append/only copy [object] object-code
 			return to-paren object-code

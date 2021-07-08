@@ -335,6 +335,18 @@ method-signature: [ ; same as function-signature, but different actions
 		self-position: 0
 	)
 	some [ ; gather the signature
+		<word> set name-part string!
+		(
+			append new-method/template name-part
+		)
+		|
+		<multi-word> set multi-name-part string!
+		(
+			; split the multi-name-part into its two strings
+			multi-names: split multi-name-part "/"
+			append/only new-method/template multi-names
+		)
+		|
 		[
 			<lparen> <word> ["me" | "my"] <rparen> ; the object reference
 			(
@@ -353,11 +365,6 @@ method-signature: [ ; same as function-signature, but different actions
 			append new-method/formal-parameters param-name
 			param-position: param-position + 1
 		) 
-		|
-		<word> set name-part string!
-		(
-			append new-method/template name-part
-		)
 	]
 	; check to see if one of the parameters is the object reference
 	(

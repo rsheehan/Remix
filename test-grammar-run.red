@@ -41,43 +41,12 @@ files: [
 	"ex/test31.rem"
 	"ex/test32.rem"
 	"ex/test33.rem"
+	"ex/test34.rem"
 	; "ex/drawing.rem"
 ]
 
 foreach file files [
 	command: append copy "remix " file ;"red remix-test.red " file
 	call/console/shell command
-	; reload the whole interpreter
-	; do %remix-grammar-AST.red
-
-	; print ["^/FILENAME:" file]
-
-	; ; print "SOURCE CODE"
-	; ; print read file
-
-	; source: append copy "^/" read %standard-lib.rem
-	; source: append append source read file copy "^/"
-
-	; first-pass: parse source split-words
-	; clean-lex: tidy-up first-pass
-	; lex-symbols: spit-out-symbols clean-lex
-
-	; ; print "^/LEX OUTPUT"
-	; ; ?? lex-symbols
-
-	; ; print "^/PARSE"
-	; ast: parse lex-symbols [collect program]
-
-	; do %transpiler.red
-
-	; ; print "^/TRANSPILED OUTPUT"
-
-	; transpile-functions function-map
-	; red-code: transpile-main ast
-	; ; print []
-	; ; probe red-code
-
-	; print "^/PROGRAM OUTPUT"
-	; do red-code
 	print "DONE^/"
 ]

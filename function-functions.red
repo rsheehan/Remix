@@ -38,17 +38,19 @@ method-list: copy [] ; all methods, so we can check if a function name is unique
 
 add-to-method-list: function [
 	{ Add new-method to the method list. 
-	  Currently an error if a function exists with the same name. }
+	  If the same name already exists we require the "me" parameter to be in the same place. }
 	new-method
 ][
-	name: to-function-name new-method/template
-	position: select method-list name
-	either position = none [
-		append append method-list name new-method/self-position
-	][
-		if position <> new-method/self-position [
-			print rejoin [{Error: method "} name {" inconsistent object positions.}]
-			quit
+	names: to-function-def-names new-method/template
+	foreach name names [
+		position: select method-list name
+		either position = none [
+			append append method-list name new-method/self-position
+		][
+			if position <> new-method/self-position [
+				print rejoin [{Error: method "} name {" inconsistent object positions.}]
+				quit
+			]
 		]
 	]
 ]
@@ -94,7 +96,7 @@ to-function-name: function [
 ]
 
 to-function-def-names: function [
-	{ Convert a template, a block of name parts and parameter calls, into a string. 
+	{ Convert a template, a block of name parts and parameter calls, into a block of strings. 
 	  This deals with multi-names. }
 	block [block!]  "The block of parts and parameter blocks"
 ][
@@ -107,7 +109,7 @@ to-function-def-names: function [
 				] 
 			]
 			block? part [ ; only two options for each word currently
-				append names copy/deep names
+				append names copy/deep names ; double the number of names so far
 				first-option: first part
 				i: 1
 				while [i <= ((length? names) / 2)][
@@ -118,7 +120,7 @@ to-function-def-names: function [
 				]
 				second-option: second part
 				while [i <= (length? names)][
-					join-name names/:i second-option
+					join-name names/(i) second-option
 					i: i + 1
 				]
 			]

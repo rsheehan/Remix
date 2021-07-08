@@ -1,0 +1,10 @@
+create number (n) :
+	create
+		number : n
+
+		double /num a/b (me) :
+			number + number
+
+a: create number 23
+showline (double a (a))
+showline (double num b (a))
