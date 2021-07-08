@@ -120,13 +120,12 @@ write-file: function [/extern memory-list] [
 ]
 
 count-enters: function[text /extern new-line] [
-	; print text
 	length: (length? split text newline)
-
 	if not (length = new-line) [
 		new-line: length
-		print "different"
+		return true
 	] 
+	return false
 ]
 
 new-line: 1
@@ -136,7 +135,12 @@ view/tight [
 	commands: area 
 		400x300 
 		on-key-up [
-			count-enters commands/text
+			if count-enters commands/text [
+				attempt [
+					save-text commands/text
+					append drop-down/data (to-string (length? memory-list))
+				]
+			]
 			attempt [
 				run-remix commands/text 
 			]
