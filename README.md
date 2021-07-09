@@ -23,7 +23,7 @@ Objects are created using the following syntax, and can have optional automatica
             field1
 
         setter
-            field
+            field2
 
         (my) method1 :
             body of method
