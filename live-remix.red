@@ -60,11 +60,10 @@ write-file: function [/extern memory-list] [
 	either (length? memory-list) = 0 [
 		print "No Versions Saved"
 	] [
-		save %Code.red memory-list/(length? memory-list)	
-		write/append %Code.red "TEST"
-		; attempt [
-		; 	run-remix commands/text 
-		; ]
+		; save %Code.red memory-list/(length? memory-list)
+		; write/lines %Code.red memory-list/(length? memory-list)
+		; write/lines %testfile.txt ["a line" "another line"] EXAMPLE
+		print "TO BE COMPLETED"	
 	]
 ]
 
@@ -129,8 +128,6 @@ version-change: function [change] [
 ]
 
 count-enters: function[text /extern new-line /extern detection-rate /extern save-mode] [
-	print detection-rate
-
 	length: (length? split text newline)
 	if save-mode = true [
 		if (length >= (new-line + detection-rate)) [
