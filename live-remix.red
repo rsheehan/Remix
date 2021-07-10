@@ -28,6 +28,7 @@ run-remix: function [
 	{ Execute the remix code in "code". 
 	  Put the output in the output area. }
 	code [string!]
+	/running-first-time
 	/extern successful-parse
 ][
 	; N.B. remember to include the standard-lib
@@ -48,7 +49,10 @@ run-remix: function [
 	transpile-functions function-map
 	red-code: transpile-main ast
 	; run
-	output-area/text: copy ""
+	; use output-area only after it has been defined
+	if not running-first-time [
+		output-area/text: copy ""
+	]
 	do red-code
 ]
 
@@ -156,6 +160,13 @@ change-detection-rate: function[/extern detection-rate /extern save-mode][
 	
 ]
 
+; run (load into Red runtime) the standard remix library
+stdlib: read %standard-lib.rem
+run-remix/running-first-time stdlib
+
+; loading the graphics statements which should be executed everytime
+precursor-statements: read %precusor-graphics-statements.rem
+
 view/tight [
 	title "Live"
 	commands: area 
@@ -168,6 +179,9 @@ view/tight [
 				]
 			]
 			attempt [
+				; first execute the necessary graphics related statements
+				run-remix precursor-statements
+				; run the code
 				run-remix commands/text 
 			]
 

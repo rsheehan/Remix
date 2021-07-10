@@ -1,0 +1,55 @@
+Graphics statements needing to be executed before any graphics code.
+========================================
+
+=== Set up paper ===
+
+std-width : 800
+std-height : 600
+
+centre : {
+	std-width ÷ 2,
+	std-height ÷ 2
+}
+
+centre-x : centre [1]
+centre-y : centre [2]
+
+========================================
+
+=== Pens ===
+
+black-pen : {
+	width  : 3,
+	colour : black
+}
+
+========================================
+
+=== Shape Operations ===
+
+shape : {
+	position : {0, 0},
+	heading  : 0, ; straight up
+	size     : 5,
+	colour   : black,
+	points   : {}
+}
+
+========================================
+
+=== Turtle Operations and Objects ===
+
+turtle: make shape of {
+	{ 0, 1},
+	{-2, 2},
+	{ 0,-2},
+	{ 2, 2}
+} with size 5
+
+turtle [show] : true
+
+turtle-commands : {} ; the list of sub commands to execute each clock tick
+Groups enable multiple commands to be drawn in the same animation tick.
+current-group : turtle-commands ; group to currently add commands to 
+
+turtle-rate : 60
