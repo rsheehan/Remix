@@ -62,7 +62,7 @@ run-remix/running-first-time stdlib
 
 ; Setting up the graphics area by overriding the associated func
 setup-paper: func [
-    { Prepare the paper and drawing instructions.
+    { Overridden version - Prepare the paper and drawing instructions.
       At the moment I am using a 2x resolution background for the paper. }
     colour [tuple!]
     width [integer!]
@@ -83,7 +83,7 @@ setup-paper: func [
 ; Allowing functions to be redefined temporarily so that re-execution of code
 ; does not create trouble
 insert-function: function [
-    { Insert a function into the function map table }
+    { Overridden version - Insert a function into the function map table }
     func-object [object!]   {the function object}
 ][
     name: to-function-name func-object/template
@@ -156,5 +156,7 @@ view/tight [
 	on-down [
 		visualize-clicked-points event/offset/x event/offset/y
 	]
+	; setting up the graphics panel so that "on standard paper" will not
+	; necessarily need to be called before the attempt to generate any graphics
 	do [setup-paper 255.255.255 400 600]
 ]
