@@ -111,18 +111,20 @@ version-change: function [change] [
 	either (length? memory-list) = 0 [
 		print "No Versions Made"
 	] [
-		either change = "+" [
-			if (to-integer (version-select/selected)) < (length? memory-list) [
-				version-select/selected: ((version-select/selected) + 1)
+		if version-select/selected <> none [
+			either change = "+" [
+				if (to-integer (version-select/selected)) < (length? memory-list) [
+					version-select/selected: ((version-select/selected) + 1)
+				]
+			] [
+				if (to-integer (version-select/selected)) > 1 [
+					version-select/selected: ((version-select/selected) - 1)
+				]
 			]
-		] [
-			if (to-integer (version-select/selected)) > 1 [
-				version-select/selected: ((version-select/selected) - 1)
+			commands/text: copy (memory-list/(to-integer (version-select/selected) ))
+			attempt [
+				run-remix commands/text 
 			]
-		]
-		commands/text: copy (memory-list/(to-integer (version-select/selected) ))
-		attempt [
-			run-remix commands/text 
 		]
 	]
 ]
