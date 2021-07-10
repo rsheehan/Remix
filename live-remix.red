@@ -52,6 +52,29 @@ run-remix: function [
 	do red-code
 ]
 
+; code for writing to a file
+
+write-file: function [/extern memory-list] [
+	; save %Code.red memory-list/(length? memory-list)
+
+	either (length? memory-list) = 0 [
+		print "No Versions Saved"
+	] [
+		save %Code.red memory-list/(length? memory-list)	
+		write/append %Code.red "TEST"
+		; attempt [
+		; 	run-remix commands/text 
+		; ]
+	]
+]
+
+
+; code for version manipulation
+
+new-line: 1
+detection-rate: 5
+save-mode: true
+
 memory-list: []
 
 save-text: function [text][
@@ -60,10 +83,10 @@ save-text: function [text][
 ]
 
 version-selection: function [] [
-	either drop-down/selected = none [
+	either version-select/selected = none [
 		print "Nothing selected"
 	] [
-		commands/text: copy (memory-list/(to-integer (drop-down/selected))) ; allows non-integer values
+		commands/text: copy (memory-list/(to-integer (version-select/selected))) ; allows non-integer values
 	
 		; update output of associated code
 		attempt [
@@ -90,50 +113,45 @@ version-change: function [change] [
 		print "No Versions Made"
 	] [
 		either change = "+" [
-			if (to-integer (drop-down/selected)) < (length? memory-list) [
-				drop-down/selected: ((drop-down/selected) + 1)
+			if (to-integer (version-select/selected)) < (length? memory-list) [
+				version-select/selected: ((version-select/selected) + 1)
 			]
 		] [
-			if (to-integer (drop-down/selected)) > 1 [
-				drop-down/selected: ((drop-down/selected) - 1)
+			if (to-integer (version-select/selected)) > 1 [
+				version-select/selected: ((version-select/selected) - 1)
 			]
 		]
-		commands/text: copy (memory-list/(to-integer (drop-down/selected) ))
+		commands/text: copy (memory-list/(to-integer (version-select/selected) ))
 		attempt [
 			run-remix commands/text 
 		]
 	]
 ]
 
-write-file: function [/extern memory-list] [
-	; save %Code.red memory-list/(length? memory-list)
-
-	either (length? memory-list) = 0 [
-		print "No Versions Saved"
-	] [
-		save %Code.red memory-list/(length? memory-list)	
-		write/append %Code.red "TEST"
-		; attempt [
-		; 	run-remix commands/text 
-		; ]
-	]
-]
-
-count-enters: function[text /extern new-line /extern detection-rate] [
-	; print save-rate/text
-	print save-rate
+count-enters: function[text /extern new-line /extern detection-rate /extern save-mode] [
+	print detection-rate
 
 	length: (length? split text newline)
-	if (length = (new-line + detection-rate)) [
-	; if not (length = new-line) [
-		new-line: length
-		return true
-	] 
+	if save-mode = true [
+		if (length >= (new-line + detection-rate)) [
+			new-line: length
+			return true
+		] 
+	]
 	return false
 ]
 
-new-line: 1
-detection-rate: 5
+change-detection-rate: function[/extern detection-rate /extern save-mode][
+	either save-rate/text = "Never" [
+		save-mode: false
+	] [
+		save-mode: true
+		attempt [
+			detection-rate: to-integer save-rate/text
+		]
+	]
+	
+]
 
 view/tight [
 	title "Live"
@@ -143,7 +161,7 @@ view/tight [
 			if count-enters commands/text [
 				attempt [
 					save-text commands/text
-					append drop-down/data (to-string (length? memory-list))
+					append version-select/data (to-string (length? memory-list))
 				]
 			]
 			attempt [
@@ -157,31 +175,21 @@ view/tight [
 	version-area: panel
 		1x300
 		below 
-
-		; drop-down: drop-down 120 "Choose Code" data []
-		save-rate: drop-down 120 "Save Rate" data ["5" "10" "15" "20" "Never"]
-		drop-down: drop-down 120 "Code Versions" data []
-
-		; add-version: button 120 "Save Version" [
-		; 		attempt [
-		; 			save-text commands/text
-		; 			append drop-down/data (to-string (length? memory-list))
-		; 		]
-		; 	]
+		save-rate: drop-down 120 "Save Rate" data ["5" "10" "15" "20" "Never"] on-change [
+			print "change"
+			change-detection-rate
+		]
+		version-select: drop-down 120 "Code Versions" data []
 		show-version: button 120 "Show" [version-selection]
 
 
 		new-name: area 120x20
 		rename-name: button 120 "Name Version" [
 			save-text commands/text
-			append drop-down/data (copy new-name/text)
+			append version-select/data (copy new-name/text)
 			]
 		latest: button 120 "Latest" [latest-version]
 		next: button 120 "(Next)" [version-change "+"]
 		previous: button 120 "(Previous)" [version-change "-"]
 		write: button 120 "Write to File" [write-file]
-
-		;  for testing
-		; test2: button 120 "Print memory naming" [print drop-down/data]
-		; test: button 120 "Print memory list" [print memory-list]
 ]
