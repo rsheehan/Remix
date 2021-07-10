@@ -137,6 +137,10 @@ count-enters: function[text /extern new-line /extern detection-rate /extern save
 			new-line: length
 			return true
 		] 
+		if (length <= (new-line - detection-rate))[
+			new-line: length
+			return true
+		]
 	]
 	return false
 ]
@@ -156,7 +160,7 @@ change-detection-rate: function[/extern detection-rate /extern save-mode][
 view/tight [
 	title "Live"
 	commands: area 
-		400x300 
+		400x600 
 		on-key-up [
 			if count-enters commands/text [
 				attempt [
@@ -171,9 +175,9 @@ view/tight [
 		]
 
 	output-area: area 
-		400x300
+		400x600
 	version-area: panel
-		1x300
+		1x600
 		below 
 		save-rate: drop-down 120 "Save Rate" data ["5" "10" "15" "20" "Never"] on-change [
 			print "change"
@@ -182,14 +186,16 @@ view/tight [
 		version-select: drop-down 120 "Code Versions" data []
 		show-version: button 120 "Show" [version-selection]
 
-
+		empty: text
 		new-name: area 120x20
 		rename-name: button 120 "Name Version" [
 			save-text commands/text
 			append version-select/data (copy new-name/text)
 			]
+		return
 		latest: button 120 "Latest" [latest-version]
 		next: button 120 "(Next)" [version-change "+"]
 		previous: button 120 "(Previous)" [version-change "-"]
+		empty: text
 		write: button 120 "Write to File" [write-file]
 ]
