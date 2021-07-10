@@ -386,7 +386,7 @@ Swap the values of "a" and "b".
 
 === Set up paper ===
 
-std-width : 800
+std-width : 400
 std-height : 600
 
 centre : {
