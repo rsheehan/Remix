@@ -193,7 +193,6 @@ view/tight [
 		1x600
 		below 
 		save-rate: drop-down 120 "Save Rate" data ["5" "10" "15" "20" "Never"] on-change [
-			print "change"
 			change-detection-rate
 		]
 		version-select: drop-down 120 "Code Versions" data []
