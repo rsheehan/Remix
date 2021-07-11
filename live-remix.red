@@ -103,7 +103,7 @@ latest-version: function [] [
 		print "No Versions Made"
 	] [
 		commands/text: copy (memory-list/(to-integer (length? memory-list))) ; allows non-integer values
-	
+		version-select/selected: (length? memory-list)
 		; update output of associated code
 		attempt [
 			run-remix commands/text 
@@ -228,11 +228,10 @@ view/tight [
 		1x600
 		below 
 		save-rate: drop-down 120 "Save Rate" data ["5" "10" "15" "20" "Never"] on-change [
-			print "change"
 			change-detection-rate
 		]
 		version-select: drop-down 120 "Code Versions" data []
-		show-version: button 120 "Show" [version-selection]
+		show-version: button 120 "Show Selected Version" [version-selection]
 
 		empty: text
 		new-name: area 120x20
