@@ -56,7 +56,7 @@ run-remix: function [
 	do red-code
 ]
 
-; code for writing to a file
+;;; code for writing to a file
 
 write-file: function [/extern memory-list] [
 	; save %Code.red memory-list/(length? memory-list)
@@ -71,20 +71,21 @@ write-file: function [/extern memory-list] [
 	]
 ]
 
+;;; code for version manipulation
 
-; code for version manipulation
+new-line: 1 ; the 'global' amount of lines in the commands text area
+detection-rate: 5 ; default autosaving rate
+save-mode: true ; boolean to consider if autosaving is desired
 
-new-line: 1
-detection-rate: 5
-save-mode: true
+memory-list: [] ; series of strings to store the commands at different verseions
 
-memory-list: []
-
+; saving a current version into the list
 save-text: function [text][
 	append memory-list (copy text)
 	exit
 ]
 
+; function to display the selected version
 version-selection: function [] [
 	either version-select/selected = none [
 		print "Nothing selected"
@@ -98,6 +99,7 @@ version-selection: function [] [
 	]
 ]
 
+; function to display the latest TODO refine the function above with it to make this file less cluttered
 latest-version: function [] [
 	either (length? memory-list) = 0 [
 		print "No Versions Made"
@@ -111,10 +113,12 @@ latest-version: function [] [
 	]
 ]
 
+; function to display the next/previous function TODO refine this function with the two above for less clutter
 version-change: function [change] [
 	either (length? memory-list) = 0 [
 		print "No Versions Made"
 	] [
+		; ensure a version is selected in the first place
 		if version-select/selected <> none [
 			either change = "+" [
 				if (to-integer (version-select/selected)) < (length? memory-list) [
@@ -133,6 +137,7 @@ version-change: function [change] [
 	]
 ]
 
+; function to check if a new version should be saved, given the parameters provided
 count-enters: function[text /extern new-line /extern detection-rate /extern save-mode] [
 	length: (length? split text newline)
 	if save-mode = true [
@@ -148,6 +153,7 @@ count-enters: function[text /extern new-line /extern detection-rate /extern save
 	return false
 ]
 
+; function to modify the save rate
 change-detection-rate: function[/extern detection-rate /extern save-mode][
 	either save-rate/text = "Never" [
 		save-mode: false
