@@ -222,6 +222,8 @@ view/tight [
 
 	output-area: area 
 		400x600
+	paper: base 400x600 on-time [do-draw-animate]
+
 	version-area: panel
 		1x600
 		below 
@@ -244,5 +246,4 @@ view/tight [
 		previous: button 120 "(Previous)" [version-change "-"]
 		empty: text
 		write: button 120 "Write to File" [write-file]
-	paper: base 400x600 on-time [do-draw-animate]
 ]
