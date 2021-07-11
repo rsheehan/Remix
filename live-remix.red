@@ -189,6 +189,8 @@ view/tight [
 
 	output-area: area 
 		400x600
+	paper: base
+		400x600 on-time [do-draw-animate]
 	version-area: panel
 		1x600
 		below 
