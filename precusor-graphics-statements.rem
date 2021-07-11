@@ -3,7 +3,7 @@ Graphics statements needing to be executed before any graphics code.
 
 === Set up paper ===
 
-std-width : 800
+std-width : 400
 std-height : 600
 
 centre : {
