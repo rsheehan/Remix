@@ -26,17 +26,17 @@ extend (person) (years) years old :
 			showline {"Hi ", name, " you are ", age, " years old."}
 
 create person (a-name) with age (years) :
-	person : create person called (a-name)
-	extend (person) (years) years old
+	extend (create person called (a-name)) (years) years old
 
 person : create person called "Mary"
 showline ((person) name) 
 say hello to (person)
 welcome (person) and bye
-
-nl
-
+↲
 person : extend (person) 25 years old
 showline ((person) age)
 say hello to (person)
 welcome (person) and bye
+↲
+s : create person "Suzie" with age 42
+say hello to (s)
