@@ -461,9 +461,8 @@ set-item: function [
 	{ Set a value for a list or object.
 	  A list uses an index, a map or object uses a key.
 	  Extends the map if the key doesn't already exist.
-	  Doesn't do this for objects at the moment.
 	  Currently doesn't throw an error if passed a range. }
-	list [hash! map! object!]
+	list [hash! map!]
 	index-key
 	value
 ][
@@ -483,12 +482,6 @@ set-item: function [
 				quit
 			]
 			list/:index: value
-		]
-		object? list [
-			unless attempt [list/:index-key: value][
-				print rejoin [{Error: object "} quote list {" does not have "} index-key {".}] 
-				quit
-			]
 		]
 	]
 ]

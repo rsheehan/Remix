@@ -265,9 +265,23 @@ list-element: [
 ;	pr () :
 ;		show (a)
 create-call: [
-	<word> "create" 
+	<word> [
+		"create" 
+		(
+			obj: none
+		)
+		| 
+		"extend" <lparen> <word> set obj-name string! <rparen>
+		(
+			obj: make variable [
+				name: obj-name
+			]
+		)
+	]
 	(
-		new-object: make remix-object [] ; can nest objects
+		new-object: make remix-object [
+			extend-obj: obj
+		] ; can nest objects
 		append object-stack new-object
 	)
 	ahead block! into object-body

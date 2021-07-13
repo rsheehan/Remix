@@ -192,7 +192,12 @@ create-red-expression: function [
 					append object-code fnc
 				]
 			]
-			object-code: append/only copy [object] object-code
+			either expression/extend-obj [ ; extending an object
+				object-name: to-word expression/extend-obj/name
+				object-code: compose/deep [make (object-name) [(object-code)]]
+			][
+				object-code: append/only copy [object] object-code
+			]
 			return to-paren object-code
 		]
 	]

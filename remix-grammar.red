@@ -145,7 +145,7 @@ list-element: [
 ;	pr _ :
 ;		show (a)
 create-call: [
-	<word> "create"
+	<word> ["create" | "extend" <lparen> <word> string! <rparen>]
 	ahead block! into [object-body]
 	[end | ahead END-OF-FN-CALL]
 ]

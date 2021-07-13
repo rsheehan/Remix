@@ -31,6 +31,9 @@ call-back: function [
 	if all [event = 'end match?][
 		successful-parse: true
 	]
+	if all [event = 'end not match?][
+		probe input
+	]
 	true
 ]
 
