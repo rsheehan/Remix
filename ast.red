@@ -59,6 +59,7 @@ remix-object: object [
     fields: [] ; list of key-value pairs?
     methods: [] ; list of method-objects
     extend-obj: none ; the object to extend
+    extend-fields: [] ; fields of an extended object which could be referenced in new methods
 ]
 
 assignment-stmt: object [

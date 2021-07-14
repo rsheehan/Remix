@@ -181,6 +181,10 @@ create-red-expression: function [
 				append field-names field-name
 				append object-code compose [(to-set-word field-name) (create-red-expression field/expression)]
 			]
+			if expression/extend-obj [ ; if extending may have some base fields we need
+				append field-names expression/extend-fields
+				?? field-names
+			]
 			; now the methods
 			foreach method expression/methods [
 				; transpile each of the methods

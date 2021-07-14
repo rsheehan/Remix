@@ -1,4 +1,4 @@
-create person called (a-name) :
+a person called (a-name) :
 	create
 		name : a-name
 
@@ -19,24 +19,29 @@ extend (person) (years) years old :
 		getter
 			age
 
+		base
+			name
+
 		make (me) a year older :
 			age : age + 1
+			name : append (name) to "older "
 
 		say hello to (me) :
 			showline {"Hi ", name, " you are ", age, " years old."}
 
-create person (a-name) with age (years) :
-	extend (create person called (a-name)) (years) years old
+a person called (name) age (years):
+	person : a person called (name)
+	extend (person) (years) years old
 
-person : create person called "Mary"
+person : a person called "Mary"
 showline ((person) name) 
 say hello to (person)
 welcome (person) and bye
-↲
-person : extend (person) 25 years old
+
+person: extend (person) 25 years old
 showline ((person) age)
+make (person) a year older
 say hello to (person)
 welcome (person) and bye
-↲
-s : create person "Suzie" with age 42
-say hello to (s)
+
+say hello to (a person called "Stu" age 56)
