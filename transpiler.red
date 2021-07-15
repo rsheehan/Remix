@@ -106,11 +106,14 @@ create-red-expression: function [
 ][
 	if any [
 		number? expression
-		string? expression
 		logic? expression
 		none? expression
 	][
 		return expression
+	]
+	if string? expression [
+		; currently only necessary if a literal string is appended to repeatedly
+		return to-paren compose [copy (expression)]
 	]
 	switch expression/type [
 		"variable" [

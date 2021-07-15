@@ -41,6 +41,7 @@ welcome (person) and bye
 person: extend (person) 25 years old
 showline ((person) age)
 make (person) a year older
+make (person) a year older
 say hello to (person)
 welcome (person) and bye
 
