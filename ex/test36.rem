@@ -24,7 +24,7 @@ extend (person) (years) years old :
 
 		make (me) a year older :
 			age : age + 1
-			name : append (name) to "older "
+			name : to "older " append (name)
 
 		say hello to (me) :
 			showline {"Hi ", name, " you are ", age, " years old."}

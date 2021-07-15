@@ -58,6 +58,10 @@ not at /the end of /the (list):
 
 ========================================
 
+Alternative append function.
+to (so-far) add/append /on (more) :
+	append (more) to (so-far)
+
 === Input operations ===
 
 Ask for an integer value.
