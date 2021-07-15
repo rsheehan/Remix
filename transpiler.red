@@ -465,9 +465,7 @@ transpile-normal-function: function [
 	fnc-params [block!]
 ][
 	name: to-word fnc-name
-	either the-fnc/red-code [
-		set name do body ; this is where the red equivalent function is defined
-	][
+	unless the-fnc/red-code [
 		body: create-function-body the-fnc fnc-params
 		set name do body ; this is where the red equivalent function is defined
 		the-fnc/red-code: reduce [name]
