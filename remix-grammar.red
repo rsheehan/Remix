@@ -69,6 +69,7 @@ statement: [
 		| return-statement
 		| redo-statement
 		| setter-call
+		| list-element-assignment
 		| expression
 	]
 	END-OF-STATEMENT
@@ -113,8 +114,7 @@ unary-expression: [
 ; at the moment a single word is a function call
 ; after finding the function call we need to see if it should be a variable call instead
 simple-expression: [
-	list-element-assignment
-	| list-element
+	list-element
 	| create-call
 	| function-call 
 	| <word> string!

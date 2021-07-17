@@ -109,6 +109,7 @@ statement: [
 		| return-statement ; this keeps a "return-stmt"
 		| redo-statement ; this keeps a "redo-stmt"
 		| setter-call ; this keeps the function call to a setter method
+		| list-element-assignment ; keeps the function call to list/map assignment
 		| expression ; this keeps an expression - a variety of statements
 	]
 	END-OF-STATEMENT
@@ -183,8 +184,6 @@ unary-expression: [
 ; at the moment a single word is a function call
 ; after finding the function call we need to see if it should be a variable call instead
 simple-expression: [
-	list-element-assignment
-	|
 	list-element
 	|
 	create-call
