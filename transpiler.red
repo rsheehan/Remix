@@ -108,6 +108,7 @@ create-red-expression: function [
 		number? expression
 		logic? expression
 		none? expression
+		expression = 'self
 	][
 		return expression
 	]
@@ -186,7 +187,6 @@ create-red-expression: function [
 			]
 			if expression/extend-obj [ ; if extending may have some base fields we need
 				append field-names expression/extend-fields
-				?? field-names
 			]
 			; now the methods
 			foreach method expression/methods [

@@ -757,7 +757,7 @@ draw-circle-fnc: make function-object [
 
 draw-shape: function [
 	{ Draw a polygon. }
-	shape [map!]
+	shape [object!]
 ][
 	list-of-points: at shape/points 3
 	commands: copy [polygon]
