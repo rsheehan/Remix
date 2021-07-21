@@ -34,12 +34,12 @@ draw a (colour) mountain of max height (max-height) based at (level) :
 	height : random (max-height)
 	peak : std-height - (height + level)
 	width : random 100 + 250
-	mountain : make shape of {
+	mountain : a shape of {
 		{ centre, peak },
 		{ centre + width ÷ 2, std-height - level },
 		{ centre - width ÷ 2, std-height - level }
 	}
-	mountain [colour] : colour
+	(mountain) colour : colour
 	fill (mountain)
 
 ==================

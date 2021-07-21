@@ -37,20 +37,20 @@ a new arrow :
 	arrow
 
 an arrow shape :
-	make shape of (arrow-shape) with size 5
+	a shape of (arrow-shape) with size 5
 
 set the (arrow) colour :
-	arrow [colour] : random colour
+	(arrow) colour : random colour
 
 position the (arrow) at (angle) :
 	x : centre-x + 200 × cosine (angle)
 	y : centre-y - 200 × sine (angle)
-	arrow [position] : { x, y }
-	arrow [heading] : -1 × angle
+	(arrow) position : { x, y }
+	(arrow) heading : -1 × angle
  
 move the (arrows) :
 	for each (arrow) in (arrows)
-		angle : -1 × arrow [heading]
+		angle : -1 × (arrow) heading
 		angle : angle + 2
 		position the (arrow) at (angle)
 		fill (arrow)

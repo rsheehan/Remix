@@ -372,6 +372,8 @@ append-to: function [
 	;     value: reduce to-block at value 3
 	;     value: make hash! compose [_iter 0 (value)]
 	; ]
+	probe append/only list value
+	quit
 	append/only list value
 ]
 
@@ -782,7 +784,7 @@ draw-shape: function [
 ]
 
 draw-shape-fnc: make function-object [
-	template: ["draw" "|"]
+	template: ["draw" "shape" "|"]
 	; formal-parameters ["shape"]
 	red-code: [draw-shape]
 ]

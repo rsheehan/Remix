@@ -6,7 +6,7 @@ on standard paper
 
 === Background squares ===
 
-square : make shape of {
+square : a shape of {
 	{-1, -1},
 	{ 1, -1},
 	{ 1,  1},
@@ -17,10 +17,10 @@ scatter squares
 
 scatter squares :
 	repeat 60 times
-		square [position] : random point
-		square [size]	  : random 100
-		square [colour]   : random colour
-		square [heading]  : random 90
+		(square) position : random point
+		(square) size	  : random 100
+		(square) colour   : random colour
+		(square) heading  : random 90
 		fill (square)
 
 === Foreground balls ===

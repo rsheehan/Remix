@@ -427,7 +427,7 @@ a shape of (shape-points) with size (shape-size):
 		colour   : black
 		points   : shape-points
 
-		setters
+		getters/setters
 			position
 			heading
 			size
@@ -441,11 +441,11 @@ a shape of (shape-points) with size (shape-size):
 
 		draw (me) at (new-position) :
 			position : new-position
-			draw (me)
+			draw shape (me)
 
 		fill (me) :
 			fill colour (colour)
-			draw (me)
+			draw shape (me)
 
 		fill (me) at (new-position) :
 			position : new-position
@@ -474,220 +474,232 @@ animate (rate) times/time per sec (block):
 
 === Turtle Operations and Objects ===
 
-.turtle : a turtle
+turtle : a turtle
 
-.a turtle :
-.	create
-.		shape : {
-.			{ 0, 1},
-.			{-2, 2},
-.			{ 0,-2},
-.			{ 2, 2}
-.		}
-.		position : {0, 0}
-.		size : 5
-.		visible : true
-.		colour : black
+a turtle :
+	turtle-shape : a shape of {
+		{ 0, 1},
+		{-2, 2},
+		{ 0,-2},
+		{ 2, 2}
+	} with size 5
 
-.turtle-commands : {} ; the list of sub commands to execute each clock tick
-.Groups enable multiple commands to be drawn in the same animation tick.
-.current-group : turtle-commands ; group to currently add commands to 
+	extend (turtle-shape)
+		base
+			position
+			heading
+			size
+			colour
 
-.turtle-rate : 60
+		pen-down : true
+		visible : true
+		speed : 10
 
-.add continuing command for (turtle) from (start) to (finish):
-.	add true command for (turtle) from (start) to (finish)
+		getters/setters
+			pen-down
+			visible
+			speed
 
-.add terminating command for (turtle) from (start) to (finish):
-.	add false command for (turtle) from (start) to (finish)
+		Move the turtle.
+		move /the (me) (steps) steps/step:
+			start-pos : position
+			direction : (heading) heading to direction
+			distance : 0
+			repeat
+				if (steps < speed)
+					speed : steps
+				distance : distance + speed
+				finish-pos : {
+					start-pos [1] + distance × cosine (direction), 
+					start-pos [2] - distance × sine (direction)
+				}
+				add continuing command for (me) from (start-pos) to (finish-pos)
+				steps : steps - speed
+			… until [steps ≤ 0]
+			add terminating command for (me) from (start-pos) to (finish-pos)
+			position : finish-pos
 
-.Add a subcommand for a turtle move.
-.add (continuing) command for (turtle) from (start) to (finish):
-.	append {
-.		continuing : continuing,
-.		turtle     : turtle, 
-.		colour     : turtle [colour],
-.		pen-down   : turtle [pen-down],
-.		start      : start, 
-.		finish     : finish, 
-.		heading    : turtle [heading]
-.	} to (current-group)
+		Move a turtle to a position.
+		position is a turtle point.
+		move /the (me) to (new-position):
+			turn (me) to (new-position)
+			new-position : convert (new-position) to paper coordinate
+			move (me) (distance from (position) to (new-position)) steps
 
-.Group commands so that they all execute together.
-.group together (command-block):
-.	group together into (current-group) (command-block)
+		Turn a turtle.
+		turn /the (me) (angle) degrees/degree:
+			heading : (heading + angle) % 360
 
-.group together into (#current-group) (command-block):
-.	this-group : {}
-.	append (this-group) to (turtle-commands)
-.	#current-group : this-group
-.	do (command-block)
-.	#current-group : turtle-commands
+		Turn a turtle to face a position.
+		turn /the (me) to (new-position):
+			start-pos : position
+			finish-pos : convert (new-position) to paper coordinate
+			xd : finish-pos [1] - start-pos [1]
+			yd : start-pos [2] - finish-pos [2]
+			angle : arctangent (yd) over (xd)
+			heading : (angle) heading to direction % 360
 
-./a random turtle point:
-.	{random (std-width) - centre-x, random (std-height) - centre-y}
+turtle-commands : {} ; the list of sub commands to execute each clock tick
+Groups enable multiple commands to be drawn in the same animation tick.
+current-group : turtle-commands ; group to currently add commands to 
 
-.Set up the screen for turtle use.
-.Also sets up the base turtle.
-.turtle graphics on (background) paper:
-.	on standard (background) paper
-.	turtle [position] : convert (turtle [position]) to paper coordinate
-.	turtle [speed] : 10 ; number of steps per frame
-.	turtle [pen-down] : true
+turtle-rate : 60
 
-.Set up for turtle use and execute the turtle commands.
-.turtle graphics on (background) paper (turtle-block):
-.	turtle graphics on (background) paper
-.	do (turtle-block)
-.	turtles go
+add continuing command for (turtle) from (start) to (finish):
+	add true command for (turtle) from (start) to (finish)
 
-.Start running the turtle command list.
-.turtles go:
-.	start (turtle-commands)
-.	animate (turtle-rate) times per sec
-.		if (not at end of (turtle-commands))
-.			do command (next(turtle-commands))
-.		… otherwise
-.			animation off
-.	show paper
+add terminating command for (turtle) from (start) to (finish):
+	add false command for (turtle) from (start) to (finish)
 
-.Draw a permanent line if the pen is down.
-.draw (pen-down) with (pen) from (start) to (finish):
-.	if (pen-down)
-.		draw on layer 1
-.		draw with (pen)
-.		draw line from (start) to (finish)
+Add a subcommand for a turtle move.
+add (is-continuing) command for (the-turtle) from (the-start) to (the-finish):
+	showline "before current-group"
+	show "current-group: "
+	showline (current-group)
+	append {
+		continuing : is-continuing,
+		turtle     : the-turtle, 
+		start      : the-start, 
+		finish     : the-finish
+	} to (current-group)
+		.colour     : turtle [colour],
+		.pen-down   : turtle [pen-down],
+		.heading    : turtle [heading]
+	show "after"
 
-.Execute all commands in the list.
-.do all commands in (commands):
-.	for each (command) in (commands)
-.		do command (command)
+Group commands so that they all execute together.
+group together (command-block):
+	group together into (current-group) (command-block)
 
-.Execute one command from the commands list.
-.do command (command):
-.	if (type of (command) = "list") [
-.		do all commands in (command)
-.	] otherwise [
-.		choose from
-.			[command [command] = "clear"] do
-.				clear layer 1
-.				clear layer 2
+group together into (#current-group) (command-block):
+	this-group : {}
+	append (this-group) to (turtle-commands)
+	#current-group : this-group
+	do (command-block)
+	#current-group : turtle-commands
 
-.			[command [command] = "pause"] do
-.				wait (command [time]) secs
+/a random turtle point:
+	{random (std-width) - centre-x, random (std-height) - centre-y}
 
-.			turtle : command [turtle]
+Set up the screen for turtle use.
+Also sets up the base turtle.
+turtle graphics on (background) paper:
+	on standard (background) paper
+	(turtle) position : convert ((turtle) position) to paper coordinate
 
-.			[command [continuing]] do
-.				clear layer 2
-.				turtle [colour] : command [colour]
-.				if (turtle [pen-down])
-.					draw with (turtle [colour]) pen
-.					draw line from (command [start]) to (command [finish])
-.				turtle [position] : command [finish]
-.				turtle [heading] : command [heading]
-.				if (turtle [show])
-.					no outline
-.					fill (turtle)
+Set up for turtle use and execute the turtle commands.
+turtle graphics on (background) paper (turtle-block):
+	turtle graphics on (background) paper
+	do (turtle-block)
+	turtles go
 
-.			pen : (command [colour]) pen
-.			draw (turtle [pen-down]) with (pen) from (command [start]) to (command [finish])
-.	]
+Start running the turtle command list.
+turtles go:
+	start (turtle-commands)
+	animate (turtle-rate) times per sec
+		if (not at end of (turtle-commands))
+			do command (next(turtle-commands))
+		… otherwise
+			animation off
+	show paper
 
-.Move the base turtle.
-.move (steps) steps/step:
-.	move (turtle) (steps) steps
+Draw a permanent line if the pen is down.
+draw (pen-down) with (pen) from (start) to (finish):
+	if (pen-down)
+		draw on layer 1
+		draw with (pen)
+		draw line from (start) to (finish)
 
-.Move a turtle.
-.move /the (turtle) (steps) steps/step:
-.	start-pos : turtle [position]
-.	direction : (turtle [heading]) heading to direction
-.	speed : turtle [speed]
-.	distance : 0
-.	repeat
-.		if (steps < speed)
-.			speed : steps
-.		distance : distance + speed
-.		finish-pos : {
-.			start-pos [1] + distance × cosine (direction), 
-.			start-pos [2] - distance × sine (direction)
-.		}
-.		add continuing command for (turtle) from (start-pos) to (finish-pos)
-.		steps : steps - speed
-.	… until [steps ≤ 0]
-.	add terminating command for (turtle) from (start-pos) to (finish-pos)
-.	turtle [position] : finish-pos
+Execute all commands in the list.
+do all commands in (commands):
+	for each (command) in (commands)
+		do command (command)
 
-.Move the base turtle to a position.
-.move to (position):
-.	move (turtle) to (position)
+Execute one command from the commands list.
+do command (command):
+	if (type of (command) = "list") [
+		do all commands in (command)
+	] otherwise [
+		choose from
+			[command [command] = "clear"] do
+				clear layer 1
+				clear layer 2
 
-.Move a turtle to a position.
-.position is a turtle point.
-.move /the (turtle) to (position):
-.	turn (turtle) to (position)
-.	new-position : convert (position) to paper coordinate
-.	move (turtle) (distance from (turtle [position]) to (new-position)) steps
+			[command [command] = "pause"] do
+				wait (command [time]) secs
 
-.Turn the base turtle to face a position.
-.turn to (position):
-.	turn (turtle) to (position)
+			turtle : command [turtle]
 
-.Turn a turtle to face a position.
-.turn /the (turtle) to (position):
-.	start-pos : turtle [position]
-.	finish-pos : convert (position) to paper coordinate
-.	xd : finish-pos [1] - start-pos [1]
-.	yd : start-pos [2] - finish-pos [2]
-.	angle : arctangent (yd) over (xd)
-.	turtle [heading] : (angle) heading to direction % 360
+			[command [continuing]] do
+				clear layer 2
+				.turtle [colour] : command [colour]
+				if ((turtle) pen-down)
+					draw with ((turtle) colour) pen
+					draw line from (command [start]) to (command [finish])
+				(turtle) position : command [finish]
+				(turtle) heading : command [heading]
+				if ((turtle) visible)
+					no outline
+					fill (turtle)
 
-.Turn the base turtle.
-.turn (angle) degrees/degree:
-.	turn (turtle) (angle) degrees
+			pen : (command [colour]) pen
+			draw ((turtle) pen-down) with (pen) from (command [start]) to (command [finish])
+	]
 
-.Turn a turtle.
-.turn /the (turtle) (angle) degrees/degree:
-.	turtle [heading] : (turtle [heading] + angle) % 360
+Move the base turtle.
+move (steps) steps/step:
+	move (turtle) (steps) steps
 
-.Draw a circle around this turtle.
-.draw (colour) circle of (radius) centred on /the (turtle):
-.	draw with (colour) pen
-.	draw circle of (radius) at (turtle[position])
+Move the base turtle to a position.
+move to (position):
+	move (turtle) to (position)
 
-.Clear the turtle lines.
-.erase /the turtle/turtles:
-.	append {
-.		command : "clear"
-.	} to (current-group)
+Turn the base turtle to face a position.
+turn to (position):
+	turn (turtle) to (position)
 
-.Pause the turtles for a time.
-.pause turtles/turtle for (time) secs/sec:
-.	append {
-.		command : "pause",
-.		time : time
-.	} to (current-group)
+Turn the base turtle.
+turn (angle) degrees/degree:
+	turn (turtle) (angle) degrees
 
-.The distance between two points.
-./the distance from (pt1) to (pt2):
-.	xd : pt2 [1] - pt1 [1]
-.	yd : pt2 [2] - pt1 [2]
-.	√ ((xd × xd) + (yd × yd))
+Draw a circle around a turtle.
+draw (colour) circle of (radius) centred on /the (turtle):
+	draw with (colour) pen
+	draw circle of (radius) at ((turtle) position)
+
+Clear the turtle lines.
+erase /the turtle/turtles:
+	append {
+		command : "clear"
+	} to (current-group)
+
+Pause the turtles for a time.
+pause turtles/turtle for (time) secs/sec:
+	append {
+		command : "pause",
+		time : time
+	} to (current-group)
+
+The distance between two points.
+/the distance from (pt1) to (pt2):
+	xd : pt2 [1] - pt1 [1]
+	yd : pt2 [2] - pt1 [2]
+	√ ((xd × xd) + (yd × yd))
 
 Convert a turtle heading to a direction (and vice versa).
 (angle) heading to direction:
 	90 - angle
 
-.Convert a paper coordinate to a turtle coordinate.
-.convert (coordinate) to turtle coordinate:
-.	{
-.		coordinate [1] - centre [1],
-.		centre [2] - coordinate [2]
-.	}
+Convert a paper coordinate to a turtle coordinate.
+convert (coordinate) to turtle coordinate:
+	{
+		coordinate [1] - centre [1],
+		centre [2] - coordinate [2]
+	}
 
-.Convert a turtle coordinate to a paper coordinate.
-.convert (coordinate) to paper coordinate:
-.	{
-.		coordinate [1] + centre [1],
-.		centre [2] - coordinate [2]
-.	}
+Convert a turtle coordinate to a paper coordinate.
+convert (coordinate) to paper coordinate:
+	{
+		coordinate [1] + centre [1],
+		centre [2] - coordinate [2]
+	}
