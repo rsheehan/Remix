@@ -372,8 +372,6 @@ append-to: function [
 	;     value: reduce to-block at value 3
 	;     value: make hash! compose [_iter 0 (value)]
 	; ]
-	probe append/only list value
-	quit
 	append/only list value
 ]
 
@@ -938,7 +936,7 @@ cosine-fnc: make function-object [
 ]
 
 atan2-fnc: make function-object [
-	template: ["arctangent" "|" "over" "|"]
+	template: ["arctangent" "|" ["over" "/"] "|"]
 	; formal-parameters ["change-y" "change-x"]
 	red-code: [arctangent2]
 ]

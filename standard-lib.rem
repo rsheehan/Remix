@@ -488,8 +488,8 @@ a turtle :
 		base
 			position
 			heading
-			size
-			colour
+			.size ; don't need as not using set word in functions
+			.colour
 
 		pen-down : true
 		visible : true
@@ -553,19 +553,17 @@ add terminating command for (turtle) from (start) to (finish):
 
 Add a subcommand for a turtle move.
 add (is-continuing) command for (the-turtle) from (the-start) to (the-finish):
-	showline "before current-group"
-	show "current-group: "
-	showline (current-group)
 	append {
 		continuing : is-continuing,
 		turtle     : the-turtle, 
 		start      : the-start, 
-		finish     : the-finish
+		finish     : the-finish,
+		colour     : (the-turtle) colour,
+		pen-down   : (the-turtle) pen-down,
+		heading    : (the-turtle) heading
 	} to (current-group)
-		.colour     : turtle [colour],
-		.pen-down   : turtle [pen-down],
-		.heading    : turtle [heading]
-	show "after"
+	show (length of (current-group))
+	show " "
 
 Group commands so that they all execute together.
 group together (command-block):
@@ -617,9 +615,9 @@ do all commands in (commands):
 
 Execute one command from the commands list.
 do command (command):
-	if (type of (command) = "list") [
+	if (type of (command) = "list")
 		do all commands in (command)
-	] otherwise [
+	… otherwise
 		choose from
 			[command [command] = "clear"] do
 				clear layer 1
@@ -632,7 +630,7 @@ do command (command):
 
 			[command [continuing]] do
 				clear layer 2
-				.turtle [colour] : command [colour]
+				(turtle) colour : command [colour]
 				if ((turtle) pen-down)
 					draw with ((turtle) colour) pen
 					draw line from (command [start]) to (command [finish])
@@ -642,9 +640,9 @@ do command (command):
 					no outline
 					fill (turtle)
 
+			showline "drawing permanent line"
 			pen : (command [colour]) pen
 			draw ((turtle) pen-down) with (pen) from (command [start]) to (command [finish])
-	]
 
 Move the base turtle.
 move (steps) steps/step:
