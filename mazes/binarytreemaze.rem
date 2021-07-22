@@ -30,7 +30,7 @@ on standard (black) paper
 	solve the maze from (start) to (finish)
 
 prepare the maze grid :
-	square : make shape of {
+	square : a shape of {
 		{-1, -1}, {-1, 1}, {1, 1}, {1, -1}
 	} with size (SIZE)
 	draw with (red) pen

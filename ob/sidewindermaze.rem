@@ -8,7 +8,7 @@ randomize
 
 SIZE : 10
 
-square : make shape of {
+square : a shape of {
 	{-1, -1}, {-1, 1}, {1, 1}, {1, -1}
 } with size (SIZE)
 

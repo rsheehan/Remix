@@ -7,26 +7,26 @@ For the purposes of turtle graphics.
 
 turtle graphics on (black) paper
 
-	blue-turtle: make (blue) turtle heading 0
-	red-turtle: make (red) turtle heading 120
-	green-turtle: make (green) turtle heading 240
+	blue-turtle : a (blue) turtle heading 0
+	red-turtle : a (red) turtle heading 120
+	green-turtle : a (green) turtle heading 240
 
-	turtles: {blue-turtle, red-turtle, green-turtle}
+	turtles : { blue-turtle, red-turtle, green-turtle }
 	repeat 12 times
 		group together
 			for each (turtle) in (turtles)
 				draw square with (turtle)
-		pause turtles for 0.25 secs
+		pause turtles for 0.5 secs
 		for each (turtle) in (turtles)
 			turn (turtle) 10 degrees
 
 ========================================
 
-make (colour) turtle heading (angle):
-	new-turtle : based on (turtle)
-	new-turtle [speed] : 200
-	new-turtle [colour] : colour
-	new-turtle [show] : false
+a (colour) turtle heading (angle):
+	new-turtle : a turtle
+	(new-turtle) speed : 200
+	(new-turtle) colour : colour
+	(new-turtle) visible : false
 	turn (new-turtle) (angle) degrees
 	new-turtle
 

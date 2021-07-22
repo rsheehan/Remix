@@ -488,12 +488,11 @@ a turtle :
 		base
 			position
 			heading
-			.size ; don't need as not using set word in functions
-			.colour
 
 		pen-down : true
 		visible : true
 		speed : 10
+		position : convert ((my) position) to paper coordinate
 
 		getters/setters
 			pen-down
@@ -505,16 +504,17 @@ a turtle :
 			start-pos : position
 			direction : (heading) heading to direction
 			distance : 0
+			move-speed : speed
 			repeat
 				if (steps < speed)
-					speed : steps
-				distance : distance + speed
+					move-speed : steps
+				distance : distance + move-speed
 				finish-pos : {
 					start-pos [1] + distance × cosine (direction), 
 					start-pos [2] - distance × sine (direction)
 				}
 				add continuing command for (me) from (start-pos) to (finish-pos)
-				steps : steps - speed
+				steps : steps - move-speed
 			… until [steps ≤ 0]
 			add terminating command for (me) from (start-pos) to (finish-pos)
 			position : finish-pos
@@ -562,8 +562,6 @@ add (is-continuing) command for (the-turtle) from (the-start) to (the-finish):
 		pen-down   : (the-turtle) pen-down,
 		heading    : (the-turtle) heading
 	} to (current-group)
-	show (length of (current-group))
-	show " "
 
 Group commands so that they all execute together.
 group together (command-block):
@@ -583,7 +581,6 @@ Set up the screen for turtle use.
 Also sets up the base turtle.
 turtle graphics on (background) paper:
 	on standard (background) paper
-	(turtle) position : convert ((turtle) position) to paper coordinate
 
 Set up for turtle use and execute the turtle commands.
 turtle graphics on (background) paper (turtle-block):
@@ -640,7 +637,6 @@ do command (command):
 					no outline
 					fill (turtle)
 
-			showline "drawing permanent line"
 			pen : (command [colour]) pen
 			draw ((turtle) pen-down) with (pen) from (command [start]) to (command [finish])
 

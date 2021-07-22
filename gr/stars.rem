@@ -7,9 +7,9 @@ turtle graphics on (black) paper
 		random star
 
 random star :
-	turtle [show] : false
-	turtle [position] : random point
-	turtle [colour] : random colour
+	(turtle) visible : false
+	(turtle) position : random point
+	(turtle) colour : random colour
 	draw a star
 
 draw a star :
