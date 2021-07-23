@@ -19,9 +19,6 @@ extend (person) (years) years old :
 		getter
 			age
 
-		base
-			name
-
 		make (me) a year older :
 			age : age + 1
 			name : to "older " append (name)

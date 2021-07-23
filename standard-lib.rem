@@ -485,10 +485,6 @@ a turtle :
 	} with size 5
 
 	extend (turtle-shape)
-		base
-			position
-			heading
-
 		pen-down : true
 		visible : true
 		speed : 10

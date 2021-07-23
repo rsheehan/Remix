@@ -185,9 +185,6 @@ create-red-expression: function [
 				append field-names field-name
 				append object-code compose [(to-set-word field-name) (create-red-expression field/expression)]
 			]
-			if expression/extend-obj [ ; if extending may have some base fields we need
-				append field-names expression/extend-fields
-			]
 			; now the methods
 			foreach method expression/methods [
 				; transpile each of the methods
@@ -202,12 +199,29 @@ create-red-expression: function [
 			either expression/extend-obj [ ; extending an object
 				object-name: to-word expression/extend-obj/name
 				object-code: compose/deep [make (object-name) [(object-code)]]
+				; we need the new functions to treat extended fields as /extern
+				add-fields: reduce ['find-fields object-name]
+				object-code: compose/deep [do replace/all/deep [(object-code)] /extern append copy [/extern] (add-fields)]
 			][
 				object-code: append/only copy [object] object-code
 			]
 			return to-paren object-code
 		]
 	]
+]
+
+find-fields: function [
+	{ Return a block of the fields of the object. 
+	  A field is here defined as not a function. }
+	obj [object!]
+][
+	fields: copy []
+	foreach field words-of obj [
+		unless (type? select obj field) = function! [
+			append fields field
+		]
+	]
+	return fields
 ]
 
 create-method-body: function [

@@ -300,8 +300,6 @@ object-body: [
 		|
 		object-field-getter-setter END-OF-STATEMENT
 		|
-		base-object-field END-OF-STATEMENT
-		|
 		object-method
 	]
 ]
@@ -404,21 +402,6 @@ object-field-getter-setter: [
 			create-a-getter name
 			create-a-setter name
 		]
-	)
-]
-
-; e.g.
-; base
-;	name
-base-object-field: [
-	<word> "base" ahead block! collect set name-list into get-fields-list
-	(
-		new-object: last object-stack
-		names-as-words: copy []
-		foreach name name-list [
-			append names-as-words to-word name
-		]
-		append new-object/extend-fields names-as-words
 	)
 ]
 

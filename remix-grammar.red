@@ -160,8 +160,6 @@ object-body: [
 		|
 		object-field-getter-setter END-OF-STATEMENT
 		|
-		base-object-field END-OF-STATEMENT
-		|
 		object-method
 	]
 ]
@@ -194,13 +192,6 @@ object-field-setter: [
 ; 	x : 4
 object-field-getter-setter: [
 	<multi-word> ["getter/setter" | "getters/setters"] ahead block! into get-fields-list
-]
-
-; e.g.
-; base
-;	name
-base-object-field: [
-	<word> "base" ahead block! into get-fields-list
 ]
 
 object-method: [
