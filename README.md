@@ -40,7 +40,7 @@ Here is an animated random landscape program in Remix.
     
     on standard (sky) paper
     draw together
-        draw the landscape
+    	draw the landscape
     
     the-clouds : apply [create a cloud] 10 times
     
@@ -55,7 +55,7 @@ Here is an animated random landscape program in Remix.
     
     draw the back mountains :
     	draw on layer 2
-        no outline
+    	no outline
     	repeat 30 times
     		draw a (coal) mountain of max height 200 based at 200
     	draw (coal) box from {0, std-height} to {std-width, std-height - 200}
