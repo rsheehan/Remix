@@ -31,6 +31,8 @@ Objects are created using the following syntax, and can have optional automatica
         another type of method on (me) with (param) :
             body of method
 
+More information about Remix can be found in this presentation, [IntroToRemix.pdf](https://github.com/rsheehan/Remix/files/6872199/IntroToRemix.pdf), the first half shows how Remix can be used to develop a program from pseudocode, the second half describes the language.
+
 Here is an animated random landscape program in Remix.
 
     
