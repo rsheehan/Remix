@@ -1,0 +1,22 @@
+
+make object :
+	create
+		x : 4
+
+		(my) x :
+			x
+		(my) x : (new-x) :
+			x : new-x
+		show object (me) plus (y) :
+			showline (x + y)
+
+a : make object
+y : 3
+show object (a) plus (y + (a) x)
+
+function show (a)
+
+function show (b) :
+	(b) x : 100
+	showline ((a) x)
+	show object (b) plus (10 + (b) x)

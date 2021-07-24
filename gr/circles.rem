@@ -14,13 +14,12 @@ turtle graphics on (black) paper
 ========================================
 
 (n) turtles in circle of (radius):
-	turtles : {}
-	repeat (n) times
+	(turtle) visible : false
+	apply
 		new-turtle : based on (turtle)
-		new-turtle [colour] : random colour
-		new-turtle [show] : false
+		(new-turtle) colour : random colour
 		move (new-turtle) by (radius)
 		turn (new-turtle) 90 degrees
-		add the (new-turtle) to (turtles)
-		turn 10 degrees
-	turtles
+		turn (turtle) 10 degrees
+		new-turtle
+	… (n) times

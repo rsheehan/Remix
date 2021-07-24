@@ -30,7 +30,7 @@ on standard (black) paper
 	solve the maze from (start) to (finish)
 
 prepare the maze grid :
-	square : make shape of {
+	square : a shape of {
 		{-1, -1}, {-1, 1}, {1, 1}, {1, -1}
 	} with size (SIZE)
 	draw with (red) pen
@@ -61,11 +61,10 @@ deal with all rows except the bottom :
 
 deal with all columns in the (row) except the right :
 	for each (col) from 1 to (cols - 1)
-		if (heads) [
+		if (heads)
 			remove the right wall in the cell at {col, row}
-		] otherwise [
+		… otherwise
 			remove the bottom wall in the cell at {col, row}
-		]
 
 deal with the right cell in the (row) :
 	remove the bottom wall in the cell at {cols, row}
@@ -124,30 +123,30 @@ solve the maze from (start) to (finish) :
 move outwards from (position) :
 	cell : cell at (position)
 	new-distance : cell[distance] + 1
+
 	if all of {
 		[I can move right from (position)],
 		[(right from (position)) not visited]
-	} [
+	}
 		move (RIGHT) from (position) with (new-distance)
-	]
+
 	if all of {
 		[I can move down from (position)],
 		[(down from (position)) not visited]
-	} [
+	}
 		move (DOWN) from (position) with (new-distance)
-	]
+
 	if all of {
 		[I can move left from (position)],
 		[(left from (position)) not visited]
-	} [
+	}
 		move (LEFT) from (position) with (new-distance)
-	]
+
 	if all of {
 		[I can move up from (position)],
 		[(up from (position)) not visited]
-	} [
+	}
 		move (UP) from (position) with (new-distance)
-	]
 
 move (direction) from (position) with (distance) :
 	new-position : position going (direction) from (position)
@@ -208,6 +207,7 @@ plot the solution :
 
 go closer than (distance) from (position) :
 	if [position ≠ start]
+		wait 0.25 secs
 		mark the (position) with (green)
 	if [distance > 1] 
 		distance : distance - 1

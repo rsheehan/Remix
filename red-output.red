@@ -17,11 +17,11 @@ print "^/Without the standard library most remix programs will not transpile."
 print "With the standard library there is a lot of output."
 yes-set: charset "yY"
 either parse (ask "Include the standard library? y/n ") [yes-set] [
-	source: append append "^/" read %standard-lib.rem "^/"
+	source: rejoin ["^/" read %standard-lib.rem "^/"]
 ][
 	source: "^/"
 ]
-source: append append source read rem-file "^/"
+append append source read rem-file "^/"
 
 first-pass: parse source split-words
 clean-lex: tidy-up first-pass

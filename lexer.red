@@ -1,7 +1,7 @@
 Red [
 	Title: "Lexer revision 2"
 	Author: "Robert Sheehan"
-	Version: 0.2
+	Version: 0.3
 	Purpose: "Produce the sequence of tokens for the Remix grammar."
 ]
 
@@ -12,7 +12,7 @@ token: object [
 
 ; newline: #"^/" ; because I have a newline function in Remix
 white-space: charset reduce [space tab]
-special: charset "()[]{,}:—_|§@/"    ; can add to this as required
+special: charset "()[]{,}:—_|§@/…"    ; can add to this as required
 ; everything apart from white space, newline or special is a character
 characters: complement union union special white-space charset newline
 operators: charset "+-×÷%=≠<≤>≥"
@@ -184,6 +184,15 @@ colon: [
 	)
 ]
 
+cont: [
+	#"…"
+	keep (
+		make token [
+			name: <cont>
+		]
+	)
+]
+
 nl: [
     some [
 		newline opt some comments
@@ -201,8 +210,19 @@ nl: [
 ]
 
 tokens: [left-p | right-p | left-b | right-b | left-curly-b | right-curly-b
-		| comma-char | colon | operator | nl]
+		| comma-char | colon | operator | cont | nl]
 
+multi-word: [ ; used for function multiple names
+	copy first-word any characters
+	"/"
+	copy second-word some characters
+	keep (
+		make token [
+			name: <multi-word>
+			value: rejoin [first-word "/" second-word]
+		]
+	)
+]
 
 char-sequence: [
     copy chars any characters
@@ -235,7 +255,7 @@ char-sequence: [
 split-words: [                  ; parse block
     collect [
         any [
-            [remix-string | comments | number | tokens | char-sequence]
+            [remix-string | comments | number | tokens | multi-word | char-sequence]
             any white-space
         ]
     ]

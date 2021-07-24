@@ -1,7 +1,7 @@
 Red [
 	Title: "The Remix Red code generator"
 	Author: "Robert Sheehan"
-	Version: 0.2
+	Version: 0.3
 	Purpose: "Converts an AST of Remix code into Red code."
 ]
 
@@ -25,7 +25,7 @@ create-sequence: function [
 		][
 			need-a-loop: true
 		]
-		append seq-list statement ;first list-of-statements
+		append seq-list statement
 		list-of-statements: next list-of-statements
 	]
 	last-statement: first list-of-statements
@@ -41,11 +41,11 @@ create-sequence: function [
 
 	either need-a-loop [
 		either return-higher [
-			sequence: reduce [ ;compose/deep [ ; and forever not quoted
+			sequence: reduce [
 				'forever compose [(seq-list)]
 			]
 		][
-			sequence: reduce [ ;compose/deep [
+			sequence: reduce [
 				'catch/name reduce [
 					'forever compose [(seq-list)]
 				] quote 'return
@@ -53,11 +53,11 @@ create-sequence: function [
 		]
 	][ ; doesn't need a loop
 		either return-higher [
-			sequence: compose [ ;compose/deep [
+			sequence: compose [
 				(seq-list)
 			]
 		][
-			sequence: reduce [ ;compose/deep [
+			sequence: reduce [
 				'catch/name compose [
 					(seq-list)
 				] quote 'return
@@ -106,11 +106,15 @@ create-red-expression: function [
 ][
 	if any [
 		number? expression
-		string? expression
 		logic? expression
 		none? expression
+		expression = 'self
 	][
 		return expression
+	]
+	if string? expression [
+		; currently only necessary if a literal string is appended to repeatedly
+		return to-paren compose [copy (expression)]
 	]
 	switch expression/type [
 		"variable" [
@@ -127,8 +131,7 @@ create-red-expression: function [
 			return append/only copy [] sequence
 		]
 		"function" [
-			; probe to-paren create-red-function-call expression
-			return to-paren create-red-function-call expression
+			return to-paren create-red-function-or-method-call expression
 		]
 		"list" [
 			list-type: determine-list-type first expression/value
@@ -141,17 +144,16 @@ create-red-expression: function [
 				]
 			]
 			foreach item expression/value [
-				either list-type = "map" [ ; object
+				either list-type = "map" [ ; map
 					if not attempt [
 						if item/type = "key-value" [
 							list: append copy [extend] list
-							; append/only list compose [(to-set-word item/key) (create-red-expression item/value)]
 							append list 'compose
 							append/only list compose [(to-set-word item/key) (create-red-expression item/value)]
 
 						]
 					][
-						print "Error: Cannot add item to object."
+						print "Error: Cannot add item to map."
 						quit
 					]	
 				][ ; list
@@ -173,7 +175,141 @@ create-red-expression: function [
 			]
 			return to-paren list
 		]
+		"object" [
+			; can't fill the fields in until called
+			object-code: copy []
+			field-names: copy []
+			foreach field expression/fields [
+				; collect field assignments
+				field-name: to-word field/name
+				append field-names field-name
+				append object-code compose [(to-set-word field-name) (create-red-expression field/expression)]
+			]
+			; now the methods
+			foreach method expression/methods [
+				; transpile each of the methods
+				body: create-method-body method field-names
+				names: to-function-def-names method/template
+				foreach name names [
+					fnc: reduce [to-set-word name]
+					append fnc body
+					append object-code fnc
+				]
+			]
+			either expression/extend-obj [ ; extending an object
+				object-name: to-word expression/extend-obj/name
+				object-code: compose/deep [make (object-name) [(object-code)]]
+				; we need the new functions to treat extended fields as /extern
+				add-fields: reduce ['find-fields object-name]
+				object-code: compose/deep [do replace/all/deep [(object-code)] /extern append copy [/extern] (add-fields)]
+			][
+				object-code: append/only copy [object] object-code
+			]
+			return to-paren object-code
+		]
 	]
+]
+
+find-fields: function [
+	{ Return a block of the fields of the object. 
+	  A field is here defined as not a function. }
+	obj [object!]
+][
+	fields: copy []
+	foreach field words-of obj [
+		unless (type? select obj field) = function! [
+			append fields field
+		]
+	]
+	return fields
+]
+
+create-method-body: function [
+	{ Return the transpiled body of the method.
+	  Need to take into account a self reference (). name = "_" }
+	the-method [object!]
+	field-names ; these must be object scope/context
+][
+	method-params: copy []
+	foreach name the-method/formal-parameters [
+		unless name = "_" [
+			append method-params to-word name
+		]
+	]
+	statements: create-red-statements the-method/block/list-of-stmts
+	body-sequence: create-sequence statements false
+	compose/deep [function [(method-params) /extern (field-names)] [(body-sequence)]]
+]
+
+create-method-call: function [
+	{ Return the code to indirectly call the correct method. }
+	name			"the name of the method"
+	actual-params	"the parameters to evaluate and pass"
+][
+	; don't currently handle recursive or reference method calls
+	unless find method-list name [
+		return false
+	]
+	; is the call from a method to a method of the same object?
+	; if so generate a simple method call
+	self-location: find actual-params 'self
+	if self-location [
+		unless (index? self-location) = (select method-list name) [
+			return false
+		]
+		remove self-location
+		method-call: reduce [to-word name]
+		actual-params: create-red-parameters actual-params
+		append method-call actual-params
+		return method-call
+	]
+	; otherwise have to dynamically dispatch
+	; this could now be dynamic dispatch of an ordinary function call
+	actual-params: create-red-parameters actual-params
+	compose/deep [
+		call-method (name) [(actual-params)] 
+	]
+]
+
+call-method: function [
+	{ Call the correct method. 
+	  This is only called at runtime. }
+	name 			[string!]	"the method name"
+	parameters		[block!]	"the actual parameters"
+][
+	; currently finds the first parameter with a matching method
+	method: to-word name
+	the-object: none
+	method-parameters: reduce parameters ;find the values, one should be the receiver
+	parameter-number: 0
+	forall method-parameters [
+		parameter-number: parameter-number + 1
+		the-object: first method-parameters
+		if all [
+			object? the-object
+			select the-object method
+		][
+			if (select method-list name) = parameter-number [
+				remove method-parameters
+				break
+			]			
+		]
+		the-object: none
+	]
+	method-parameters: head method-parameters
+	either the-object [
+		the-call: append copy [the-object/:method] method-parameters
+	][
+		; we either have an error or a function call
+		; doesn't currently deal with reference functions
+		the-fnc: select function-map name
+		unless the-fnc [
+			print rejoin [{Error: on method or function call "} name {".} ]
+			quit
+		]
+		the-call: append copy the-fnc/red-code method-parameters
+	]
+	do the-call
 ]
 
 deal-with-word-key: function [
@@ -198,32 +334,26 @@ deal-with-word-key: function [
 
 create-red-function-call: function [
 	{ Return the red equivalent of a function call. }
-	remix-call "Includes the name and parameter list"
+	name			"the name of the function"
+	the-fnc			"the function-object to call"
+	actual-params	"the parameters to evaluate and pass"
 ][
-	the-fnc: select function-map remix-call/fnc-name
-	if the-fnc = none [
-		; check if the name can be pluralised.
-		either (the-fnc: pluralised remix-call/fnc-name) [
-			print ["Careful:" remix-call/fnc-name "renamed." ]
-		][
-			print ["Error:" remix-call/fnc-name "not declared."]
-			return ; changed from quit for live coding
-		]
-	]
 	if all [ ; check if it is a recursive call
 		the-fnc/red-code = none
 		the-fnc/fnc-def = []
 	][ ; at the moment no reference parameters in recursive calls
-		red-stmt: to-word remix-call/fnc-name
-		red-params: create-red-parameters remix-call/actual-params
+	   ; also currently don't handle recursive method calls
+		red-stmt: to-word name
+		red-params: create-red-parameters actual-params
 		return compose [(red-stmt) (red-params)]
 	]
+
 	either the-fnc/red-code [ ; an ordinary function call
 		red-stmt: first the-fnc/red-code
 		either (red-stmt = 'get-item) or (red-stmt = 'set-item) [
-			red-params: deal-with-word-key remix-call/actual-params
+			red-params: deal-with-word-key actual-params
 		][
-			red-params: create-red-parameters remix-call/actual-params
+			red-params: create-red-parameters actual-params
 		]
 		return compose [(red-stmt) (red-params)]
 	][ ; a reference function call
@@ -233,7 +363,7 @@ create-red-function-call: function [
 		bind-word: none
 		forall formals [
 			formal-param: first formals
-			actual-param: pick remix-call/actual-params (index? formals)
+			actual-param: pick actual-params (index? formals)
 			either (first formal-param) = #"#" [
 				if actual-param/type <> "variable" [
 					print "Error: The actual parameter for a reference parameter must be a variable."
@@ -253,6 +383,24 @@ create-red-function-call: function [
 	]
 ]
 
+create-red-function-or-method-call: function [
+	{ Return the red equivalent of a function or method call. }
+	remix-call "Includes the name and parameter list"
+][
+	name: remix-call/fnc-name
+	method-call: create-method-call name remix-call/actual-params 
+	if method-call [
+		return method-call
+	]
+	; possibly a function call
+	the-fnc: select function-map name
+	if the-fnc [
+		return create-red-function-call name the-fnc remix-call/actual-params
+	]
+	print rejoin [{Error: no method or function "} name {".} ]
+	quit
+]
+
 create-red-statements: function [
 	{ Return a block of red statements matching the statement objects.}
 	statements [block!]
@@ -263,21 +411,10 @@ create-red-statements: function [
 			switch/default statement/type [
 				"assignment" [
 					red-expression: create-red-expression statement/expression
-; I need to carefully work out if we know that "dup" is not required.
-; It is required if we assign a "literal" string.
-; Is it required if we assign a literal list or map?
-					either string? red-expression [
-						either (first statement/name) = #"#" [ ; ref vars are always "set" explicitly
-							append/only red-statements compose [set quote (to-word statement/name) copy (red-expression)]
-						][
-							repend/only red-statements [to-set-word statement/name 'copy red-expression]
-						]
+					either (first statement/name) = #"#" [ ; ref vars are always "set" explicitly
+						append/only red-statements compose [set quote (to-word statement/name) (red-expression)]
 					][
-						either (first statement/name) = #"#" [ ; ref vars are always "set" explicitly
-							append/only red-statements compose [set quote (to-word statement/name) (red-expression)]
-						][
-							repend/only red-statements [to-set-word statement/name red-expression]
-						]
+						repend/only red-statements [to-set-word statement/name red-expression]
 					]
 				]
 				"return" [
@@ -324,25 +461,31 @@ create-function-body: function [
 ]
 
 transpile-normal-function: function [
-	{ Transpile this normal function. }
+	{ Transpile this normal function. 
+	  Now handles multi-named functions. }
 	fnc-name [string!]
 	the-fnc [object!]
 	fnc-params [block!]
 ][
-	body: create-function-body the-fnc fnc-params
 	name: to-word fnc-name
-	set name do body ; this is where the red equivalent function is defined
-	the-fnc/red-code: reduce [name]
+	unless the-fnc/red-code [
+		body: create-function-body the-fnc fnc-params
+		set name do body ; this is where the red equivalent function is defined
+		the-fnc/red-code: reduce [name]
+	]
 ]
 
 transpile-reference-function: function [
-	{ Transpile this reference function. }
+	{ Transpile this reference function. 
+	  Now handles multi-name ref functions. }
 	the-fnc [object!]
 	fnc-params [block!]
 	ref-params [block!]
 ][
-	body: create-function-body the-fnc fnc-params
-	the-fnc/fnc-def: body
+	if (length? the-fnc/fnc-def) = 0 [
+		body: create-function-body the-fnc fnc-params
+		the-fnc/fnc-def: body
+	]
 ]
 
 transpile-functions: function [
@@ -359,7 +502,7 @@ transpile-functions: function [
 		the-fnc: select function-map fnc
 		if the-fnc/red-code = none [ ; built-in functions have a value here
 			if the-fnc/block/type <> "sequence" [
-				print ["Error:" fnc "is not a sequence."]
+				print rejoin [{Error:"} fnc {"is not a sequence.}]
 				quit
 			]
 			param-lists: create-param-lists the-fnc/formal-parameters

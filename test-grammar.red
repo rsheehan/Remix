@@ -39,6 +39,8 @@ files: [
 	%gr/arrows.rem
 	%gr/squares.rem
 	%gr/bounce.rem
+	%ob/obj-demo.rem
+	%ex/test35.rem
 	%temp.rem
 ]
 
@@ -48,7 +50,7 @@ foreach file files [
 	; print "SOURCE CODE"
 	; print read file
 
-	first-pass: parse (append append copy "^/" read file copy "^/") split-words
+	first-pass: parse (rejoin [copy "^/" read file copy "^/"]) split-words
 	clean-lex: tidy-up first-pass
 	lex-symbols: spit-out-symbols clean-lex
 

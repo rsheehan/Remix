@@ -1,0 +1,42 @@
+Show a grid of everchanging squares.
+====================================
+
+SIZE : 20
+COLUMNS : STD-WIDTH ÷ SIZE
+ROWS : STD-HEIGHT ÷ SIZE
+
+squares : produce a grid of (COLUMNS) by (ROWS) squares
+
+on standard paper
+	animate 1 time per sec
+		clear layer 1
+		no outline
+		for each (square) in (squares)
+			change (square) colour
+			draw (square)
+
+========================================
+
+produce a grid of (columns) by (rows) squares :
+	squares : an empty list
+	for (x)(columns) and (y)(rows)
+		square : make a square of (SIZE) at {x, y}
+		append (square) to (squares)
+		
+make a square of (size) at (grid-pos) :
+	grid-pos : enlarge (grid-pos) by (size)
+
+	create
+		colour : random colour
+		top-left : { grid-pos [1] - size, grid-pos [2] - size }
+		bottom-right : { grid-pos [1], grid-pos [2] }
+
+		draw (me) :
+			fill colour (colour)
+			draw box from (top-left) to (bottom-right)
+
+		change (my) colour :
+			colour : random colour
+
+enlarge (list) by (factor) :
+	apply [item × factor] to each (item) from (list)

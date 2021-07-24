@@ -1,13 +1,14 @@
 Red [
 	Title: "The Remix Grammar"
 	Author: "Robert Sheehan"
-	Version: 0.2
+	Version: 0.3
 	Purpose: "The grammar of Remix creating AST. This is used by the transpiler. "
 ]
 
 do %lexer.red
-do %built-in-functions.red
 do %ast.red
+do %function-functions.red
+do %built-in-functions.red
 
 END-OF-LINE: [<LINE> | <*LINE>]
 
@@ -24,6 +25,7 @@ program: [
 	(
 		; the function-map is in %built-in-functions.red
 		program-statements: make sequence-stmt []
+		object-stack: copy [] ; to included nested objects
 	)
 	some [
 		<LINE> | end
@@ -51,11 +53,19 @@ function-definition: [
 ]
 
 ; e.g. from (start) to (finish) do (block)
+; now includes multiple names
 function-signature: [
 	some [
 		<word> set name-part string!
 		(
 			append new-function/template name-part
+		)
+		|
+		<multi-word> set multi-name-part string!
+		(
+			; split the multi-name-part into its two strings
+			multi-names: split multi-name-part "/"
+			append/only new-function/template multi-names
 		)
 		|
 		<lparen> <word> set param-name string! <rparen> 
@@ -67,10 +77,8 @@ function-signature: [
 ]
 
 function-statements: [
-	[
-		ahead block! 
-		collect set fnc-block into block-of-statements
-	]
+	ahead block! 
+	collect set fnc-block into block-of-statements
 	(
 		new-function/block: first fnc-block
 	)
@@ -100,19 +108,9 @@ statement: [
 		assignment-statement ; this keeps an "assignment-stmt"
 		| return-statement ; this keeps a "return-stmt"
 		| redo-statement ; this keeps a "redo-stmt"
+		| setter-call ; this keeps the function call to a setter method
+		| list-element-assignment ; keeps the function call to list/map assignment
 		| expression ; this keeps an expression - a variety of statements
-		; collect set expr expression
-		; (
-		; 	expr: first expr
-		; 	attempt [
-		; 		if expr/type <> "function" [
-		; 			fnc-template: copy ["|"]
-		; 			append fnc-template expr
-		; 			probe fnc-template
-		; 		]
-		; 	]
-		; )
-		; keep (expr)
 	]
 	END-OF-STATEMENT
 ]
@@ -186,9 +184,9 @@ unary-expression: [
 ; at the moment a single word is a function call
 ; after finding the function call we need to see if it should be a variable call instead
 simple-expression: [
-	list-element-assignment
-	|
 	list-element
+	|
+	create-call
 	|  
 	function-call
 	|
@@ -206,12 +204,7 @@ simple-expression: [
 	| 
 	<boolean> keep logic!
 	|
-	collect set new-list literal-list
-	keep (
-		make remix-list [
-			value: to-hash new-list
-		]
-	)
+	literal-list
 ]
 
 ; e.g. a-list [ any ] : value
@@ -265,6 +258,258 @@ list-element: [
 	)
 ]
 
+; e.g. 
+;create
+;	a : 4
+;	pr () :
+;		show (a)
+create-call: [
+	<word> [
+		"create" 
+		(
+			obj: none
+		)
+		| 
+		"extend" <lparen> <word> set obj-name string! <rparen>
+		(
+			obj: make variable [
+				name: obj-name
+			]
+		)
+	]
+	(
+		new-object: make remix-object [
+			extend-obj: obj
+		] ; can nest objects
+		append object-stack new-object
+	)
+	ahead block! into object-body
+	[end | ahead END-OF-FN-CALL]
+	keep (
+		take/last object-stack
+	)
+]
+
+object-body: [
+	some [
+		collect set not-used [object-field] END-OF-STATEMENT
+		|
+		object-field-getter END-OF-STATEMENT
+		|
+		object-field-setter END-OF-STATEMENT
+		|
+		object-field-getter-setter END-OF-STATEMENT
+		|
+		object-method
+	]
+]
+
+object-field: [
+	collect set field-info [<word> keep string! <colon>  expression] ; expression keeps by definition
+	(
+		new-object: last object-stack
+		append new-object/fields make field-initializer [
+			name: first field-info
+			expression: second field-info
+		]
+	)
+	keep (first field-info)
+]
+
+create-a-getter: function [
+	"Create a getter function for the field in the current object."
+	field-name [string!]
+][
+	field: make variable [
+		name: field-name
+	]
+	getter: make method-object [
+		template: reduce ["|" field-name]
+		formal-parameters: ["_"]
+		self-position: 1
+		block: make sequence-stmt [
+			list-of-stmts: reduce [field]
+		]
+	]
+	add-to-method-list getter
+	new-object: last object-stack
+	append new-object/methods getter
+]
+
+create-a-setter: function [
+	"Create a setter function for the field in the current object."
+	field-name [string!]
+][
+	field: make variable [
+		name: field-name
+	]
+	setter: make method-object [
+		template: reduce ["|" field-name "set" "|"]
+		formal-parameters: ["_" "new-value"]
+		self-position: 1
+		block: make sequence-stmt [
+			list-of-stmts: reduce [
+				make assignment-stmt [
+					name: field-name
+					expression: make variable [
+						name: "new-value"
+					]
+				]
+			]
+		]
+	]
+	add-to-method-list setter
+	new-object: last object-stack
+	append new-object/methods setter
+]
+
+; Just a list of field names
+get-fields-list: [
+	any [<word> keep string! END-OF-STATEMENT]
+]
+
+; e.g.
+; getter
+; 	x : 4
+object-field-getter: [
+	<word> ["getter" | "getters"] ahead block! collect set name-list into get-fields-list
+	(
+		foreach name name-list [
+			create-a-getter name
+		]
+	)
+]
+
+; e.g.
+; setter
+; 	x : 4
+object-field-setter: [
+	<word> ["setter" | "setters"] ahead block! collect set name-list into get-fields-list
+		(
+		foreach name name-list [
+			create-a-setter name
+		]
+	)
+]
+
+; e.g.
+; getter/setter
+; 	x : 4
+object-field-getter-setter: [
+	<multi-word> ["getter/setter" | "getters/setters"] ahead block! collect set name-list into get-fields-list
+	(
+		foreach name name-list [
+			create-a-getter name
+			create-a-setter name
+		]
+	)
+]
+
+object-method: [
+	; create a method-object, safe as not nested
+	(
+		new-method: make method-object []
+	)
+	method-signature
+	<colon>
+	method-statements 
+	END-OF-LINE
+	(
+		add-to-method-list new-method
+		new-object: last object-stack
+		append new-object/methods new-method
+	)
+]
+
+method-signature: [ ; same as function-signature, but different actions
+	(
+		param-position: 1
+		self-position: 0
+	)
+	some [ ; gather the signature
+		<word> set name-part string!
+		(
+			append new-method/template name-part
+		)
+		|
+		<multi-word> set multi-name-part string!
+		(
+			; split the multi-name-part into its two strings
+			multi-names: split multi-name-part "/"
+			append/only new-method/template multi-names
+		)
+		|
+		[
+			<lparen> <word> ["me" | "my"] <rparen> ; the object reference
+			(
+				if self-position <> 0 [
+					print rejoin [{Error: method "} new-method/template {" more than one self reference (me/my).}]
+					quit ; return if live coding
+				]
+				self-position: param-position
+				param-name: "_"
+			)
+			| 
+			<lparen> <word> set param-name string! <rparen>
+		]
+		(
+			append new-method/template "|"
+			append new-method/formal-parameters param-name
+			param-position: param-position + 1
+		) 
+	]
+	opt [
+		<colon> <lparen> <word> set param-name string! <rparen> ; for setter methods
+		(
+			append new-method/template "set"
+			append new-method/template "|"
+			append new-method/formal-parameters param-name
+		) 
+	]
+	; check to see if one of the parameters is the object reference
+	(
+		either self-position = 0 [
+			print rejoin [{Error: method "} new-method/template {" without (me/my) parameter.}]
+			quit ; return if live coding
+		][
+			new-method/self-position: self-position
+		]
+	)
+]
+
+method-statements: [
+	ahead block! 
+	collect set method-block into block-of-statements ; add the block to the method-object
+	(
+		new-method/block: first method-block
+	)
+]
+
+; e.g.
+; (x) number : 7
+setter-call: [
+	; Not designed to allow callee to be "me" or "my".
+	; Assuming if in the object we just use the field directly.
+	collect set fnc-template [
+		<lparen> <word> set callee string! <rparen>
+		keep ("|")
+		keep (
+			make variable [
+				name: callee
+			]		
+		)
+		<word> keep string! 
+		<colon> 
+		keep ("set")
+		keep ("|")
+		expression
+		[end | ahead END-OF-FN-CALL]
+	]
+	keep (
+		assist-create-function-call fnc-template
+	)
+]
+
 function-call: [
 	[
 		collect set fnc-template [
@@ -281,7 +526,12 @@ function-call: [
 				<word> keep string! ; part of the function name the rest are actual parameters
 				| 
 				[
-					<string> set string string! 
+					<lparen> <word> ["me" | "my"] <rparen> ; for a self method call
+					(
+						; need to record this for checking in the transpiler
+						expr: 'self
+					)
+					| <string> set string string! 
 					(
 						expr: string
 					)
@@ -293,17 +543,12 @@ function-call: [
 					(
 						expr: bool
 					)
-					| collect set lit-list literal-list
-					(
-						expr: make remix-list [
-							value: to-hash lit-list
-						]
-					)
+					| collect set expr literal-list
 
 					; the next 4 are block parameters
 
 					| <LBRACKET> ahead block! collect set expr [into deferred-block-of-statements] <*LINE> <RBRACKET> 
-					| ahead block! collect set expr [into deferred-block-of-statements]
+					| ahead block! collect set expr [into deferred-block-of-statements] opt [<*LINE> <cont>]
 					| <LBRACKET> collect set expr deferred-block-of-statements <RBRACKET> 
 					| <lparen> <LBRACKET> collect set expr deferred-block-of-statements <RBRACKET> <rparen>
 
@@ -327,7 +572,12 @@ function-call: [
 ]
 
 literal-list: [
-	<lbrace> list <rbrace>
+	<lbrace> collect set lit-list list <rbrace>
+	keep (
+		expr: make remix-list [
+			value: to-hash lit-list
+		]
+	)
 ]
 
 key-value: [

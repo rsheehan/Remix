@@ -2,14 +2,11 @@ The Remix standard library.
 ===========================
 
 Output a newline character.
-nl:
+nl/↲:
 	show "
 "
 
 new line:
-	nl
-
-↲:
 	nl
 
 Output the value of "what" followed by a newline.
@@ -20,11 +17,14 @@ showline (what):
 show line (what):
 	showline (what)
 
-show (what) ↲:
+/show (what) ↲:
 	showline (what)
 
-(what) ↲:
-	showline (what)
+========================================
+Just trying out a more verbal version.
+
+/an empty list :
+	{}
 
 ========================================
 
@@ -53,15 +53,19 @@ The boolean "or" operation.
 
 
 Report if not at the end of the "list".
-not at end of (list):
+not at /the end of /the (list):
 	not (end of (list))
 
 ========================================
 
+Alternative append function.
+to (so-far) add/append /on (more) :
+	append (more) to (so-far)
+
 === Input operations ===
 
 Ask for an integer value.
-ask for integer (prompt):
+ask for /an integer (prompt):
 	input : ask (prompt)
 	convert (input) to integer
 
@@ -115,28 +119,10 @@ repeat (block) until (condition):
 
 ========================================
 
-starting with (start-block) repeat (block)(count) times:
-	do (start-block)
-	repeat (count) times (block)
-
-starting with (start-block) repeat (count) times (block):
-	do (start-block)
-	repeat (count) times (block)
-
-starting with (start-block) repeat (block) until (condition):
-	do (start-block)
-	repeat (block) until (condition)
-
-starting with (start-block) while (condition) repeat (block):
-	do (start-block)
-	while (condition) repeat (block)
-
-========================================
-
 Run "block" for each item in "list".
 "block" will refer to "item".
 Returns either the last statement result or whatever is returned from "block".
-for each (#item) in (list)(block):
+for each (#item) in /the (list)(block):
 	start (list)
 	do
 		if (end of (list))
@@ -150,19 +136,27 @@ A for each with a definite "start" and "finish" value.
 for each (#item) from (start) to (finish) (block):
 	for each (#item) in ((start) to (finish)) (block)
 
-A for each with "start", "finish" and a "step".
+For each with "start", "finish" and "step".
+Only positive steps so far.
 for each (#item) from (start) to (finish) in steps of (step) (block):
-	list : (start) to (finish)
-	start (list)
-	do
-		if (end of (list))
-			return last
-		#item : next(list)
+	#item : start
+	while [#item ≤ finish] repeat
 		last : do (block)
-		repeat (step - 1) times
-			if (not at end of (list))
-				next(list)
-		redo
+		#item : #item + step
+	last
+
+A 2 dimensional for loop over "num-rows" and "num-cols".
+"row-block" can refer to "#down".
+"col-block" can refer to "#down" and "#across".
+for (#across)(num-cols) and (#down)(num-rows) on each row (row-block) (col-block) :
+	for each (#down) from 1 to (num-rows)
+		do (row-block)
+		for each (#across) from 1 to (num-cols)
+			do (col-block)
+
+A 2 dimensional for loop with no "row-block".
+for (#across)(num-cols) and (#down)(num-rows) (col-block) :
+	for (#across)(num-cols) and (#down)(num-rows) on each row [] (col-block)
 
 ========================================
 
@@ -183,19 +177,9 @@ keep (#item) from (list) until (condition):
 		append (#item) to (new-list)
 	new-list
 
-.Create a new list by applying a block to each element of a list.
-.Each "x" value in the block is replaced by each element in turn.
-.I really need to consider whether this is a good idea.
-.The x value is a top-level value and overwrites an existing x.
-.apply (x-block) to (list):
-.	result : {}
-.	for each (x) in (list)
-.		append (do (x-block)) to (result)
-.	result
-
 Create a new list by applying "block" to each element of "list".
 Uses the variable name passed as #item.
-apply (block) to each (#item) from (list):
+apply (block) to each (#item) from /the (list):
 	result : {}
 	for each (#item) in (list)
 		append (do (block)) to (result)
@@ -205,6 +189,10 @@ apply (block) (n) times:
 	result : {}
 	repeat (n) times
 		append (do (block)) to (result)
+
+Choose a random item from a list.
+pick item from /the (list):
+	list [random (length of (list))]
 
 ========================================
 
@@ -239,32 +227,26 @@ any of (list-of-blocks):
 		false
 
 Transparent like "if".
-if any of (list-of-blocks) (consequence)::
+if any of (list-of-blocks) /do (consequence)::
 	if (any of (list-of-blocks)) 
 		do (consequence)
 
 Compare the above with this to see different approaches to the "consequence".
-
-if all of (list-of-blocks) (consequence)::
+if all of (list-of-blocks) /do (consequence)::
 	if (all of (list-of-blocks)) (consequence)
 
 ========================================
-
-A variant of append.
-add the (item) to (collection):
-	append (item) to (collection)
 
 Create a pretty string of "list".
 (list) as list:
 	result : "{"
 	for each (item) in (list)
-		if ((type of (item) = "list") or (type of (item) = "object"))[
+		if ((type of (item) = "list") or (type of (item) = "map"))
 			append ((item) as list) to (result)
-		] otherwise [
+		… otherwise
 			append ' to (result) if (item) string
 			append (convert (item) to string) to (result)
 			append ' to (result) if (item) string
-		]
 		if (not at end of (list))
 			append ", " to (result)
 	append "}" to (result)
@@ -287,24 +269,24 @@ show line (list) as list:
 (list) as list ↲:
 	showline (list) as list
 
-Output a pretty printed "object".
-show (object) as object:
+Output a pretty printed "map".
+show (map) as map:
 	show "{"
-	for each (n) from 1 to (length of (object))
-		show (object [n])
-		if (n ≠ length of (object))
+	for each (n) from 1 to (length of (map))
+		show (map [n])
+		if (n ≠ length of (map))
 			show ", "
 	show "}"
 
-showline (object) as object:
-	show (object) as object
+showline (map) as map:
+	show (map) as map
 	nl
 
-show line (object) as object:
-	showline (object) as object
+show line (map) as map:
+	showline (map) as map
 
-(object) as object ↲:
-	showline (object) as object
+(map) as map ↲:
+	showline (map) as map
 
 ========================================
 
@@ -314,28 +296,29 @@ with (initial) apply (block) on each (#item) in (list):
 	for each (#item) in (list)
 		do (block)
 
-WARNING: currently to prevent "item" leaking into the top level we have to give it an initial value.
+- WARNING: To prevent "item" leaking into the top level 
+  we have to give it an initial value.
 
 Sum all the elements in the list (or range).
 sum (list):
-	with [
+	with
 		sum : 0
 		item : 0
-	] apply [sum : sum + item] on each (item) in (list)
+	… apply [sum : sum + item] on each (item) in (list)
 
 Multiply all the elements in the list (or range).
 product (list):
-	with [
+	with
 		product : 1
 		item : 0
-	] apply [product : product × item] on each (item) in (list)
+	… apply [product : product × item] on each (item) in (list)
 
 Concatenate values in a list into a string.
 concatenate (list):
-	with [
+	with
 		str : ""
 		item : ""
-	] apply [append (item) to (str)] on each (item) in (list)
+	… apply [append (item) to (str)] on each (item) in (list)
 
 Create a copy of the "list".
 copy (list):
@@ -344,10 +327,10 @@ copy (list):
 Join the contents of "list1" and "list2".
 The original lists remain unchanged.
 join (list1) and (list2):
-	with [
+	with
 		list : copy (list1)
 		item : {}
-	] apply [append (item) to (list)] on each (item) in (list2)
+	… apply [append (item) to (list)] on each (item) in (list2)
 
 ========================================
 
@@ -360,14 +343,11 @@ inc (#var):
 dec (#var):
 	#var : #var - 1
 
-first in (list):
+first in /the (list):
 	list [1]
 
-last in (list):
+last in /the (list):
 	list [length of (list)]
-
-(operand1) * (operand2): ; just for show
-	operand1 × operand2
 
 square (x):
 	x × x
@@ -377,7 +357,7 @@ heads :
 	random 2 = 1
 
 Swap the values of "a" and "b".
-(#a) ⇆ (#b) :
+(#a) swap/⇆ (#b) :
 	temp : #b
 	#b : #a
 	#a : temp
@@ -397,7 +377,7 @@ centre : {
 centre-x : centre [1]
 centre-y : centre [2]
 
-random point:
+/a random point:
 	{random (std-width), random (std-height)}
 
 on standard paper:
@@ -421,88 +401,143 @@ black-pen : {
 	colour : black
 }
 
-(colour) pen:
+/a (colour) pen:
 	pen : based on (black-pen)
 	pen [colour] : colour
 	pen
 
-random pen:
+/a random pen:
 	(random colour) pen
 
-random colour:
+/a random colour:
 	random (white)
 
-draw with (pen-colour) pen:
+draw with /a (pen-colour) pen:
 	draw with ((pen-colour) pen)
 
 === Box Operations ===
 
-draw (colour) box from (bottom-left) to (top-right) :
+draw (colour) box from /the (bottom-left) to /the (top-right) :
 	fill colour (colour)
 	draw box from (bottom-left) to (top-right)
 
 === Shape Operations ===
 
-shape : {
-	position : {0, 0},
-	heading  : 0, ; straight up
-	size     : 5,
-	colour   : black,
-	points   : {}
-}
+a shape of (shape-points) with size (shape-size):
+	create
+		position : {0, 0}
+		heading  : 0 ; straight up
+		size     : shape-size
+		colour   : black
+		points   : shape-points
 
-make shape of (points):
-	new-shape : based on (shape)
-	new-shape [points] : points
-	new-shape
+		getters/setters
+			position
+			heading
+			size
+			colour
 
-make shape of (points) with size (size):
-	new-shape : based on (shape)
-	new-shape [size] : size
-	new-shape [points] : points
-	new-shape
+		move /the (me) by (steps) :
+			direction : (heading) heading to direction
+			new-x : position [1] + steps × cosine (direction)
+			new-y : position [2] - steps × sine (direction)
+			position : {new-x, new-y}
 
-move (shape) by (steps):
-	position : shape [position]
-	direction : (shape [heading]) heading to direction
-	new-x : position [1] + steps × cosine (direction)
-	new-y : position [2] - steps × sine (direction)
-	shape [position] : {new-x, new-y}
+		draw /the (me) at (new-position) :
+			position : new-position
+			draw shape (me)
 
-draw (shape) at (position):
-	shape[position] : position
-	draw (shape)
+		fill /the (me) :
+			fill colour (colour)
+			draw shape (me)
 
-fill (shape):
-	fill colour (shape[colour])
-	draw (shape)
+		fill /the (me) at (new-position) :
+			position : new-position
+			fill (me)
 
-fill (shape) at (position):
-	shape[position] : position
-	fill (shape)
+a shape of (points) :
+	a shape of (points) with size 1
 
 === Circle Operations ===
 
-draw (colour) circle of (size) at (centre):
+draw /a (colour) circle of (size) at (centre):
 	fill colour (colour)
 	draw circle of (size) at (centre)
 
-=== Animation Control ===
+=== Animation and Drawing Control ===
 
-animate (rate) times per sec (block):
+Groups all the drawing in the "draw-block".
+draw together (draw-block) :
+	hide drawing
+	do (draw-block)
+	show drawing
+
+animate (rate) times/time per sec (block):
 	(rate) times per sec
 	animate (block)
 
 === Turtle Operations and Objects ===
 
-turtle: make shape of {
-	{ 0, 1},
-	{-2, 2},
-	{ 0,-2},
-	{ 2, 2}
-} with size 5
+turtle : a turtle
 
-turtle [show] : true
+a turtle :
+	turtle-shape : a shape of {
+		{ 0, 1},
+		{-2, 2},
+		{ 0,-2},
+		{ 2, 2}
+	} with size 5
+
+	extend (turtle-shape)
+		pen-down : true
+		visible : true
+		speed : 10
+		position : convert ((my) position) to paper coordinate
+
+		getters/setters
+			pen-down
+			visible
+			speed
+
+		Move the turtle.
+		move /the (me) (steps) steps/step:
+			start-pos : position
+			direction : (heading) heading to direction
+			distance : 0
+			move-speed : speed
+			repeat
+				if (steps < speed)
+					move-speed : steps
+				distance : distance + move-speed
+				finish-pos : {
+					start-pos [1] + distance × cosine (direction), 
+					start-pos [2] - distance × sine (direction)
+				}
+				add continuing command for (me) from (start-pos) to (finish-pos)
+				steps : steps - move-speed
+			… until [steps ≤ 0]
+			add terminating command for (me) from (start-pos) to (finish-pos)
+			position : finish-pos
+
+		Move a turtle to a position.
+		position is a turtle point.
+		move /the (me) to (new-position):
+			turn (me) to (new-position)
+			new-position : convert (new-position) to paper coordinate
+			move (me) (distance from (position) to (new-position)) steps
+
+		Turn a turtle.
+		turn /the (me) (angle) degrees/degree:
+			heading : (heading + angle) % 360
+
+		Turn a turtle to face a position.
+		turn /the (me) to (new-position):
+			start-pos : position
+			finish-pos : convert (new-position) to paper coordinate
+			xd : finish-pos [1] - start-pos [1]
+			yd : start-pos [2] - finish-pos [2]
+			angle : arctangent (yd) over (xd)
+			heading : (angle) heading to direction % 360
 
 turtle-commands : {} ; the list of sub commands to execute each clock tick
 Groups enable multiple commands to be drawn in the same animation tick.
@@ -517,15 +552,15 @@ add terminating command for (turtle) from (start) to (finish):
 	add false command for (turtle) from (start) to (finish)
 
 Add a subcommand for a turtle move.
-add (continuing) command for (turtle) from (start) to (finish):
+add (is-continuing) command for (the-turtle) from (the-start) to (the-finish):
 	append {
-		continuing : continuing,
-		turtle     : turtle, 
-		colour     : turtle [colour],
-		pendown    : turtle [pendown],
-		start      : start, 
-		finish     : finish, 
-		heading    : turtle [heading]
+		continuing : is-continuing,
+		turtle     : the-turtle, 
+		start      : the-start, 
+		finish     : the-finish,
+		colour     : (the-turtle) colour,
+		pen-down   : (the-turtle) pen-down,
+		heading    : (the-turtle) heading
 	} to (current-group)
 
 Group commands so that they all execute together.
@@ -539,16 +574,13 @@ group together into (#current-group) (command-block):
 	do (command-block)
 	#current-group : turtle-commands
 
-random turtle point:
+/a random turtle point:
 	{random (std-width) - centre-x, random (std-height) - centre-y}
 
 Set up the screen for turtle use.
 Also sets up the base turtle.
 turtle graphics on (background) paper:
 	on standard (background) paper
-	turtle [position] : convert (turtle [position]) to paper coordinate
-	turtle [speed] : 10 ; number of steps per frame
-	turtle [pen-down] : true
 
 Set up for turtle use and execute the turtle commands.
 turtle graphics on (background) paper (turtle-block):
@@ -560,11 +592,10 @@ Start running the turtle command list.
 turtles go:
 	start (turtle-commands)
 	animate (turtle-rate) times per sec
-		if (not at end of (turtle-commands)) [
+		if (not at end of (turtle-commands))
 			do command (next(turtle-commands))
-		] otherwise [
+		… otherwise
 			animation off
-		]
 	show paper
 
 Draw a permanent line if the pen is down.
@@ -581,9 +612,9 @@ do all commands in (commands):
 
 Execute one command from the commands list.
 do command (command):
-	if (type of (command) = "list") [
+	if (type of (command) = "list")
 		do all commands in (command)
-	] otherwise [
+	… otherwise
 		choose from
 			[command [command] = "clear"] do
 				clear layer 1
@@ -596,108 +627,55 @@ do command (command):
 
 			[command [continuing]] do
 				clear layer 2
-				turtle [colour] : command [colour]
-				if (turtle [pen-down])
-					draw with (turtle [colour]) pen
+				(turtle) colour : command [colour]
+				if ((turtle) pen-down)
+					draw with ((turtle) colour) pen
 					draw line from (command [start]) to (command [finish])
-				turtle [position] : command [finish]
-				turtle [heading] : command [heading]
-				if (turtle [show])
+				(turtle) position : command [finish]
+				(turtle) heading : command [heading]
+				if ((turtle) visible)
 					no outline
 					fill (turtle)
 
 			pen : (command [colour]) pen
-			draw (turtle [pen-down]) with (pen) from (command [start]) to (command [finish])
-	]
+			draw ((turtle) pen-down) with (pen) from (command [start]) to (command [finish])
 
 Move the base turtle.
-move (steps) steps:
+move (steps) steps/step:
 	move (turtle) (steps) steps
-
-Move a turtle.
-move (turtle) (steps) steps:
-	start-pos : turtle [position]
-	direction : (turtle [heading]) heading to direction
-	speed : turtle [speed]
-	distance : 0
-	repeat [
-		if (steps < speed) [
-			speed : steps
-		]
-		distance : distance + speed
-		finish-pos : {
-			start-pos [1] + distance × cosine (direction), 
-			start-pos [2] - distance × sine (direction)
-		}
-		add continuing command for (turtle) from (start-pos) to (finish-pos)
-		steps : steps - speed
-	] until [steps ≤ 0]
-	add terminating command for (turtle) from (start-pos) to (finish-pos)
-	turtle [position] : finish-pos
 
 Move the base turtle to a position.
 move to (position):
 	move (turtle) to (position)
 
-Move a turtle to a position.
-position is a turtle point.
-move (turtle) to (position):
-	turn (turtle) to (position)
-	new-position : convert (position) to paper coordinate
-	move (turtle) (distance from (turtle [position]) to (new-position)) steps
-
 Turn the base turtle to face a position.
 turn to (position):
 	turn (turtle) to (position)
 
-Turn a turtle to face a position.
-turn (turtle) to (position):
-	start-pos : turtle [position]
-	finish-pos : convert (position) to paper coordinate
-	xd : finish-pos [1] - start-pos [1]
-	yd : start-pos [2] - finish-pos [2]
-	angle : arctangent (yd) over (xd)
-	turtle [heading] : (angle) heading to direction % 360
-
 Turn the base turtle.
-turn (angle) degrees:
+turn (angle) degrees/degree:
 	turn (turtle) (angle) degrees
 
-Turn a turtle.
-turn (turtle) (angle) degrees:
-	turtle [heading] : (turtle [heading] + angle) % 360
-
-Draw a circle around this turtle.
-draw (colour) circle of (radius) centred on (turtle):
+Draw a circle around a turtle.
+draw (colour) circle of (radius) centred on /the (turtle):
 	draw with (colour) pen
-	draw circle of (radius) at (turtle[position])
-
-.Hide the turtle.
-.hide (turtle):
-.	turtle [show] : false
-
-.See the turtle.
-.see (turtle):
-.	turtle [show] : true
+	draw circle of (radius) at ((turtle) position)
 
 Clear the turtle lines.
-erase turtles:
+erase /the turtle/turtles:
 	append {
 		command : "clear"
 	} to (current-group)
 
 Pause the turtles for a time.
-pause turtles for (time) secs:
+pause turtles/turtle for (time) secs/sec:
 	append {
 		command : "pause",
 		time : time
 	} to (current-group)
 
-pause turtle for (time) secs:
-	pause turtles for (time) secs
-
 The distance between two points.
-distance from (pt1) to (pt2):
+/the distance from (pt1) to (pt2):
 	xd : pt2 [1] - pt1 [1]
 	yd : pt2 [2] - pt1 [2]
 	√ ((xd × xd) + (yd × yd))

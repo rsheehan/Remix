@@ -1,7 +1,7 @@
 Red [
 	Title: "The Remix Grammar"
 	Author: "Robert Sheehan"
-	Version: 0.2
+	Version: 0.3
 	Purpose: { The grammar of Remix.
 	Some <tags> are followed by the <tag>'s value. }
 ]
@@ -38,9 +38,12 @@ function-definition: [
 ]
 
 ; e.g. from (start) to (finish) do (block)
+; now includes multiple names
 function-signature: [
 	some [
 		<word> string!
+		|
+		<multi-word> string!
 		|
 		<lparen> <word> string! <rparen> 
 	]
@@ -65,6 +68,8 @@ statement: [
 		assignment-statement 
 		| return-statement
 		| redo-statement
+		| setter-call
+		| list-element-assignment
 		| expression
 	]
 	END-OF-STATEMENT
@@ -109,8 +114,8 @@ unary-expression: [
 ; at the moment a single word is a function call
 ; after finding the function call we need to see if it should be a variable call instead
 simple-expression: [
-	list-element-assignment
-	| list-element
+	list-element
+	| create-call
 	| function-call 
 	| <word> string!
 	| <string> string! 
@@ -134,19 +139,113 @@ list-element: [
 	[end | ahead END-OF-FN-CALL]
 ]
 
+; e.g. 
+;create
+;	a : 4
+;	pr _ :
+;		show (a)
+create-call: [
+	<word> ["create" | "extend" <lparen> <word> string! <rparen>]
+	ahead block! into [object-body]
+	[end | ahead END-OF-FN-CALL]
+]
+
+object-body: [
+	any [
+		object-field END-OF-STATEMENT
+		|
+		object-field-getter END-OF-STATEMENT
+		|
+		object-field-setter END-OF-STATEMENT
+		|
+		object-field-getter-setter END-OF-STATEMENT
+		|
+		object-method
+	]
+]
+
+object-field: [
+	<word> string! <colon> expression
+]
+
+; Just a list of field names
+get-fields-list: [
+	any [<word> string! END-OF-STATEMENT]
+]
+
+; e.g.
+; getter
+; 	x : 4
+object-field-getter: [
+	<word> ["getter" | "getters"] ahead block! into get-fields-list
+]
+
+; e.g.
+; setter
+; 	x : 4
+object-field-setter: [
+	<word> ["setter" | "setters"] ahead block! into get-fields-list
+]
+
+; e.g.
+; getter/setter
+; 	x : 4
+object-field-getter-setter: [
+	<multi-word> ["getter/setter" | "getters/setters"] ahead block! into get-fields-list
+]
+
+object-method: [
+	method-signature
+	<colon>
+	method-statements 
+	END-OF-LINE
+]
+
+method-signature: [ ; same as function-signature, but different actions
+	some [
+		<word> string!
+		|
+		<multi-word> string!
+		|
+		[
+			<lparen> <word> ["me" | "my"] <rparen>
+			|
+			<lparen> <word> string! <rparen> 
+		]
+	]
+	opt [<colon> <lparen> <word> string! <rparen>] ; for setter methods
+]
+
+method-statements: [ ; same as function-statements, but different actions
+	ahead block! 
+	into block-of-statements
+]
+
+; e.g.
+; (x) number : 7
+setter-call: [
+	; Not designed to allow callee to be "me" or "my".
+	; Assuming if in the object we just use the field directly.
+	<lparen> <word> string! <rparen> <word> string! <colon> expression
+	[end | ahead END-OF-FN-CALL]
+]
+
 function-call: [
 	[
 		<word> string! [end | ahead END-OF-FN-CALL]
 		|
 		2 20 [ ; currently a max of 20 parts to a function call
 			<word> string!
+			|
+			; for a self method call
+			<lparen> <rparen>
 			; a literal parameter
 			| <string> string! | <number> number! | <boolean> logic! | literal-list
 
 			; the next 4 are block parameters
 
-			| <LBRACKET> ahead block! into [deferred-block-of-statements] <*LINE> <RBRACKET> 
-			| ahead block! [into deferred-block-of-statements]
+			| <LBRACKET> ahead block! into deferred-block-of-statements <*LINE> <RBRACKET> 
+			| ahead block! into deferred-block-of-statements opt [<*LINE> <cont>]
 			| <LBRACKET> deferred-block-of-statements <RBRACKET> 
 			| <lparen> <LBRACKET> deferred-block-of-statements <RBRACKET> <rparen>
 

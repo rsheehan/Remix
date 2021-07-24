@@ -1,0 +1,14 @@
+
+make object :
+	create
+		x : 4
+
+		show object (me) plus (y) :
+			showline {x, y}
+
+		call show (me) :
+			z : "extra"
+			show object (me) plus (append (z) to " more ")
+
+a : make object
+call show (a)

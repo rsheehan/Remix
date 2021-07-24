@@ -4,11 +4,11 @@ window: {x: 100, y: 50}
 showline {"x: ", window [x]}
 showline {"y: ", window [y]}
 
-showline (window) as object
+showline (window) as map
 for each (n) from 1 to (length of (window))
 	showline (window [n])
 
 window [z]: window [x] + 999
-showline (window) as object
+showline (window) as map
 
 showline {"z: ", window [z]}

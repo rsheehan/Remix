@@ -1,0 +1,13 @@
+
+do (num) time/times :
+	num: num + num
+	showline (num)
+
+simple /option : 
+	showline "X"
+
+do 4 time
+do 10 times
+
+simple
+simple option
