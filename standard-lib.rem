@@ -190,6 +190,10 @@ apply (block) (n) times:
 	repeat (n) times
 		append (do (block)) to (result)
 
+Choose a random item from a list.
+pick item from /the (list):
+	list [random (length of (list))]
+
 ========================================
 
 The "options-block" is a sequence of "[condition] do [block]" statements.
@@ -433,21 +437,21 @@ a shape of (shape-points) with size (shape-size):
 			size
 			colour
 
-		move (me) by (steps) :
+		move /the (me) by (steps) :
 			direction : (heading) heading to direction
 			new-x : position [1] + steps × cosine (direction)
 			new-y : position [2] - steps × sine (direction)
 			position : {new-x, new-y}
 
-		draw (me) at (new-position) :
+		draw /the (me) at (new-position) :
 			position : new-position
 			draw shape (me)
 
-		fill (me) :
+		fill /the (me) :
 			fill colour (colour)
 			draw shape (me)
 
-		fill (me) at (new-position) :
+		fill /the (me) at (new-position) :
 			position : new-position
 			fill (me)
 

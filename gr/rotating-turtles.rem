@@ -11,9 +11,9 @@ turtles : 36 turtles
 animate 30 times per sec
 	clear layer 1
 	for each (turtle) in (turtles)
-		move (turtle) by (2 × step)
-		turn (turtle) 2 degrees ; keep as 2 if you want a nice circle
-		fill (turtle)
+		move the (turtle) by (2 × step)
+		turn the (turtle) 2 degrees ; keep as 2 if you want a nice circle
+		fill the (turtle)
 
 show paper
 
@@ -24,8 +24,8 @@ show paper
 	repeat (n) times
 		new-turtle: based on (turtle)
 		(new-turtle) colour : random colour
-		move (new-turtle) by (radius)
-		turn (new-turtle) 90 degrees
+		move the (new-turtle) by (radius)
+		turn the (new-turtle) 90 degrees
 		add the (new-turtle) to (turtles)
 		turn 10 degrees
 	turtles
