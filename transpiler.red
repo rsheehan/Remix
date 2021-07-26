@@ -196,11 +196,11 @@ create-red-expression: function [
 					append object-code fnc
 				]
 			]
-			either expression/extend-obj [ ; extending an object
-				object-name: to-word expression/extend-obj/name
-				object-code: compose/deep [make (object-name) [(object-code)]]
+			either expression/extend-obj-expr [ ; extending an object
+				object-expr: create-red-expression do expression/extend-obj-expr
+				object-code: compose/deep [make (object-expr) [(object-code)]]
 				; we need the new functions to treat extended fields as /extern
-				add-fields: reduce ['find-fields object-name]
+				add-fields: reduce ['find-fields object-expr]
 				object-code: compose/deep [do replace/all/deep [(object-code)] /extern append copy [/extern] (add-fields)]
 			][
 				object-code: append/only copy [object] object-code

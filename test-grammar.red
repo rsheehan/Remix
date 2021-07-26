@@ -41,6 +41,7 @@ files: [
 	%gr/bounce.rem
 	%ob/obj-demo.rem
 	%ex/test35.rem
+	%ex/test36.rem
 	%temp.rem
 ]
 

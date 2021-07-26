@@ -270,16 +270,11 @@ create-call: [
 			obj: none
 		)
 		| 
-		"extend" <lparen> <word> set obj-name string! <rparen>
-		(
-			obj: make variable [
-				name: obj-name
-			]
-		)
+		"extend" <lparen> collect set obj simple-expression <rparen>
 	]
 	(
 		new-object: make remix-object [
-			extend-obj: obj
+			extend-obj-expr: obj
 		] ; can nest objects
 		append object-stack new-object
 	)
@@ -292,7 +287,7 @@ create-call: [
 
 object-body: [
 	some [
-		collect set not-used [object-field] END-OF-STATEMENT
+		object-field END-OF-STATEMENT
 		|
 		object-field-getter END-OF-STATEMENT
 		|
@@ -313,7 +308,6 @@ object-field: [
 			expression: second field-info
 		]
 	)
-	keep (first field-info)
 ]
 
 create-a-getter: function [

@@ -12,8 +12,8 @@ a person called (a-name) :
 			say hello to (me)
 			showline {"bye now."}
 
-extend (person) (years) years old :
-	extend (person)
+a person called (name) age (years):
+	extend (a person called (name))
 		age : years
 
 		getter
@@ -26,16 +26,12 @@ extend (person) (years) years old :
 		say hello to (me) :
 			showline {"Hi ", name, " you are ", age, " years old."}
 
-a person called (name) age (years):
-	person : a person called (name)
-	extend (person) (years) years old
-
 person : a person called "Mary"
 showline ((person) name) 
 say hello to (person)
 welcome (person) and bye
 
-person: extend (person) 25 years old
+person: a person called ((person) name) age 25
 showline ((person) age)
 make (person) a year older
 make (person) a year older
