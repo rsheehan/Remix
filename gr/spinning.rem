@@ -8,7 +8,7 @@ a (new-colour) spinning square centred at (new-position) :
 
 		colour : new-colour
 		position : new-position
-		change : random from -5 to 5
+		change : pick item from (-5 to 5)
 
 		spin the (me) :
 			heading : heading + change
@@ -23,7 +23,3 @@ on standard paper
 		for each (square) in (squares)
 			fill the (square)
 			spin the (square)
-
-random from (start) to (finish) :
-	range : finish - start + 1
-	random (range) + start - 1

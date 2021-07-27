@@ -291,7 +291,7 @@ start-iterator-fnc: make function-object [
 ]
 
 next-iterator: function [
-	{ Return the next item from the list, range or object and move on. }
+	{ Return the next item from the list, range or map and move on. }
 	list [hash! map!]
 ][
 	either map? list [
@@ -389,6 +389,7 @@ create-range: function [
 		'_iter 0
 		'_start start
 		'_finish finish
+		'_range true
 	]
 ]
 
@@ -412,7 +413,7 @@ index-to-value: function [
 get-item: function [
 	{ Get an item from a list, map or object. 
 	  The index-key can either be an index or a key. 
-	  Currently doesn't throw an error if passed a range. }
+	  Now works with a range. }
 	list [hash! map!] ; no longer works with object!
 	index-key
 ][
@@ -435,13 +436,35 @@ get-item: function [
 			]
 		]
 		hash? list [
-			list: at list 3; adjust for _iter
-			index: index-to-value index-key
-			if (index > length? list) or (index < 1) [
-				print rejoin [{Error: list "} quote list {" out of bounds}]
-				quit
+			either select list '_range [
+				index: index-to-value index-key
+				start: select list '_start
+				finish: select list '_finish
+				reverse: false
+				if start > finish [
+					temp: finish
+					finish: start
+					start: temp
+					reverse: true
+				]
+				if (index > (finish - start + 1)) or (index < 1) [
+					print rejoin [{Error: list "} quote list {" out of bounds}]
+					quit
+				]
+				either reverse [
+					result: (finish - start) - index + 1 + start
+				][
+					result: start + index - 1
+				]
+			][
+				list: at list 3; adjust for _iter
+				index: index-to-value index-key
+				if (index > length? list) or (index < 1) [
+					print rejoin [{Error: list "} quote list {" out of bounds}]
+					quit
+				]
+				result: list/:index
 			]
-			result: list/:index
 		]
 	] 
 	if any [
