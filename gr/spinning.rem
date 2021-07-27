@@ -1,0 +1,29 @@
+a (new-colour) spinning square centred at (new-position) :
+	extend (a shape of {
+		{-1, -1},
+		{ 1, -1},
+		{ 1,  1},
+		{-1,  1}
+	} with size 50)
+
+		colour : new-colour
+		position : new-position
+		change : random from -5 to 5
+
+		spin the (me) :
+			heading : heading + change
+
+squares : apply [a (random colour) spinning square centred at (a random point)] 20 times
+
+on standard paper
+
+	animate 20 times per sec
+		clear layer 1
+
+		for each (square) in (squares)
+			fill the (square)
+			spin the (square)
+
+random from (start) to (finish) :
+	range : finish - start + 1
+	random (range) + start - 1
