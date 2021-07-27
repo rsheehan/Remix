@@ -238,7 +238,7 @@ function-call: [
 			<word> string!
 			|
 			; for a self method call
-			<lparen> <rparen>
+			<lparen> <word> ["me" | "my"] <rparen>
 			; a literal parameter
 			| <string> string! | <number> number! | <boolean> logic! | literal-list
 
