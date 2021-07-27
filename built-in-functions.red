@@ -411,9 +411,8 @@ index-to-value: function [
 ]
 
 get-item: function [
-	{ Get an item from a list, map or object. 
-	  The index-key can either be an index or a key. 
-	  Now works with a range. }
+	{ Get an item from a list, range or map. 
+	  The index-key can either be an index or a key. }
 	list [hash! map!] ; no longer works with object!
 	index-key
 ][
@@ -452,7 +451,7 @@ get-item: function [
 					quit
 				]
 				either reverse [
-					result: (finish - start) - index + 1 + start
+					result: finish - index + 1
 				][
 					result: start + index - 1
 				]
