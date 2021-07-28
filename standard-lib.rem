@@ -191,7 +191,7 @@ apply (block) (n) times:
 		append (do (block)) to (result)
 
 Choose a random item from a list.
-pick item from /the (list):
+pick /item from /the (list):
 	list [random (length of (list))]
 
 ========================================

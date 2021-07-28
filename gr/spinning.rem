@@ -8,7 +8,7 @@ a (new-colour) spinning square centred at (new-position) :
 
 		colour : new-colour
 		position : new-position
-		change : pick item from (-5 to 5)
+		change : pick from (-5 to 5)
 
 		spin the (me) :
 			heading : heading + change
