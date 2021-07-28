@@ -60,7 +60,7 @@ deal with all columns in (row) except the right :
 	for each (column) from 1 to (COLUMNS - 1)
 		if (heads)
 			remove the right wall in (cell at { column, row })
-		… otherwise
+		… otherwise …
 			gap : choose from (start-run) to (column)
 			remove the bottom wall in (cell at { gap, row })
 			start-run : column + 1

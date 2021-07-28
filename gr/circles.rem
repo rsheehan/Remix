@@ -15,7 +15,7 @@ turtle graphics on (black) paper
 
 (n) turtles in circle of (radius):
 	(turtle) visible : false
-	apply
+	apply …
 		new-turtle : based on (turtle)
 		(new-turtle) colour : random colour
 		move (new-turtle) by (radius)

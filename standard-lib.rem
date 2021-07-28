@@ -243,7 +243,7 @@ Create a pretty string of "list".
 	for each (item) in (list)
 		if ((type of (item) = "list") or (type of (item) = "map"))
 			append ((item) as list) to (result)
-		… otherwise
+		… otherwise …
 			append ' to (result) if (item) string
 			append (convert (item) to string) to (result)
 			append ' to (result) if (item) string
@@ -301,21 +301,21 @@ with (initial) apply (block) on each (#item) in (list):
 
 Sum all the elements in the list (or range).
 sum (list):
-	with
+	with …
 		sum : 0
 		item : 0
 	… apply [sum : sum + item] on each (item) in (list)
 
 Multiply all the elements in the list (or range).
 product (list):
-	with
+	with …
 		product : 1
 		item : 0
 	… apply [product : product × item] on each (item) in (list)
 
 Concatenate values in a list into a string.
 concatenate (list):
-	with
+	with …
 		str : ""
 		item : ""
 	… apply [append (item) to (str)] on each (item) in (list)
@@ -327,7 +327,7 @@ copy (list):
 Join the contents of "list1" and "list2".
 The original lists remain unchanged.
 join (list1) and (list2):
-	with
+	with …
 		list : copy (list1)
 		item : {}
 	… apply [append (item) to (list)] on each (item) in (list2)
@@ -592,10 +592,10 @@ Start running the turtle command list.
 turtles go:
 	start (turtle-commands)
 	animate (turtle-rate) times per sec
-		if (not at end of (turtle-commands))
-			do command (next(turtle-commands))
-		… otherwise
+		if (end of (turtle-commands))
 			animation off
+		… otherwise …
+			do command (next(turtle-commands))
 	show paper
 
 Draw a permanent line if the pen is down.
@@ -614,7 +614,7 @@ Execute one command from the commands list.
 do command (command):
 	if (type of (command) = "list")
 		do all commands in (command)
-	… otherwise
+	… otherwise …
 		choose from
 			[command [command] = "clear"] do
 				clear layer 1

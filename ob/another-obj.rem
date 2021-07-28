@@ -42,7 +42,7 @@ joseph : make person called "Josephine" of age 32
 show ((josephine) name)
 if ((josephine) same as (joseph))
 	show " is the same as "
-… otherwise
+… otherwise …
 	show " is different from "
 show ((joseph) name) ↲
 

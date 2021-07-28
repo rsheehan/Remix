@@ -245,7 +245,7 @@ function-call: [
 			; the next 4 are block parameters
 
 			| <LBRACKET> ahead block! into deferred-block-of-statements <*LINE> <RBRACKET> 
-			| ahead block! into deferred-block-of-statements opt [<*LINE> <cont>]
+			| opt <cont> ahead block! into deferred-block-of-statements opt [<*LINE> <cont>]
 			| <LBRACKET> deferred-block-of-statements <RBRACKET> 
 			| <lparen> <LBRACKET> deferred-block-of-statements <RBRACKET> <rparen>
 
