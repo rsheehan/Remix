@@ -20,6 +20,10 @@ show line (what):
 /show (what) ↲:
 	showline (what)
 
+A simplified show function.
+(what) ^ :
+	show (what)
+
 ========================================
 Just trying out a more verbal version.
 

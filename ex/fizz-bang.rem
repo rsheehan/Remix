@@ -4,10 +4,11 @@ Fizz-Buzz.
 for each (n) from 1 to 100
 	choose from
 		((n) is divisible by 15) do
-			show "fizz-buzz "
+			"fizz-buzz"^
 		((n) is divisible by 3) do
-			show "fizz "
+			"fizz"^
 		((n) is divisible by 5) do
-			show "buzz "
-		show {n, " "}
-new line
+			"buzz"^
+		(n)^
+	" "^
+↲
