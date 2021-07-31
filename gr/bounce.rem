@@ -53,9 +53,9 @@ create (n) bouncing balls based on (ball) :
 
 move and draw (ball) :
 	size : ball [size]
-	if any of { [ball [x] < size], [ball [x] > std-width - size] }
+	if any of { ball [x] < size, ball [x] > std-width - size }
 		bounce (ball) off left or right wall
-	if any of { [ball [y] < size], [ball [y] > std-height - size] }
+	if any of { ball [y] < size, ball [y] > std-height - size }
 		bounce (ball) off top or bottom wall
 	move (ball)
 	draw (ball [colour]) circle of (size) at { ball [x], ball [y] }

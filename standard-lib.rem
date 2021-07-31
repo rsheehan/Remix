@@ -195,23 +195,6 @@ pick /item from /the (list):
 	list [random (length of (list))]
 
 ========================================
-
-The "options-block" is a sequence of "[condition] do [block]" statements.
-Optionally followed by a default statement.
-Unlike a simple "do" this function catches any "break out" calls.
-choose from (options-block):
-	do (options-block)
-Note the :: in the following function definition.
-(condition) do (block)::
-	if (condition)
-		return do (block)
-		.break out
-
-See ex/middle.
-(condition) produces (result)::
-	if (condition)
-		return result
-
 Return true if all blocks in the {list-of-blocks} are true.
 all of (list-of-blocks):
 	for each (item-block) in (list-of-blocks)
@@ -226,14 +209,40 @@ any of (list-of-blocks):
 			return true
 		false
 
-Transparent like "if".
+If any. Transparent like "if".
 if any of (list-of-blocks) /do (consequence)::
-	if (any of (list-of-blocks)) 
-		do (consequence)
+	if (any of (list-of-blocks)) (consequence)
 
-Compare the above with this to see different approaches to the "consequence".
+If all. Transparent like "if".
 if all of (list-of-blocks) /do (consequence)::
 	if (all of (list-of-blocks)) (consequence)
+
+========================================
+The "options-block" is a sequence of "[condition] do [block]" statements.
+Optionally followed by a default statement.
+Unlike a simple "do" this function catches any "break out" calls.
+choose from (options-block):
+	do (options-block)
+
+Note the :: in the following function definition.
+(condition) do (block)::
+	if (condition)
+		return do (block)
+
+This is to be used by "choose from".
+all of (conditions) do (consequence)::
+	if (all of (conditions))
+		return do (consequence)
+
+This is to be used by "choose from".
+any of (conditions) do (consequence)::
+	if (any of (conditions))
+		return do (consequence)
+
+See ex/middle.
+(condition) produces (result)::
+	if (condition)
+		return result
 
 ========================================
 

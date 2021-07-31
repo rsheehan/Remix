@@ -28,8 +28,8 @@ make person called (the-name) of age (years) :
 		same (me) as (another) :
 			showline {"This person is ", name}
 			all of {
-				[name = (another) name],
-				[age = (another) age]
+				name = (another) name,
+				age = (another) age
 			}
 
 person : make person called "Amy" of age 52

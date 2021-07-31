@@ -7,9 +7,9 @@ for each (n) from 1 to 100
 
 list : filter (1 to 1000) by (n) where
 	all of {
-		[(n) is divisible by 7],
-		[(n) is divisible by 5],
-		[(n) is divisible by 3]
+		(n) is divisible by 7,
+		(n) is divisible by 5,
+		(n) is divisible by 3
 	}
 
 showline (list) as list
