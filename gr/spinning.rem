@@ -1,4 +1,4 @@
-a (new-colour) spinning square centred at (new-position) :
+a spinning square :
 	extend (a shape of {
 		{-1, -1},
 		{ 1, -1},
@@ -6,14 +6,14 @@ a (new-colour) spinning square centred at (new-position) :
 		{-1,  1}
 	} with size 50)
 
-		colour : new-colour
-		position : new-position
+		colour : random colour
+		position : random point
 		change : pick from (-5 to 5)
 
 		spin the (me) :
 			heading : heading + change
 
-squares : apply [a (random colour) spinning square centred at (a random point)] 20 times
+squares : collect [a spinning square] 20 times
 
 on standard paper
 

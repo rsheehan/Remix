@@ -189,7 +189,7 @@ apply (block) to each (#item) from /the (list):
 		append (do (block)) to (result)
 
 Create a new list by applying "block" "n" times.
-apply (block) (n) times:
+apply/collect (block) (n) times:
 	result : {}
 	repeat (n) times
 		append (do (block)) to (result)
