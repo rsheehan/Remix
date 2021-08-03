@@ -463,6 +463,7 @@ a shape of (shape-points) with size (shape-size):
 		fill /the (me) :
 			fill colour (colour)
 			draw shape (me)
+			do not fill
 
 		fill /the (me) at (new-position) :
 			position : new-position
@@ -556,7 +557,7 @@ turtle-commands : {} ; the list of sub commands to execute each clock tick
 Groups enable multiple commands to be drawn in the same animation tick.
 current-group : turtle-commands ; group to currently add commands to 
 
-turtle-rate : 60
+turtle-rate : 30
 
 add continuing command for (turtle) from (start) to (finish):
 	add true command for (turtle) from (start) to (finish)

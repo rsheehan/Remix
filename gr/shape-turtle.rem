@@ -1,0 +1,19 @@
+on standard (purple) paper
+	bow : extend (turtle)
+		points : {
+			{-1, -1},
+			{ 1, -1},
+			{-1,  1},
+			{ 1,  1}
+		}
+		size : 25
+		heading : 90
+		position : {400, 100}
+		.colour : pink
+		pen-down : false
+
+	animate 30 times per sec
+		clear layer 1
+		move the (bow) by 17
+		turn the (bow) 5 degrees
+		fill the (bow)
