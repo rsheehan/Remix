@@ -9,18 +9,17 @@ array : apply [(random 101) - 51] 10 times
 (array) as list ↲
 
 swap (array) element (first) with (second):
-	temp : array [first]
-	array [first] : array [second]
-	array [second] : temp
+	temp : array {first}
+	array {first} : array {second}
+	array {second} : temp
 
 insertion sort (list):
 	for each (i) from 2 to (length of (list))
 		for each (j) from (i) to 2
-			if (list [j - 1] > list [j]) [
+			if (list {j - 1} > list {j})
 				swap (list) element (j) with (j - 1)
-			] otherwise [
+			… otherwise
 				break out
-			]
 
 insertion sort (array)
 (array) as list ↲
