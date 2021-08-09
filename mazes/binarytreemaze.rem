@@ -41,7 +41,7 @@ prepare the maze grid :
 				right-open : false, 
 				bottom-open : false, 
 				distance : -1
-			} to (the-maze[row])
+			} to (the-maze{row})
 			draw (square) at (centre of cell at {col, row})
 
 mark the (place) with (colour) :
@@ -75,54 +75,54 @@ deal with the bottom row :
 
 remove the right wall in the cell at (position) :
 	cell : cell at (position)
-	cell[right-open] : true
+	cell{right-open} : true
 	centre : centre of cell at (position)
 	draw with (black) pen
 
-	x : centre[1] + SIZE
-	y : centre[2] - SIZE
+	x : centre{1} + SIZE
+	y : centre{2} - SIZE
 	start : {x, y}
 
-	y : centre[2] + SIZE
+	y : centre{2} + SIZE
 	finish : {x, y}
 	
 	draw line from (start) to (finish)
 
 remove the bottom wall in the cell at (position) :
 	cell : cell at (position)
-	cell[bottom-open] : true
+	cell{bottom-open} : true
 	centre : centre of cell at (position)
 	draw with (black) pen
 
-	x : centre[1] - SIZE
-	y : centre[2] + SIZE
+	x : centre{1} - SIZE
+	y : centre{2} + SIZE
 	start : {x, y}
 
-	x : centre[1] + SIZE
+	x : centre{1} + SIZE
 	finish : {x, y}
 
 	draw line from (start) to (finish)
 
 cell at (position) :
-	the-row : the-maze[position[2]]
-	the-row[position[1]]
+	the-row : the-maze{position{2}}
+	the-row{position{1}}
 
 centre of cell at (position) :
 	{
-		centre-x + ((2 × position[1]) - (cols + 1)) × SIZE,
-		centre-y + ((2 × position[2]) - (rows + 1)) × SIZE
+		centre-x + ((2 × position{1}) - (cols + 1)) × SIZE,
+		centre-y + ((2 × position{2}) - (rows + 1)) × SIZE
 	}
 
 solve the maze from (start) to (finish) :
 	beginning : cell at (finish) ; going backwards
-	beginning[distance] : 0
+	beginning{distance} : 0
 	move outwards from (finish)
 	.show the distances
 	plot the solution
 
 move outwards from (position) :
 	cell : cell at (position)
-	new-distance : cell[distance] + 1
+	new-distance : cell{distance} + 1
 
 	if all of {
 		[I can move right from (position)],
@@ -162,47 +162,47 @@ position going (direction) from (position) :
 
 store (distance) at (position) :
 	cell : cell at (position)
-	cell[distance] : distance
+	cell{distance} : distance
 
 right from (position) :
-	{position[1] + 1, position[2]}
+	{position{1} + 1, position{2}}
 
 left from (position) :
-	{position[1] - 1, position[2]}
+	{position{1} - 1, position{2}}
 
 down from (position) :
-	{position[1], position[2] + 1}
+	{position{1}, position{2} + 1}
 
 up from (position) :
-	{position[1], position[2] - 1}
+	{position{1}, position{2} - 1}
 
 (position) not visited :
 	cell : cell at (position)
-	cell[distance] = -1
+	cell{distance} = -1
 
 I can move right from (position) :
 	cell : cell at (position)
-	cell[right-open]
+	cell{right-open}
 
 I can move left from (position) :
-	if [position[1] = 1]
+	if [position{1} = 1]
 		return false
-	cell : cell at {position[1] - 1, position[2]}
-	cell[right-open]
+	cell : cell at {position{1} - 1, position{2}}
+	cell{right-open}
 
 I can move down from (position) :
 	cell : cell at (position)
-	cell[bottom-open]
+	cell{bottom-open}
 
 I can move up from (position) :
-	if [position[2] = 1]
+	if [position{2} = 1]
 		return false
-	cell : cell at {position[1], position[2] - 1}
-	cell[bottom-open]
+	cell : cell at {position{1}, position{2} - 1}
+	cell{bottom-open}
 
 plot the solution :
 	cell : cell at (start)
-	distance : cell[distance]
+	distance : cell{distance}
 	go closer than (distance) from (start)
 
 go closer than (distance) from (position) :
@@ -235,11 +235,11 @@ go closer than (distance) from (position) :
 
 (position) is (distance) away :
 	cell : cell at (position)
-	cell[distance] = distance
+	cell{distance} = distance
 
 show the distances :
 	for each (row) from 1 to (rows)
 		for each (col) from 1 to (cols)
 			cell : cell at {col, row}
-			show {cell[distance], " "}
+			show {cell{distance}, " "}
 		new line

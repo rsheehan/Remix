@@ -1,24 +1,24 @@
 my-list: {1, 2, 4, 8, 16}
 
-showline (my-list[4])
+showline (my-list {4})
 
 for each (i) in (1 to (length of (my-list)))
-	showline (my-list[i])
+	showline (my-list {i})
 
 showline (my-list) as list
 
-my-list[4]: 6
+my-list {4}: 6
 
 showline (my-list) as list
 
-my-list[1]: 99
+my-list {1}: 99
 
 showline (my-list) as list
 
 i: 2
-my-list[i]: "abc"
+my-list {i}: "abc"
 
-my-list[3]: my-list[i]
+my-list {3}: my-list {i}
 
 showline (my-list) as list
 

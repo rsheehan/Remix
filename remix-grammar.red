@@ -124,18 +124,18 @@ simple-expression: [
 	| literal-list
 ]
 
-; e.g. a-list [ any ] : value
+; e.g. a-list {any} : value
 list-element-assignment: [
 	<word> string!
-	<LBRACKET> expression <RBRACKET>
+	<lbrace> expression <rbrace>
 	<colon>
 	expression
 ]
 
-; e.g. a-list [3]
+; e.g. a-list {3}
 list-element: [
 	<word> string!
-	<LBRACKET> expression <RBRACKET>
+	<lbrace> expression <rbrace>
 	[end | ahead END-OF-FN-CALL]
 ]
 

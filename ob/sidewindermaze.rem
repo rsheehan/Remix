@@ -42,7 +42,7 @@ find the middle :
 prepare the maze grid :
 	for (column)(COLUMNS) and (row)(ROWS) on each row [append {} to (the-maze)] 
 		cell : create a maze cell at (row) and (column)
-		append (cell) to (the-maze [row])
+		append (cell) to (the-maze {row})
 		draw (cell)
 
 make the sidewinder maze :
@@ -79,8 +79,8 @@ show the maze :
 
 cell at (position) :
 	Return the cell object at "position".
-	the-row : the-maze [position [2]]
-	the-row [position [1]]
+	the-row : the-maze {position {2}}
+	the-row {position {1}}
 
 choose from (start) to (finish) :
 	(random (1 + finish - start)) + start - 1
@@ -194,17 +194,17 @@ create a maze cell at (the-row) and (the-col) :
 		draw (my) exits :
 			draw with (black) pen
 			if (right-open)
-				x : centre [1] + SIZE
-				y : centre [2] - SIZE
+				x : centre {1} + SIZE
+				y : centre {2} - SIZE
 				start : { x, y }
-				y : centre [2] + SIZE
+				y : centre {2} + SIZE
 				finish : { x, y }
 				draw line from (start) to (finish)
 			if (bottom-open)
-				x : centre [1] - SIZE
-				y : centre [2] + SIZE
+				x : centre {1} - SIZE
+				y : centre {2} + SIZE
 				start : { x, y }
-				x : centre [1] + SIZE
+				x : centre {1} + SIZE
 				finish : { x, y }
 				draw line from (start) to (finish)
 

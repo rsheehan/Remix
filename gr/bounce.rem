@@ -39,33 +39,33 @@ show paper ; the program runs until the user closes the window
 =====================================
 
 create (n) bouncing balls based on (ball) :
-	size : ball [size]
+	size : ball {size}
 	balls : {}
 	repeat (n) times
 		direction : random 360
 		new-ball : based on (ball)
-		new-ball [colour] : random colour
-		new-ball [x]      : size + (random (std-width - 2 × size))
-		new-ball [y]	  : size + (random (std-height - 2 × size))
-		new-ball [vx]     : random 10 × sine (direction)
-		new-ball [vy]     : random 10 × cosine (direction)
+		new-ball {colour} : random colour
+		new-ball {x}      : size + (random (std-width - 2 × size))
+		new-ball {y}	  : size + (random (std-height - 2 × size))
+		new-ball {vx}     : random 10 × sine (direction)
+		new-ball {vy}     : random 10 × cosine (direction)
 		add the (new-ball) to (balls)
 
 move and draw (ball) :
-	size : ball [size]
-	if any of { ball [x] < size, ball [x] > std-width - size }
+	size : ball {size}
+	if any of { ball {x} < size, ball {x} > std-width - size }
 		bounce (ball) off left or right wall
-	if any of { ball [y] < size, ball [y] > std-height - size }
+	if any of { ball {y} < size, ball {y} > std-height - size }
 		bounce (ball) off top or bottom wall
 	move (ball)
-	draw (ball [colour]) circle of (size) at { ball [x], ball [y] }
+	draw (ball {colour}) circle of (size) at { ball {x}, ball {y} }
 
 bounce (ball) off left or right wall :
-	ball [vx] : -1 × ball [vx]
+	ball {vx} : -1 × ball {vx}
 
 bounce (ball) off top or bottom wall :
-	ball [vy] : -1 × ball [vy]
+	ball {vy} : -1 × ball {vy}
 
 move (ball) :
-	ball [x] : ball [x] + ball [vx]
-	ball [y] : ball [y] + ball [vy]
+	ball {x} : ball {x} + ball {vx}
+	ball {y} : ball {y} + ball {vy}

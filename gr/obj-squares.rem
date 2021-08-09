@@ -28,8 +28,8 @@ make a square of (size) at (grid-pos) :
 
 	create
 		colour : random colour
-		top-left : { grid-pos [1] - size, grid-pos [2] - size }
-		bottom-right : { grid-pos [1], grid-pos [2] }
+		top-left : { grid-pos {1} - size, grid-pos {2} - size }
+		bottom-right : { grid-pos {1}, grid-pos {2} }
 
 		draw (me) :
 			fill colour (colour)

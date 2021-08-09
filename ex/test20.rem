@@ -3,8 +3,8 @@ list: {1, 2, 4, 8, 16, 32, 64, 128, 256}
 new-list: copy (list)
 showline (new-list) as list
 
-list [1]: 99
-new-list [2]: 100
+list{1}: 99
+new-list{2}: 100
 
 showline (list) as list
 showline (new-list) as list

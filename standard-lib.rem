@@ -196,7 +196,7 @@ apply/collect (block) (n) times:
 
 Choose a random item from a list.
 pick /item from /the (list):
-	list [random (length of (list))]
+	list {random (length of (list))}
 
 ========================================
 Return true if all blocks in the {list-of-blocks} are true.
@@ -286,7 +286,7 @@ Output a pretty printed "map".
 show (map) as map:
 	show "{"
 	for each (n) from 1 to (length of (map))
-		show (map [n])
+		show (map {n})
 		if (n ≠ length of (map))
 			show ", "
 	show "}"
@@ -357,10 +357,10 @@ dec (#var):
 	#var : #var - 1
 
 first in /the (list):
-	list [1]
+	list {1}
 
 last in /the (list):
-	list [length of (list)]
+	list {length of (list)}
 
 square (x):
 	x × x
@@ -387,8 +387,8 @@ centre : {
 	std-height ÷ 2
 }
 
-centre-x : centre [1]
-centre-y : centre [2]
+centre-x : centre {1}
+centre-y : centre {2}
 
 /a random point:
 	{random (std-width), random (std-height)}
@@ -416,7 +416,7 @@ black-pen : {
 
 /a (colour) pen:
 	pen : based on (black-pen)
-	pen [colour] : colour
+	pen {colour} : colour
 	pen
 
 /a random pen:
@@ -452,8 +452,8 @@ a shape of (shape-points) with size (shape-size):
 
 		move /the (me) by (steps) :
 			direction : (heading) heading to direction
-			new-x : position [1] + steps × cosine (direction)
-			new-y : position [2] - steps × sine (direction)
+			new-x : position {1} + steps × cosine (direction)
+			new-y : position {2} - steps × sine (direction)
 			position : {new-x, new-y}
 
 		draw /the (me) at (new-position) :
@@ -524,8 +524,8 @@ a turtle :
 					move-speed : steps
 				distance : distance + move-speed
 				finish-pos : {
-					start-pos [1] + distance × cosine (direction), 
-					start-pos [2] - distance × sine (direction)
+					start-pos {1} + distance × cosine (direction), 
+					start-pos {2} - distance × sine (direction)
 				}
 				add continuing command for (me) from (start-pos) to (finish-pos)
 				steps : steps - move-speed
@@ -548,8 +548,8 @@ a turtle :
 		turn /the (me) to (new-position):
 			start-pos : position
 			finish-pos : convert (new-position) to paper coordinate
-			xd : finish-pos [1] - start-pos [1]
-			yd : start-pos [2] - finish-pos [2]
+			xd : finish-pos {1} - start-pos {1}
+			yd : start-pos {2} - finish-pos {2}
 			angle : arctangent (yd) over (xd)
 			heading : (angle) heading to direction % 360
 
@@ -630,29 +630,29 @@ do command (command):
 		do all commands in (command)
 	… otherwise …
 		choose from
-			[command [command] = "clear"] do
+			[command {command} = "clear"] do
 				clear layer 1
 				clear layer 2
 
-			[command [command] = "pause"] do
-				wait (command [time]) secs
+			[command {command} = "pause"] do
+				wait (command {time}) secs
 
-			turtle : command [turtle]
+			turtle : command {turtle}
 
-			[command [continuing]] do
+			[command {continuing}] do
 				clear layer 2
-				(turtle) colour : command [colour]
+				(turtle) colour : command {colour}
 				if ((turtle) pen-down)
 					draw with ((turtle) colour) pen
-					draw line from (command [start]) to (command [finish])
-				(turtle) position : command [finish]
-				(turtle) heading : command [heading]
+					draw line from (command {start}) to (command {finish})
+				(turtle) position : command {finish}
+				(turtle) heading : command {heading}
 				if ((turtle) visible)
 					no outline
 					fill (turtle)
 
-			pen : (command [colour]) pen
-			draw ((turtle) pen-down) with (pen) from (command [start]) to (command [finish])
+			pen : (command {colour}) pen
+			draw ((turtle) pen-down) with (pen) from (command {start}) to (command {finish})
 
 Move the base turtle.
 move (steps) steps/step:
@@ -690,8 +690,8 @@ pause turtles/turtle for (time) secs/sec:
 
 The distance between two points.
 /the distance from (pt1) to (pt2):
-	xd : pt2 [1] - pt1 [1]
-	yd : pt2 [2] - pt1 [2]
+	xd : pt2 {1} - pt1 {1}
+	yd : pt2 {2} - pt1 {2}
 	√ ((xd × xd) + (yd × yd))
 
 Convert a turtle heading to a direction (and vice versa).
@@ -701,13 +701,13 @@ Convert a turtle heading to a direction (and vice versa).
 Convert a paper coordinate to a turtle coordinate.
 convert (coordinate) to turtle coordinate:
 	{
-		coordinate [1] - centre [1],
-		centre [2] - coordinate [2]
+		coordinate {1} - centre {1},
+		centre {2} - coordinate {2}
 	}
 
 Convert a turtle coordinate to a paper coordinate.
 convert (coordinate) to paper coordinate:
 	{
-		coordinate [1] + centre [1],
-		centre [2] - coordinate [2]
+		coordinate {1} + centre {1},
+		centre {2} - coordinate {2}
 	}

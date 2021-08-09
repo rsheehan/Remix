@@ -207,7 +207,7 @@ simple-expression: [
 	literal-list
 ]
 
-; e.g. a-list [ any ] : value
+; e.g. a-list {any} : value
 ; This is really a function call with name: "|_|_|"
 list-element-assignment: [
 	collect set fnc-template [
@@ -219,7 +219,7 @@ list-element-assignment: [
 			]
 		)
 		keep ("|")
-		<LBRACKET> collect set expr expression <RBRACKET>
+		<lbrace> collect set expr expression <rbrace>
 		keep (expr)
 		<colon>
 		keep ("|")
@@ -231,7 +231,7 @@ list-element-assignment: [
 	)
 ]
 
-; e.g. a-list [3]
+; e.g. a-list {3}
 ; This is really a function call with name: "|_|"
 ; It could be a mistaken "name block" function call so this needs to be checked for.
 list-element: [
@@ -244,16 +244,16 @@ list-element: [
 			]
 		)
 		keep ("|")
-		<LBRACKET> collect set expr expression <RBRACKET>
+		<lbrace> collect set expr expression <rbrace>
 		[end | ahead END-OF-FN-CALL]
 		keep (expr)
 	]
-	keep (
+	if (		
 		name: copy get in second fnc-template 'name
 		name: append name "_|"
-		if select function-map name [ ; this is the check
-			print ["Warning: There is a function with this name -" name]
-		]
+		not select function-map name ; don't succeed if function with this name
+	)
+	keep (
 		result-fnc: assist-create-function-call fnc-template
 	)
 ]

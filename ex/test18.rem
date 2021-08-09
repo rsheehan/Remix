@@ -6,14 +6,14 @@ array: {-1, -3, 0, 5, -2, 1.0, 0, -1, 6, 7, 999, -2, 0, 10}
 showline (array) as list
 
 in (array) swap element (first) with (second) :
-	temp : array [first]
-	array [first] : array [second]
-	array [second] : temp
+	temp : array {first}
+	array {first} : array {second}
+	array {second} : temp
 
 insertion sort (list) :
 	for each (i) from 2 to (length of (list))
 		for each (j) from (i) to 2
-			if (list [j - 1] > list [j])
+			if (list {j - 1} > list {j})
 				in (list) swap element (j - 1) with (j)
 
 insertion sort (array)
