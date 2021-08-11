@@ -8,7 +8,7 @@ randomize
 
 SIZE : 10
 
-square : a shape of {
+SQUARE : a shape of {
 	{-1, -1}, {-1, 1}, {1, 1}, {1, -1}
 } with size (SIZE)
 
@@ -41,7 +41,7 @@ find the middle :
 
 prepare the maze grid :
 	for (column)(COLUMNS) and (row)(ROWS) on each row [append {} to (the-maze)] 
-		cell : create a maze cell at (row) and (column)
+		cell : a maze cell at (row) and (column)
 		append (cell) to (the-maze {row})
 		draw (cell)
 
@@ -166,7 +166,7 @@ go closer than (distance) from (cell) :
 
 ==== Maze Cell Object ====
 
-create a maze cell at (the-row) and (the-col) :
+a maze cell at (the-row) and (the-col) :
 	create
 		row : the-row
 		column : the-col
@@ -189,7 +189,7 @@ create a maze cell at (the-row) and (the-col) :
 
 		draw (me) :
 			draw with (red) pen
-			draw (square) at (centre)
+			draw (SQUARE) at (centre)
 
 		draw (my) exits :
 			draw with (black) pen
