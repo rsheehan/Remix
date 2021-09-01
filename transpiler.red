@@ -193,7 +193,12 @@ create-red-expression: function [
 			; first collect the method names
 			foreach method expression/methods [
 				names: to-function-def-names method/template
-				append object-method-list names
+				; remove parameter "_" from the count
+				num-params: length? method/formal-parameters
+				if find method/formal-parameters "_" [
+					num-params: num-params - 1
+				]
+				append append object-method-list names num-params
 			]
 			append/only object-method-list-stack object-method-list
 			foreach method expression/methods [
@@ -259,13 +264,10 @@ create-method-call: function [
 	/extern object-method-list-stack
 ][
 	; don't currently handle recursive or reference method calls
-	unless find method-list name [ ; probably don't need this anymore
-		return false
-	]
 	; is the call from a method to a method of the same object?
 	; or a call to a me/my less method of the same object?
 	; if so generate a simple method call
-	if find last object-method-list-stack name [
+	if a-simple-call name length? actual-params [
 		self-location: find actual-params 'self
 		if self-location [
 			either (index? self-location) = (select method-list name) [
@@ -287,6 +289,19 @@ create-method-call: function [
 	]
 ]
 
+; Because with nested objects it could have the same name as a method of this object
+; need to check if the number of parameters is as expected.
+; If we have 1 parameter more than expected should use dynamic dispatch.
+a-simple-call: function [
+	{ Does the number of parameters match. 
+	  This is used to distinguish between calls to self methods with calls of the same name. }
+	name [string!]
+	num-params [number!]
+][
+	method-num-params: select last object-method-list-stack name
+	num-params = method-num-params
+]
+
 call-method: function [
 	{ Call the correct method. 
 	  This is only called at runtime. }
@@ -295,25 +310,18 @@ call-method: function [
 ][
 	; currently finds the first parameter with a matching method
 	method: to-word name
+	; Find the index position first then check if the corresponding
+	; parameter has a matching method.
+	object-parameter: select method-list name ; find the object index if a method
+	method-parameters: reduce parameters
 	the-object: none
-	method-parameters: reduce parameters ;find the values, one should be the receiver
-	parameter-number: 0
-	forall method-parameters [
-		parameter-number: parameter-number + 1
-		the-object: first method-parameters
-		if all [
-			object? the-object
-			select the-object method
-		][
-			if (select method-list name) = parameter-number [
-				remove method-parameters
-				break
-			]			
-		]
-		the-object: none
-	]
-	method-parameters: head method-parameters
-	either the-object [
+	; if object-parameter [
+	the-object: method-parameters/:object-parameter ; the potential object destination
+	either all [
+		object? the-object
+		select the-object method
+	][
+		alter method-parameters the-object ; this remove the-object from the parameters
 		the-call: append copy [the-object/:method] method-parameters
 	][
 		; we either have an error or a function call
@@ -326,6 +334,37 @@ call-method: function [
 		the-call: append copy the-fnc/red-code method-parameters
 	]
 	do the-call
+	; ]
+	; method-parameters: reduce parameters ;find the values, one should be the receiver
+	; parameter-number: 0
+	; forall method-parameters [
+	; 	parameter-number: parameter-number + 1
+	; 	the-object: first method-parameters
+	; 	if all [
+	; 		object? the-object
+	; 		select the-object method
+	; 	][
+	; 		if (select method-list name) = parameter-number [
+	; 			remove method-parameters
+	; 			break
+	; 		]
+	; 	]
+	; 	the-object: none
+	; ]
+	; method-parameters: head method-parameters
+	; either the-object [
+	; 	the-call: append copy [the-object/:method] method-parameters
+	; ][
+	; 	; we either have an error or a function call
+	; 	; doesn't currently deal with reference functions
+	; 	the-fnc: select function-map name
+	; 	unless the-fnc [
+	; 		print rejoin [{Error: on method or function call "} name {".} ]
+	; 		quit
+	; 	]
+	; 	the-call: append copy the-fnc/red-code method-parameters
+	; ]
+	; do the-call
 ]
 
 deal-with-word-key: function [
