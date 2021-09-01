@@ -9,6 +9,8 @@ primitive!: make typeset! [
 	integer! float! string! logic! none!
 ]
 
+object-method-list-stack: copy []
+
 create-sequence: function [
 	{ Create a sequence block of red statements. }
 	list-of-statements [block!]
@@ -103,6 +105,7 @@ determine-list-type: function [
 create-red-expression: function [
 	{ Return a red expression matching the expression. }
 	expression
+	/extern object-method-list-stack
 ][
 	if any [
 		number? expression
@@ -177,6 +180,7 @@ create-red-expression: function [
 		]
 		"object" [
 			; can't fill the fields in until called
+			object-method-list: copy []
 			object-code: copy []
 			field-names: copy []
 			foreach field expression/fields [
@@ -186,6 +190,12 @@ create-red-expression: function [
 				append object-code compose [(to-set-word field-name) (create-red-expression field/expression)]
 			]
 			; now the methods
+			; first collect the method names
+			foreach method expression/methods [
+				names: to-function-def-names method/template
+				append object-method-list names
+			]
+			append/only object-method-list-stack object-method-list
 			foreach method expression/methods [
 				; transpile each of the methods
 				body: create-method-body method field-names
@@ -205,6 +215,7 @@ create-red-expression: function [
 			][
 				object-code: append/only copy [object] object-code
 			]
+			take/last object-method-list-stack
 			return to-paren object-code
 		]
 	]
@@ -245,19 +256,24 @@ create-method-call: function [
 	{ Return the code to indirectly call the correct method. }
 	name			"the name of the method"
 	actual-params	"the parameters to evaluate and pass"
+	/extern object-method-list-stack
 ][
 	; don't currently handle recursive or reference method calls
-	unless find method-list name [
+	unless find method-list name [ ; probably don't need this anymore
 		return false
 	]
 	; is the call from a method to a method of the same object?
+	; or a call to a me/my less method of the same object?
 	; if so generate a simple method call
-	self-location: find actual-params 'self
-	if self-location [
-		unless (index? self-location) = (select method-list name) [
-			return false
+	if find last object-method-list-stack name [
+		self-location: find actual-params 'self
+		if self-location [
+			either (index? self-location) = (select method-list name) [
+				remove self-location
+			][
+				return false
+			]
 		]
-		remove self-location
 		method-call: reduce [to-word name]
 		actual-params: create-red-parameters actual-params
 		append method-call actual-params

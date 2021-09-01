@@ -462,12 +462,12 @@ method-signature: [ ; same as function-signature, but different actions
 	]
 	; check to see if one of the parameters is the object reference
 	(
-		either self-position = 0 [
-			print rejoin [{Error: method "} new-method/template {" without (me/my) parameter.}]
-			quit ; return if live coding
-		][
+		; either self-position = 0 [
+		; 	print rejoin [{Error: method "} new-method/template {" without (me/my) parameter.}]
+		; 	quit ; return if live coding
+		; ][
 			new-method/self-position: self-position
-		]
+		; ]
 	)
 ]
 
