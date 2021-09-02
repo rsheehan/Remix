@@ -460,15 +460,7 @@ method-signature: [ ; same as function-signature, but different actions
 			append new-method/formal-parameters param-name
 		) 
 	]
-	; check to see if one of the parameters is the object reference
-	(
-		; either self-position = 0 [
-		; 	print rejoin [{Error: method "} new-method/template {" without (me/my) parameter.}]
-		; 	quit ; return if live coding
-		; ][
-			new-method/self-position: self-position
-		; ]
-	)
+	(new-method/self-position: self-position)
 ]
 
 method-statements: [

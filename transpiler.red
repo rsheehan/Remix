@@ -334,37 +334,6 @@ call-method: function [
 		the-call: append copy the-fnc/red-code method-parameters
 	]
 	do the-call
-	; ]
-	; method-parameters: reduce parameters ;find the values, one should be the receiver
-	; parameter-number: 0
-	; forall method-parameters [
-	; 	parameter-number: parameter-number + 1
-	; 	the-object: first method-parameters
-	; 	if all [
-	; 		object? the-object
-	; 		select the-object method
-	; 	][
-	; 		if (select method-list name) = parameter-number [
-	; 			remove method-parameters
-	; 			break
-	; 		]
-	; 	]
-	; 	the-object: none
-	; ]
-	; method-parameters: head method-parameters
-	; either the-object [
-	; 	the-call: append copy [the-object/:method] method-parameters
-	; ][
-	; 	; we either have an error or a function call
-	; 	; doesn't currently deal with reference functions
-	; 	the-fnc: select function-map name
-	; 	unless the-fnc [
-	; 		print rejoin [{Error: on method or function call "} name {".} ]
-	; 		quit
-	; 	]
-	; 	the-call: append copy the-fnc/red-code method-parameters
-	; ]
-	; do the-call
 ]
 
 deal-with-word-key: function [
