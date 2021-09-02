@@ -13,7 +13,7 @@ is the function signature for a function which can be called with any of the fol
     pause turtle for 6 secs
     pause turtle for 1 sec
 
-Objects are created using the following syntax, and can have optional automatically generated getter and setter methods for fields (which are otherwise private). Methods must include a "me" or "my" parameter indicating the receiver.
+Objects are created using the following syntax, and can have optional automatically generated getter and setter methods for fields (which are otherwise private). Methods which include a "me" or "my" parameter, indicating the receiver, are public. Methods without a "me" or "my" parameter can only be called from methods in the same object, hence they are private.
 
     create
         field1 : value
@@ -29,6 +29,9 @@ Objects are created using the following syntax, and can have optional automatica
             body of method
 
         another type of method on (me) with (param) :
+            body of method
+            
+        a private method with (param) but no me/my parameter :
             body of method
 
 More information about Remix can be found in this presentation, [IntroToRemix.pdf](https://github.com/rsheehan/Remix/files/6872199/IntroToRemix.pdf), the first half shows how Remix can be used to develop a program from pseudocode, the second half describes the language.
