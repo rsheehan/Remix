@@ -1,0 +1,26 @@
+a person called (a-name) :
+	create
+		name : a-name
+
+		getter
+			name
+
+		say hello to (me) :
+			showline {"Hi ", name}
+
+		welcome (me) and bye :
+			say hello to (me)
+			name surrounded by "*"
+			double name
+			showline {"bye now."}
+
+		double name :
+			showline {name, name}
+
+		name surrounded by (char) : 
+			name : concatenate {char, name, char}
+
+
+person : a person called "Mary"
+welcome (person) and bye
+showline {(person) name, " should be ", "*Mary*"}

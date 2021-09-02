@@ -263,17 +263,17 @@ create-method-call: function [
 	actual-params	"the parameters to evaluate and pass"
 	/extern object-method-list-stack
 ][
-	; don't currently handle recursive or reference method calls
-	; is the call from a method to a method of the same object?
-	; or a call to a me/my less method of the same object?
-	; if so generate a simple method call
+	; Is the call from a method to a method of the same object?
+	; Or a call to a me/my less method of the same object?
+	; If so generate a simple method call.
 	if a-simple-call name length? actual-params [
 		self-location: find actual-params 'self
 		if self-location [
 			either (index? self-location) = (select method-list name) [
 				remove self-location
 			][
-				return false
+				print rejoin [{Error: self (me/my) parameter in wrong place in method "} name {"}]
+				quit ; originally returned false to create-red-function-or-method-call
 			]
 		]
 		method-call: reduce [to-word name]
@@ -443,9 +443,9 @@ create-red-function-or-method-call: function [
 	remix-call "Includes the name and parameter list"
 ][
 	name: remix-call/fnc-name
-	method-call: create-method-call name remix-call/actual-params 
-	if method-call [
-		return method-call
+	; We don't currently handle recursive or reference method calls.
+	if find method-list name [
+		return create-method-call name remix-call/actual-params 
 	]
 	; possibly a function call
 	the-fnc: select function-map name
