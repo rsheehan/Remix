@@ -27,12 +27,12 @@ a person called (name) age (years):
 			showline {"Hi ", name, " you are ", age, " years old."}
 
 person : a person called "Mary"
-showline ((person) name) 
+showline (person's name) 
 say hello to (person)
 welcome (person) and bye
 
-person: a person called ((person) name) age 25
-showline ((person) age)
+person: a person called (person's name) age 25
+showline (person's age)
 make (person) a year older
 make (person) a year older
 say hello to (person)

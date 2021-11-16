@@ -1,4 +1,4 @@
-create a number (n) :
+a number (n) :
 	create
 		getters
 			number
@@ -19,12 +19,12 @@ create a number (n) :
 		see (my) more :
 			showline (more)
 
-x : create a number 7
-showline ((x) number)
-showline ((x) age)
-see (x) more
-(x) more : (x) age + 1
-see (x) more
-showline ((x) even-more)
-(x) even-more : "abc"
-showline ((x) even-more)
+x : a number 7
+showline (x's number)
+showline (x's age)
+see x's more
+x's more : x's age + 1
+see x's more
+showline (x's even-more)
+x's even-more : "abc"
+showline (x's even-more)

@@ -8,6 +8,8 @@ make person called (the-name) of age (years) :
 		(my) name :
 			name
 		(my) name : (new-name) :
+		; could also be
+		; (my) name set (new-name) :
 			name : new-name
 			
 		age : years
@@ -28,28 +30,28 @@ make person called (the-name) of age (years) :
 		same (another) as (me) :
 			showline {"This person is ", name}
 			all of {
-				[name = (another) name],
+				[name = (another) name]
 				[age = (another) age]
 			}
 
 person : make person called "Amy" of age 52
 
-showline ((person) name)
-showline ((person) age)
+showline (person's name)
+showline (person's age)
 
 say hi to (person)
 
 nl
 
 make (person) 3 years older
-(person) name : "David"
+person's name : "David"
 say hi to (person)
 
 nl
 
 another : make person called "Pauline" of age 37
 yet-another : based on (person) ; this still works
-(yet-another) name : "Stephen"
+yet-another's name : "Stephen"
 
 say hi to (another)
 say hi to (person)
@@ -64,6 +66,6 @@ nl
 
 showline (same (person) as (yet-another))
 showline (same (yet-another) as (person))
-(yet-another) name : "David"
+yet-another's name : "David"
 showline (same (person) as (yet-another))
 showline (same (yet-another) as (person))

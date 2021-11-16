@@ -23,4 +23,4 @@ a person called (a-name) :
 
 person : a person called "Mary"
 welcome (person) and bye
-showline {(person) name, " should be ", "*Mary*"}
+showline {person's name, " should be ", "*Mary*"}
