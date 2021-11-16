@@ -558,7 +558,7 @@ function-call: [
 ]
 
 literal-list: [
-	<lbrace> collect set lit-list list <rbrace> ;[list <rbrace> | list-item ahead block! into list-block]
+	<lbrace> collect set lit-list list <rbrace>
 	keep (
 		expr: make remix-list [
 			value: to-hash lit-list
@@ -599,11 +599,6 @@ list-item: [
 	deferred-block-of-statements
 	<RBRACKET>
 ]
-
-; list-block: [
-; 	list-item any [<LINE> list-item]
-; 	<rbrace>
-; ]
 
 list: [
 	list-item any [<comma> list-item] ;was list-item opt [<comma> list]
