@@ -571,7 +571,7 @@ add (is-continuing) command for (the-turtle) from (the-start) to (the-finish):
 		continuing : is-continuing
 		turtle     : the-turtle
 		start      : the-start
-		finish     : the-finish,
+		finish     : the-finish
 		colour     : (the-turtle) colour
 		pen-down   : (the-turtle) pen-down
 		heading    : (the-turtle) heading
