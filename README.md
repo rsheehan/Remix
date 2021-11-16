@@ -14,6 +14,7 @@ is the function signature for a function which can be called with any of the fol
     pause turtle for 1 sec
 
 Objects are created using the following syntax, and can have optional automatically generated getter and setter methods for fields (which are otherwise private). Methods which include a "me" or "my" parameter, indicating the receiver, are public. Methods without a "me" or "my" parameter can only be called from methods in the same object, hence they are private.
+You can access object fields using the possessive apostrophe.
 
     create
         field1 : value
@@ -75,11 +76,11 @@ Here is an animated random landscape program in Remix.
     	peak : std-height - (height + level)
     	width : random 100 + 250
     	mountain : a shape of {
-    		{ centre, peak },
-    		{ centre + width ÷ 2, std-height - level },
+    		{ centre, peak }
+    		{ centre + width ÷ 2, std-height - level }
     		{ centre - width ÷ 2, std-height - level }
     	}
-    	(mountain) colour : colour
+    	mountain's colour : colour
     	fill (mountain)
     
     ==================
