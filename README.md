@@ -35,7 +35,8 @@ You can access object fields using the possessive apostrophe.
         a private method with (param) but no me/my parameter :
             body of method
 
-More information about Remix can be found in this presentation, [IntroToRemix.pdf](https://github.com/rsheehan/Remix/files/6872199/IntroToRemix.pdf), the first half shows how Remix can be used to develop a program from pseudocode, the second half describes the language.
+More information about Remix can be found in this presentation, [IntroToRemix.pdf](https://github.com/rsheehan/Remix/files/7551327/IntroToRemix.pdf)
+, the first half shows how Remix can be used to develop a program from pseudocode, the second half describes the language.
 
 Here is an animated random landscape program in Remix.
 
