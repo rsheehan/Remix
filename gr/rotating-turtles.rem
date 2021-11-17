@@ -23,7 +23,7 @@ show paper
 	turtles : {}
 	repeat (n) times
 		new-turtle: based on (turtle)
-		(new-turtle) colour : random colour
+		new-turtle's colour : random colour
 		move the (new-turtle) by (radius)
 		turn the (new-turtle) 90 degrees
 		add the (new-turtle) to (turtles)

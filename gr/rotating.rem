@@ -2,9 +2,9 @@ Rotating Arrows.
 ================
 
 arrow-shape : {
-	{ 0, 1 },
-	{-2, 2 },
-	{ 0,-2 },
+	{ 0, 1 }
+	{-2, 2 }
+	{ 0,-2 }
 	{ 2, 2 }
 }
 
@@ -40,17 +40,17 @@ an arrow shape :
 	a shape of (arrow-shape) with size 5
 
 set the (arrow) colour :
-	(arrow) colour : random colour
+	arrow's colour : random colour
 
 position the (arrow) at (angle) :
 	x : centre-x + 200 × cosine (angle)
 	y : centre-y - 200 × sine (angle)
-	(arrow) position : { x, y }
-	(arrow) heading : -1 × angle
+	arrow's position : { x, y }
+	arrow's heading : -1 × angle
  
 move the (arrows) :
 	for each (arrow) in (arrows)
-		angle : -1 × (arrow) heading
+		angle : -1 × arrow's heading
 		angle : angle + 2
 		position the (arrow) at (angle)
 		fill (arrow)

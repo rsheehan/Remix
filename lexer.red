@@ -12,7 +12,7 @@ token: object [
 
 ; newline: #"^/" ; because I have a newline function in Remix
 white-space: charset reduce [space tab]
-special: charset "()[]{,}:—_|§@/…'"    ; can add to this as required
+special: charset "()[]{,}:—_|§@/…'’"    ; can add to this as required
 ; everything apart from white space, newline or special is a character
 characters: complement union union special white-space charset newline
 operators: charset "+-×÷%=≠<≤>≥"
@@ -226,7 +226,7 @@ multi-word: [ ; used for function multiple names
 
 possessive: [ ; used for object field access
 	copy chars any characters
-	"'s"
+	[#"'" | #"’"] #"s"
 	keep (
 		make token [
 			name: <lparen>
