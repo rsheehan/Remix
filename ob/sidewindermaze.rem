@@ -95,27 +95,25 @@ move outwards from (cell) :
 	new-distance : (cell) distance + 1
 
 	if all of {
-		can move right from (cell)
+		[can move right from (cell)]
 		[not visited (right from (cell))]
-		; the line above is a block because we don't want to execute it
-		; unless the previous element is true
 	}
 		move (RIGHT) from (cell) with (new-distance)
 
 	if all of {
-		can move down from (cell)
+		[can move down from (cell)]
 		[not visited (down from (cell))]
 	}
 		move (DOWN) from (cell) with (new-distance)
 
 	if all of {
-		can move left from (cell)
+		[can move left from (cell)]
 		[not visited (left from (cell))]
 	}
 		move (LEFT) from (cell) with (new-distance)
 		
 	if all of {
-		can move up from (cell)
+		[can move up from (cell)]
 		[not visited (up from (cell))]
 	}
 		move (UP) from (cell) with (new-distance)
@@ -144,22 +142,22 @@ go closer than (distance) from (cell) :
 		distance : distance - 1
 		choose from
 			all of {
-				can move right from (cell)
+				[can move right from (cell)]
 				[(right from (cell)) is (distance) away]
 			} do
 				go closer than (distance) from (right from (cell))
 			all of {
-				can move left from (cell)
+				[can move left from (cell)]
 				[(left from (cell)) is (distance) away]
 			} do
 				go closer than (distance) from (left from (cell))
 			all of {
-				can move down from (cell)
+				[can move down from (cell)]
 				[(down from (cell)) is (distance) away]
 			} do
 				go closer than (distance) from (down from (cell))
 			all of {
-				can move up from (cell)
+				[can move up from (cell)]
 				[(up from (cell)) is (distance) away]
 			} do
 				go closer than (distance) from (up from (cell))
