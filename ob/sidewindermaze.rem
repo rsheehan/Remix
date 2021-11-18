@@ -22,7 +22,10 @@ COLUMNS : 38
 
 the-maze : {}  ; this will contain maze cells
 start : {1, 1} ; {random 39, random 29}
-finish : find the middle
+finish : { ; the middle
+	convert (COLUMNS ÷ 2) to integer + 1
+	convert (ROWS ÷ 2) to integer + 1
+}
 
 on standard (black) paper
 	draw together
@@ -33,11 +36,6 @@ on standard (black) paper
 		place (blue) dot in (cell at (start))
 		place (orange) dot in (cell at (finish))
 	solve the maze from (start) to (finish)
-
-find the middle :
-	middle-x : convert (COLUMNS ÷ 2) to integer + 1
-	middle-y : convert (ROWS ÷ 2) to integer + 1
-	{ middle-x, middle-y }
 
 prepare the maze grid :
 	for (column)(COLUMNS) and (row)(ROWS) on each row [append {} to (the-maze)] 

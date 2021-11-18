@@ -21,15 +21,17 @@ non-quote: charset [not "^""]
 not-end-comment: charset [not ".^/"]
 not-newline: charset [not "^/"]
 
-comments: [
+comment: [
 	[
-		newline  ; line starts or ends with "." or starts with "="s.
 		[
-			any tab ["." | "=" | "- " | ";"] any not-newline
-			|
-			some [any not-end-comment some "."]; gobble anything until a "." or a newline
-			|
-			any tab ; a line with only tabs
+			newline  ; line starts or ends with "." or starts with "="s.
+			[
+				any tab ["." | "=" | "- " | ";"] any not-newline
+				|
+				some [any not-end-comment some "."]; gobble anything until a "." or a newline
+				|
+				any tab ; a line with only tabs
+			]
 		]
 		|
 		";" any not-newline ; semi-colon until the end of the line
@@ -137,11 +139,16 @@ right-b: [
 	)
 ]
 
+space-in-lists: [ ; these get gobbled up if inside a list
+	opt white-space
+	opt comment
+	opt newline
+	opt tab
+]
+
 left-curly-b: [
 	#"{"
-	; gobble up newlines and tabs following
-	opt newline
-	opt any tab
+	any space-in-lists
 	keep (
 		make token [
 			name: <lbrace>
@@ -151,11 +158,7 @@ left-curly-b: [
 
 comma-char: [
 	#","
-	; gobble up newlines and tabs following
-	opt white-space ; and left over spaces on the end of the line
-	opt [#";" any not-newline]
-	opt newline
-	opt any tab
+	any space-in-lists
 	keep (
 		make token [
 			name: <comma>
@@ -195,7 +198,7 @@ cont: [
 
 nl: [
     some [
-		newline opt some comments
+		newline any comment
 	]
     (tabs: 0)
     any [
@@ -276,7 +279,7 @@ char-sequence: [
 split-words: [                  ; parse block
     collect [
         any [
-            [remix-string | comments | number | tokens | multi-word | possessive | char-sequence]
+            [remix-string | comment | number | tokens | multi-word | possessive | char-sequence]
             any white-space
         ]
     ]
@@ -340,7 +343,7 @@ tidy-up: function [
 							]
 						]
 					]
-				][ ; lines in a list
+				][ ; lines in a list, replace the <LINE> with a <comma>
 					append current-block make token [
 						name: <comma>
 					]
