@@ -1,0 +1,14 @@
+test : [
+	31 < 5
+	show true
+	randomize
+	random 10
+	a > 3
+]
+a : 5
+showline (do (test))
+
+for each (i) from 11 to 0 in steps of -2
+	show {i, " "}
+for each (i) from 0 to 11 in steps of 2
+	show {i, " "}
