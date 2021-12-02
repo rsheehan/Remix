@@ -1,7 +1,7 @@
 
 block-list: {
-	[showline "first element"],
-	[showline "second element"],
+	[showline "first element"]
+	[showline "second element"]
 	[calling a function]
 }
 

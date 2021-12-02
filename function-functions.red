@@ -136,7 +136,7 @@ insert-function: function [
 	names: to-function-def-names func-object/template
 	func-object/num-names: length? names
 	foreach name names [
-		select function-map name [
+		if select function-map name [
 			print rejoin [{Error: "} name {"function is already defined.}]
 			quit
 		]

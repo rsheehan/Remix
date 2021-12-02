@@ -158,7 +158,7 @@ do-fnc: make function-object [
 	template: ["do" "|"]
 	; formal-parameters: ["executable"]
 	return-higher: true
-	red-code: [do] ;[do] ;[do-remix]
+	red-code: [do] ;[do-remix]
 ]
 
 type: function [

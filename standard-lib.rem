@@ -143,8 +143,12 @@ for each (#item) from (start) to (finish) (block):
 For each with "start", "finish" and "step".
 Only positive steps so far.
 for each (#item) from (start) to (finish) in steps of (step) (block):
+	if (start < finish)
+		test : [#item ≤ finish]
+	… otherwise
+		test : [#item ≥ finish]
 	#item : start
-	while [#item ≤ finish] repeat
+	while (test) repeat
 		last : do (block)
 		#item : #item + step
 	last

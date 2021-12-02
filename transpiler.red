@@ -435,6 +435,11 @@ create-red-statements: function [
 			switch/default statement/type [
 				"assignment" [
 					red-expression: create-red-expression statement/expression
+					attempt [
+						if block? first red-expression [ ; a fudge for deferred blocks
+							red-expression: first red-expression
+						]
+					]
 					either (first statement/name) = #"#" [ ; ref vars are always "set" explicitly
 						append/only red-statements compose [set quote (to-word statement/name) (red-expression)]
 					][

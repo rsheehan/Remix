@@ -15,13 +15,13 @@ print ["input file:" rem-file]
 ; N.B. remember to include the standard-lib
 ; source: append append "^/" read %standard-lib.rem "^/"
 ; source: append append source read rem-file "^/"
-source: append read rem-file "^/"
+source: append "^/" append read rem-file "^/"
 
 first-pass: parse source split-words
 clean-lex: tidy-up first-pass
 lex-symbols: spit-out-symbols clean-lex
 
-? lex-symbols
+; ?? lex-symbols
 ast: parse-trace lex-symbols [collect program]
 
 ; call-back: function [

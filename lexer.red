@@ -302,7 +302,7 @@ tidy-up: function [
 ][
     lex-output: copy []
     current-block: lex-output
-    indent-stack: []
+    indent-stack: copy []
 	list-depth: 0 ; keeps track if we are inside a list
     append/only indent-stack lex-output
     current-indent: 0

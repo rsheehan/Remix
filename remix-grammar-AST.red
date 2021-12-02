@@ -94,7 +94,13 @@ block-of-statements: [
 ]
 
 deferred-block-of-statements: [
-	collect set sequence block-of-statements
+	collect set sequence [
+		ahead block!
+		into block-of-statements
+		opt <*LINE>
+		|
+		block-of-statements
+	]
 	keep (
 		sequence: first sequence
 		sequence/type: "deferred"
@@ -205,6 +211,10 @@ simple-expression: [
 	<boolean> keep logic!
 	|
 	literal-list
+	|
+	<LBRACKET>
+	deferred-block-of-statements
+	<RBRACKET>
 ]
 
 ; e.g. a-list [ any ] : value
@@ -594,10 +604,6 @@ list-item: [
 	)
 	|
 	expression
-	|
-	<LBRACKET>
-	deferred-block-of-statements
-	<RBRACKET>
 ]
 
 list: [
