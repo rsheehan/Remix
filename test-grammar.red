@@ -40,8 +40,18 @@ files: [
 	%gr/squares.rem
 	%gr/bounce.rem
 	%ob/obj-demo.rem
+	%ob/sidewindermaze.rem
+	%ex/test29.rem
+	%ex/test30.rem
+	%ex/test31.rem
+	%ex/test32.rem
+	%ex/test33.rem
+	%ex/test34.rem
 	%ex/test35.rem
 	%ex/test36.rem
+	%ex/test37.rem
+	%ex/test38.rem
+	%ex/test39.rem
 	%temp.rem
 ]
 

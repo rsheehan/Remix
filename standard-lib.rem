@@ -387,7 +387,7 @@ std-width : 800
 std-height : 600
 
 centre : {
-	std-width ÷ 2,
+	std-width ÷ 2
 	std-height ÷ 2
 }
 
@@ -442,7 +442,7 @@ draw (colour) box from /the (bottom-left) to /the (top-right) :
 
 a shape of (shape-points) with size (shape-size):
 	create
-		position : {0, 0}
+		position : { 0, 0 }
 		heading  : 0 ; straight up
 		size     : shape-size
 		colour   : black
@@ -688,7 +688,7 @@ erase /the turtle/turtles:
 Pause the turtles for a time.
 pause turtles/turtle for (time) secs/sec:
 	append {
-		command : "pause",
+		command : "pause"
 		time : time
 	} to (current-group)
 

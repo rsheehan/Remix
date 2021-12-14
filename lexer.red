@@ -1,8 +1,8 @@
 Red [
-	Title: "Lexer revision 2"
+	Title: "Lexer revision 3"
 	Author: "Robert Sheehan"
 	Version: 0.3
-	Purpose: "Produce the sequence of tokens for the Remix grammar."
+	Purpose: "Produce the sequence of tokens and blocks for the Remix grammar."
 ]
 
 token: object [
@@ -140,20 +140,17 @@ right-b: [
 ]
 
 space-in-lists: [ ; these get gobbled up if inside a list
-	opt white-space
-	opt comment
-	opt newline
-	opt tab
+	white-space | comment | nl ;newline | tab ; do I need to add tab?
 ]
 
 left-curly-b: [
 	#"{"
-	any space-in-lists
 	keep (
 		make token [
 			name: <lbrace>
 		]
 	)
+	any space-in-lists
 ]
 
 comma-char: [
@@ -167,9 +164,6 @@ comma-char: [
 ]
 
 right-curly-b: [
-	; gobble up newlines and tabs preceding
-	opt newline
-	opt any tab
 	#"}"
 	keep (
 		make token [
@@ -289,72 +283,136 @@ LINE: make token [
 	name: <LINE>
 ]
 
-LINE-STAR: make token [
-	name: <*LINE>
+LBRACKET: make token [
+	name: <LBRACKET>
+]
+
+RBRACKET: make token [
+	name: <RBRACKET>
+]
+
+LBRACE: make token [
+	name: <lbrace>
+]
+
+RBRACE: make token [
+	name: <rbrace>
+]
+
+COMMA: make token [
+	name: <comma>
+]
+
+IMPLICIT: make token [ ; only used for implicit blocks
+	name: <implicit>
+]
+
+set-inner-block: function [
+	start-item		"start of block marker"
+	finish-item		"end of block marker"
+	input-block
+	output-block
+	indent-level
+][
+	append output-block start-item 	; e.g. <lbrace>
+	sub-output-block: copy []
+	append/only output-block sub-output-block
+	block-indent: package-up-blocks finish-item input-block sub-output-block (indent-level + 1)
+	input-block: first block-indent
+	take input-block ; remove finish-item
+	append output-block finish-item	; e.g. <rbrace>
+	input-block	; return where we are up to
+]
+
+set-inner-implicit-block: function [
+	input-block
+	output-block
+	indent-level
+][
+	sub-output-block: copy []
+	append/only output-block sub-output-block
+	return package-up-blocks IMPLICIT input-block sub-output-block (indent-level + 1)
+]
+
+package-up-blocks: function [
+	terminating		[object!]	"Finish when get this input"
+	input-block		[block!]	"Input block"
+	output-block	[block!]	"Output block"
+	indent-level	[integer!]	"Level of indent"
+][
+	previous: none
+	while [(get in first input-block 'name) <> terminating/name] [ ; never true for implicit blocks
+		; could be a list
+		; could be a deferred block
+		;	this could be implicit by tabs
+		;	or explict with [ ... ].
+		item: take input-block
+		case [
+			item/name = <lbrace> [ ; a list
+				input-block: set-inner-block LBRACE RBRACE input-block output-block indent-level
+			]
+
+			item/name = <LBRACKET> [ ; an explicit block
+				input-block: set-inner-block LBRACKET RBRACKET input-block output-block indent-level
+			]
+
+			item/name = <LINE> [
+				indent: item/value
+				if indent = (indent-level + 1) [ ; an implicit block
+					block-indent: set-inner-implicit-block input-block output-block indent-level
+					input-block: first block-indent
+					indent: second block-indent
+				]
+				if indent < indent-level [
+					return reduce [input-block indent]
+				]
+				if previous [ ; don't append if just inside the block
+					append output-block LINE
+				]
+			]
+
+			true [ ; everything else
+				append output-block item
+			]
+		]
+		previous: item
+	]
+	reduce [input-block indent-level]
 ]
 
 tidy-up: function [
     { Turns the output into required Remix lex code.
-      Removes all of the indent lines and puts consecutive same levels between brackets. 
-	  Also deals with explicit lists so commas aren't necessary if items are on different
-	  lines. }
-    block   [block!]    "A block with tokens, strings and characters etc"
+      Removes all of the indent lines and puts consecutive same levels between brackets. }
+    input-block   [block!]    "The input block with tokens, strings and characters etc"
 ][
-    lex-output: copy []
-    current-block: lex-output
-    indent-stack: copy []
-	list-depth: 0 ; keeps track if we are inside a list
-    append/only indent-stack lex-output
-    current-indent: 0
-    forall block [
-        item: first block
-		case [
-			item/name = <lbrace> [
-				list-depth: list-depth + 1
-				append current-block item
+	output-block: copy []
+	while [not empty? input-block] [
+		item: take input-block
+		switch/default item/name [
+			<lbrace> [
+				input-block: set-inner-block LBRACE RBRACE input-block output-block 0
 			]
-			item/name = <rbrace> [
-				list-depth: list-depth - 1
-				append current-block item
+			<LBRACKET> [
+				input-block: set-inner-block LBRACKET RBRACKET input-block output-block 0
 			]
-			item/name = <LINE> [
-				either list-depth = 0 [ ; ordinary lines
-					this-indent: item/value
-					case [
-						this-indent = current-indent [
-							append current-block LINE
-						]
-						this-indent = (current-indent + 1) [ ; only one implicit level allowed
-							append/only current-block copy []
-							current-block: last current-block
-							append/only indent-stack current-block ; push
-							current-indent: this-indent
-						]
-						this-indent > current-indent [
-							print "Error: bad indentation"
-							quit
-						]
-						this-indent < current-indent [
-							while [this-indent < current-indent] [
-								take/last indent-stack ; pop
-								current-block: last indent-stack ; previous one
-								append current-block LINE-STAR
-								current-indent: current-indent - 1
-							]
-						]
+			<LINE> [
+				indent: item/value
+				case [
+					indent = 1 [
+						set-inner-implicit-block input-block output-block 0
 					]
-				][ ; lines in a list, replace the <LINE> with a <comma>
-					append current-block make token [
-						name: <comma>
+					indent <> 0 [
+						print "Error: Bad indentation top-level"
+						quit
 					]
 				]
+				append output-block LINE
 			]
-			true [
-				append current-block item
-			]
+		][ ; default
+			append output-block item
 		]
-    ]
-    append lex-output LINE
+	]
+    append output-block LINE
 ]
 
 spit-out-symbols: function [

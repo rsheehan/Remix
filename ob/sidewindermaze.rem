@@ -23,8 +23,8 @@ COLUMNS : 38
 the-maze : {}  ; this will contain maze cells
 start : {1, 1} ; {random 39, random 29}
 finish : { ; the middle
-	convert (COLUMNS ÷ 2) to integer + 1
 	convert (ROWS ÷ 2) to integer + 1
+	convert (COLUMNS ÷ 2) to integer + 1
 }
 
 on standard (black) paper
@@ -38,8 +38,8 @@ on standard (black) paper
 	solve the maze from (start) to (finish)
 
 prepare the maze grid :
-	for (column)(COLUMNS) and (row)(ROWS) on each row [append {} to (the-maze)] 
-		cell : create a maze cell at (row) and (column)
+	for (column) (COLUMNS) and (row) (ROWS) on each row [append {} to (the-maze)] 
+		cell : a maze cell at (row) and (column)
 		append (cell) to (the-maze [row])
 		draw (cell)
 
@@ -57,28 +57,27 @@ deal with all columns in (row) except the right :
 	start-run : 1
 	for each (column) from 1 to (COLUMNS - 1)
 		if (heads)
-			remove the right wall in (cell at { column, row })
+			remove the right wall in (cell at { row, column })
 		… otherwise …
 			gap : choose from (start-run) to (column)
-			remove the bottom wall in (cell at { gap, row })
+			remove the bottom wall in (cell at { row, gap })
 			start-run : column + 1
 
 deal with the right cell in (row) :
-	remove the bottom wall in (cell at { COLUMNS, row })
+	remove the bottom wall in (cell at { row, COLUMNS })
 
 deal with the bottom row : 
 	for each (col) from 1 to (COLUMNS - 1)
-		remove the right wall in (cell at { col, ROWS })
+		remove the right wall in (cell at { ROWS, col })
 
 show the maze :
 	for (column)(COLUMNS) and (row)(ROWS)
-		cell : cell at { column, row }
+		cell : cell at { row, column }
 		draw cell's exits
 
-cell at (position) :
-	Return the cell object at "position".
-	the-row : the-maze [position [2]]
-	the-row [position [1]]
+cell at (pos) :
+	Return the cell object at position "pos".
+	(the-maze's (pos's 1)) (pos's 2)
 
 choose from (start) to (finish) :
 	(random (1 + finish - start)) + start - 1
@@ -162,7 +161,7 @@ go closer than (distance) from (cell) :
 
 ==== Maze Cell Object ====
 
-create a maze cell at (the-row) and (the-col) :
+a maze cell at (the-row) and (the-col) :
 	create
 		row : the-row
 		column : the-col
@@ -209,16 +208,16 @@ create a maze cell at (the-row) and (the-col) :
 			draw circle of (SIZE ÷ 2) at (centre)
 
 		right from (me) :
-			cell at { column + 1, row }
+			cell at { row, column + 1 }
 
 		left from (me) :
-			cell at { column - 1, row}
+			cell at { row, column - 1 }
 
 		up from (me) :
-			cell at { column, row - 1 }
+			cell at { row - 1, column }
 
 		down from (me) :
-			cell at { column, row + 1 }
+			cell at { row + 1, column }
 
 		can move right from (me) :
 			right-open

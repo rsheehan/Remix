@@ -1,8 +1,8 @@
 a spinning square :
 	extend (a shape of {
-		{-1, -1},
-		{ 1, -1},
-		{ 1,  1},
+		{-1, -1}
+		{ 1, -1}
+		{ 1,  1}
 		{-1,  1}
 	} with size 50)
 

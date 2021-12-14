@@ -10,15 +10,13 @@ do %ast.red
 do %function-functions.red
 do %built-in-functions.red
 
-END-OF-LINE: [<LINE> | <*LINE>]
-
 END-OF-FN-CALL: [
-	END-OF-LINE | <RBRACKET> | <rparen>  | <rbrace> | <comma> | <operator>
+	<LINE> | <RBRACKET> | <rparen>  | <rbrace> | <comma> | <operator>
 ]
 
 ; should never remove <RBRACKET> or <rparen> except with matching left hand term.
 END-OF-STATEMENT: [
-	[end | END-OF-LINE] | ahead [<RBRACKET> | <rparen>]
+	[end | <LINE>] | ahead [<RBRACKET> | <rparen>]
 ]
 
 program: [
@@ -46,7 +44,7 @@ function-definition: [
 	function-signature ; fills in new-function/template
 	<colon> opt [<colon> (new-function/return-higher: true)]
 	function-statements ; fills in new-function/block
-	END-OF-LINE
+	<LINE>
 	(
 		insert-function new-function
 	)
@@ -97,7 +95,7 @@ deferred-block-of-statements: [
 	collect set sequence [
 		ahead block!
 		into block-of-statements
-		opt <*LINE>
+		opt <LINE>
 		|
 		block-of-statements
 	]
@@ -229,7 +227,7 @@ list-element-assignment: [
 			]
 		)
 		keep ("|")
-		<LBRACKET> collect set expr expression <RBRACKET>
+		<LBRACKET> collect set expr [ahead block! into expression] <RBRACKET>
 		keep (expr)
 		<colon>
 		keep ("|")
@@ -254,7 +252,7 @@ list-element: [
 			]
 		)
 		keep ("|")
-		<LBRACKET> collect set expr expression <RBRACKET>
+		<LBRACKET> collect set expr [ahead block! into expression] <RBRACKET>
 		[end | ahead END-OF-FN-CALL]
 		keep (expr)
 	]
@@ -417,7 +415,7 @@ object-method: [
 	method-signature
 	<colon>
 	method-statements 
-	END-OF-LINE
+	opt <LINE>
 	(
 		add-to-method-list new-method
 		new-object: last object-stack
@@ -543,8 +541,8 @@ function-call: [
 
 					; the next 4 are block parameters
 
-					| <LBRACKET> ahead block! collect set expr [into deferred-block-of-statements] <*LINE> <RBRACKET> 
-					| opt <cont> ahead block! collect set expr [into deferred-block-of-statements] opt [<*LINE> <cont>]
+					| <LBRACKET> ahead block! collect set expr [into deferred-block-of-statements] <LINE> <RBRACKET> 
+					| opt <cont> ahead block! collect set expr [into deferred-block-of-statements] opt [<LINE> <cont>]
 					| <LBRACKET> collect set expr deferred-block-of-statements <RBRACKET> 
 					| <lparen> <LBRACKET> collect set expr deferred-block-of-statements <RBRACKET> <rparen>
 
@@ -568,7 +566,7 @@ function-call: [
 ]
 
 literal-list: [
-	<lbrace> collect set lit-list list <rbrace>
+	<lbrace> collect set lit-list [into list] <rbrace> ; "into" added for lexer 3
 	keep (
 		expr: make remix-list [
 			value: to-hash lit-list
@@ -607,7 +605,7 @@ list-item: [
 ]
 
 list: [
-	list-item any [<comma> list-item] ;was list-item opt [<comma> list]
+	list-item any [any [<comma> | <LINE>] list-item] ;was list-item opt [<comma> list]
 	|
 	none
 ]

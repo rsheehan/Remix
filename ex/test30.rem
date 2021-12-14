@@ -12,11 +12,11 @@ make object :
 
 a : make object
 y : 3
-show object (a) plus (y + (a) x)
+show object (a) plus (y + a's x)
 
 function show (a)
 
 function show (b) :
-	(b) x : 100
-	showline ((a) x)
-	show object (b) plus (10 + (b) x)
+	b's x : 100
+	showline (a's x)
+	show object (b) plus (10 + b's x)

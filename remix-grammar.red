@@ -8,15 +8,13 @@ Red [
 
 do %lexer.red
 
-END-OF-LINE: [<LINE> | <*LINE>]
-
 END-OF-FN-CALL: [
-	END-OF-LINE | <RBRACKET> | <rparen> | <rbrace> | <comma> | <operator>
+	<LINE> | <RBRACKET> | <rparen> | <rbrace> | <comma> | <operator>
 ]
 
 ; should never remove <RBRACKET> or <rparen> except with matching left hand term.
 END-OF-STATEMENT: [
-	[end | END-OF-LINE ] | ahead [<RBRACKET> | <rparen>]
+	[end | <LINE> ] | ahead [<RBRACKET> | <rparen>]
 ]
 
 program: [
@@ -34,7 +32,7 @@ function-definition: [
 	function-signature
 	<colon> opt <colon>
 	function-statements 
-	END-OF-LINE
+	<LINE>
 ]
 
 ; e.g. from (start) to (finish) do (block)
@@ -59,6 +57,10 @@ block-of-statements: [
 ]
 
 deferred-block-of-statements: [ ; only here because of a difference in code generation
+	ahead block!
+	into block-of-statements
+	opt <LINE>
+	|
 	block-of-statements
 ]
 
@@ -122,12 +124,16 @@ simple-expression: [
 	| <number> number! 
 	| <boolean> logic!
 	| literal-list
+	|
+	<LBRACKET>
+	deferred-block-of-statements
+	<RBRACKET>
 ]
 
 ; e.g. a-list [ any ] : value
 list-element-assignment: [
 	<word> string!
-	<LBRACKET> expression <RBRACKET>
+	<LBRACKET> [ahead block! into expression] <RBRACKET>
 	<colon>
 	expression
 ]
@@ -135,7 +141,7 @@ list-element-assignment: [
 ; e.g. a-list [3]
 list-element: [
 	<word> string!
-	<LBRACKET> expression <RBRACKET>
+	<LBRACKET> [ahead block! into expression] <RBRACKET>
 	[end | ahead END-OF-FN-CALL]
 ]
 
@@ -146,7 +152,7 @@ list-element: [
 ;		show (a)
 create-call: [
 	<word> ["create" | "extend" <lparen> simple-expression <rparen>]
-	ahead block! into [object-body]
+	ahead block! into object-body
 	[end | ahead END-OF-FN-CALL]
 ]
 
@@ -198,7 +204,7 @@ object-method: [
 	method-signature
 	<colon>
 	method-statements 
-	END-OF-LINE
+	opt <LINE>
 ]
 
 method-signature: [ ; same as function-signature, but different actions
@@ -244,8 +250,8 @@ function-call: [
 
 			; the next 4 are block parameters
 
-			| <LBRACKET> ahead block! into deferred-block-of-statements <*LINE> <RBRACKET> 
-			| opt <cont> ahead block! into deferred-block-of-statements opt [<*LINE> <cont>]
+			| <LBRACKET> ahead block! into deferred-block-of-statements <LINE> <RBRACKET> 
+			| opt <cont> ahead block! into deferred-block-of-statements opt [<LINE> <cont>]
 			| <LBRACKET> deferred-block-of-statements <RBRACKET> 
 			| <lparen> <LBRACKET> deferred-block-of-statements <RBRACKET> <rparen>
 
@@ -256,7 +262,7 @@ function-call: [
 ]
 
 literal-list: [
-	<lbrace> list <rbrace>
+	<lbrace> into list <rbrace> ; "into" added for lexer 3
 ]
 
 key-value: [
@@ -279,14 +285,10 @@ list-item: [
 	key-value
 	|
 	expression
-	|
-	<LBRACKET>
-	deferred-block-of-statements
-	<RBRACKET>
 ]
 
 list: [
-	list-item any [<comma> list-item]
+	list-item any [any [<comma> | <LINE>] list-item]
 	|
 	none
 ]
