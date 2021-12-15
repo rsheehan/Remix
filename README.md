@@ -42,85 +42,84 @@ Here is an animated random landscape program in Remix.
 
     
     randomize
-    
+
+    the-clouds : 10 clouds
+
     on standard (sky) paper
-    draw together
-    	draw the landscape
-    
-    the-clouds : apply [create a cloud] 10 times
-    
-    animate the clouds
-    show paper
-    
+        draw the landscape
+        animate the clouds
+
     ==================
-    
+
     draw the landscape :
-    	draw the back mountains
-    	draw the front mountains
-    
+        draw the back mountains
+        draw the front mountains
+
     draw the back mountains :
-    	draw on layer 2
-    	no outline
-    	repeat 30 times
-    		draw a (coal) mountain of max height 200 based at 200
-    	draw (coal) box from {0, std-height} to {std-width, std-height - 200}
-    
+        draw on layer 2
+        no outline
+        repeat 30 times
+            draw a (coal) mountain of max height 200 based at 200
+        draw (coal) box from {0, std-height} to {std-width, std-height - 200}
+
     draw the front mountains :
-    	draw on layer 3
-    	repeat 20 times
-    		if (heads) [ no outline ] otherwise [ draw with (coal) pen ]
-    		draw a (gray) mountain of max height 150 based at 150
-    
+        draw on layer 3
+        repeat 20 times
+            if (heads) [ no outline ] otherwise [ draw with (coal) pen ]
+            draw a (gray) mountain of max height 150 based at 150
+
     draw a (colour) mountain of max height (max-height) based at (level) :
-    	centre : random (std-width)
-    	height : random (max-height)
-    	peak : std-height - (height + level)
-    	width : random 100 + 250
-    	mountain : a shape of {
-    		{ centre, peak }
-    		{ centre + width ÷ 2, std-height - level }
-    		{ centre - width ÷ 2, std-height - level }
-    	}
-    	mountain's colour : colour
-    	fill (mountain)
-    
+        centre : random (std-width)
+        height : random (max-height)
+        peak : std-height - (height + level)
+        width : random 100 + 250
+        mountain : a shape of {
+            { centre, peak }
+            { centre + width ÷ 2, std-height - level }
+            { centre - width ÷ 2, std-height - level }
+        }
+        mountain's colour : colour
+        fill (mountain)
+
     ==================
-    
+
+    (n) clouds :
+        apply [a cloud] (n) times
+
+    a cloud :
+        base : random (std-height)
+        across : random (std-width)
+        r1 : random 10 + 30
+        r2 : random 10 + 20
+        distance : 10
+        if (r1 > r2)
+            (r1) ⇆ (r2)
+
+        create
+            a-radius : r1
+            b-radius : r2
+            x1 : (across - r1) + distance
+            x2 : (across + r2) - distance
+            y1 : base - r1
+            y2 : base - r2
+
+            draw (me) :
+                draw (white) circle of (a-radius) at {x1, y1}
+                draw (white) circle of (b-radius) at {x2, y2}
+                draw (white) box from {x1, y1 + a-radius} to {x2, y2}
+
+            move (me) :
+                inc (x1)
+                inc (x2)
+                if ((x1 - a-radius) > std-width)
+                    back : 0 - b-radius
+                    x1 : back - (x2 - x1)
+                    x2 : back
+
     animate the clouds :
-    	animate 20 times per sec
-    		clear layer 1
-    		no outline
-    		for each (cloud) in (the-clouds)
-    			move (cloud)
-    			draw (cloud)
-    
-    create a cloud :
-    	base : random (std-height)
-    	across : random (std-width)
-    	r1 : random 10 + 30
-    	r2 : random 10 + 20
-    	distance : 10
-    	if (heads)
-    		(r1) ⇆ (r2)
-    
-    	create
-    		a-radius : r1
-    		b-radius : r2
-    		x1 : (across - r1) + distance
-    		x2 : (across + r2) - distance
-    		y1 : base - r1
-    		y2 : base - r2
-    
-    		draw (me) :
-    			draw (white) circle of (a-radius) at {x1, y1}
-    			draw (white) circle of (b-radius) at {x2, y2}
-    			draw (white) box from {x1, y1 + a-radius} to {x2, y2}
-    
-    		move (me) :
-    			inc (x1)
-    			inc (x2)
-    			if ((x1 - a-radius) > std-width)
-    				back : 0 - b-radius
-    				x1 : back - (x2 - x1)
-    				x2 : back
-    
+        animate 20 times per sec
+            clear layer 1
+            no outline
+            for each (cloud) in (the-clouds)
+                move (cloud)
+                draw (cloud)

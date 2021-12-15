@@ -1,14 +1,11 @@
 
 randomize
 
+the-clouds : 10 clouds
+
 on standard (sky) paper
-draw together
 	draw the landscape
-
-the-clouds : apply [create a cloud] 10 times
-
-animate the clouds
-show paper
+	animate the clouds
 
 ==================
 
@@ -44,21 +41,16 @@ draw a (colour) mountain of max height (max-height) based at (level) :
 
 ==================
 
-animate the clouds :
-	animate 20 times per sec
-		clear layer 1
-		no outline
-		for each (cloud) in (the-clouds)
-			move (cloud)
-			draw (cloud)
+(n) clouds :
+	apply [a cloud] (n) times
 
-create a cloud :
+a cloud :
 	base : random (std-height)
 	across : random (std-width)
 	r1 : random 10 + 30
 	r2 : random 10 + 20
 	distance : 10
-	if (heads)
+	if (r1 > r2)
 		(r1) ⇆ (r2)
 
 	create
@@ -81,3 +73,11 @@ create a cloud :
 				back : 0 - b-radius
 				x1 : back - (x2 - x1)
 				x2 : back
+
+animate the clouds :
+	animate 20 times per sec
+		clear layer 1
+		no outline
+		for each (cloud) in (the-clouds)
+			move (cloud)
+			draw (cloud)
