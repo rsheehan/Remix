@@ -10,10 +10,10 @@ scatter squares :
 	draw together
 		no outline
 		repeat 100 times
-			(square) position : random point
-			(square) size	  : random 100
-			(square) colour   : random colour
-			(square) heading  : random 90
+			square's position : random point
+			square's size	  : random 100
+			square's colour   : random colour
+			square's heading  : random 90
 			fill (square)
 
 on standard paper

@@ -1,1 +1,1 @@
-red remix.red $args[0]
+red --cli remix.red $args[0]

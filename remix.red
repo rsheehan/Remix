@@ -59,5 +59,6 @@ red-code: transpile-main ast
 ; probe red-code
 
 print "^/PROGRAM OUTPUT"
-recycle/off ; turn garbage collector off - this is not good but stops crashes in the short term
+recycle/off ; turn garbage collector off -
+; this is not good but stops crashes in the short term
 do red-code
