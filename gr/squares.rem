@@ -1,8 +1,8 @@
 
 square : a shape of {
-	{-1, -1},
-	{ 1, -1},
-	{ 1,  1},
+	{-1, -1}
+	{ 1, -1}
+	{ 1,  1}
 	{-1,  1}
 }
 
@@ -14,7 +14,7 @@ scatter squares :
 			square's size	  : random 100
 			square's colour   : random colour
 			square's heading  : random 90
-			fill (square)
+			fill the (square)
 
 on standard paper
 	scatter squares
