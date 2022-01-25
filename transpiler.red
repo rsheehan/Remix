@@ -261,7 +261,6 @@ create-method-call: function [
 	{ Return the code to indirectly call the correct method. }
 	name			"the name of the method"
 	actual-params	"the parameters to evaluate and pass"
-	/extern object-method-list-stack
 ][
 	; Is the call from a method to a method of the same object?
 	; Or a call to a me/my less method of the same object?
@@ -297,6 +296,7 @@ a-simple-call: function [
 	  This is used to distinguish between calls to self methods with calls of the same name. }
 	name [string!]
 	num-params [number!]
+	/extern object-method-list-stack
 ][
 	method-num-params: select last object-method-list-stack name
 	num-params = method-num-params
