@@ -141,7 +141,6 @@ for each (#item) from (start) to (finish) (block):
 	for each (#item) in ((start) to (finish)) (block)
 
 For each with "start", "finish" and "step".
-Only positive steps so far.
 for each (#item) from (start) to (finish) in steps of (step) (block):
 	if (start < finish)
 		test : [#item ≤ finish]
