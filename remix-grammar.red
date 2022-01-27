@@ -14,7 +14,7 @@ END-OF-FN-CALL: [
 
 ; should never remove <RBRACKET> or <rparen> except with matching left hand term.
 END-OF-STATEMENT: [
-	[end | <LINE> ] | ahead [<RBRACKET> | <rparen>]
+	end | <LINE> | ahead [<RBRACKET> | <rparen>]
 ]
 
 program: [
@@ -148,7 +148,7 @@ list-element: [
 ; e.g. 
 ;create
 ;	a : 4
-;	pr _ :
+;	pr (me) :
 ;		show (a)
 create-call: [
 	<word> ["create" | "extend" <lparen> simple-expression <rparen>]
@@ -157,14 +157,17 @@ create-call: [
 ]
 
 object-body: [
-	any [
-		object-field END-OF-STATEMENT
-		|
-		object-field-getter END-OF-STATEMENT
-		|
-		object-field-setter END-OF-STATEMENT
-		|
-		object-field-getter-setter END-OF-STATEMENT
+	some [
+		[
+			object-field
+			|
+			object-field-getter
+			|
+			object-field-setter
+			|
+			object-field-getter-setter
+		]
+		END-OF-STATEMENT
 		|
 		object-method
 	]
@@ -181,21 +184,21 @@ get-fields-list: [
 
 ; e.g.
 ; getter
-; 	x : 4
+; 	x
 object-field-getter: [
 	<word> ["getter" | "getters"] ahead block! into get-fields-list
 ]
 
 ; e.g.
 ; setter
-; 	x : 4
+; 	x
 object-field-setter: [
 	<word> ["setter" | "setters"] ahead block! into get-fields-list
 ]
 
 ; e.g.
 ; getter/setter
-; 	x : 4
+; 	x
 object-field-getter-setter: [
 	<multi-word> ["getter/setter" | "getters/setters"] ahead block! into get-fields-list
 ]
@@ -207,7 +210,7 @@ object-method: [
 	opt <LINE>
 ]
 
-method-signature: [ ; same as function-signature, but different actions
+method-signature: [ ; almost same as function-signature, but different actions
 	some [
 		<word> string!
 		|
@@ -228,7 +231,9 @@ method-statements: [ ; same as function-statements, but different actions
 ]
 
 ; e.g.
-; (x) number : 7
+;	(x) number : 7
+; also
+;	x's number : 7 ; because of work by lexer.red
 setter-call: [
 	; Not designed to allow callee to be "me" or "my".
 	; Assuming if in the object we just use the field directly.

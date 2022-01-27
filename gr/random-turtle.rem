@@ -6,7 +6,8 @@ For the purposes of turtle graphics.
 	- the axes have positive y at the top of the window
 
 turtle graphics on (purple) paper
+	turtle's speed : 100
 
 	repeat 100 times
-		(turtle) colour : random colour
+		turtle's colour : random colour
 		move to (random turtle point)

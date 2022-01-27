@@ -16,7 +16,7 @@ END-OF-FN-CALL: [
 
 ; should never remove <RBRACKET> or <rparen> except with matching left hand term.
 END-OF-STATEMENT: [
-	[end | <LINE>] | ahead [<RBRACKET> | <rparen>]
+	end | <LINE> | ahead [<RBRACKET> | <rparen>]
 ]
 
 program: [
@@ -269,7 +269,7 @@ list-element: [
 ; e.g. 
 ;create
 ;	a : 4
-;	pr () :
+;	pr (me) :
 ;		show (a)
 create-call: [
 	<word> [
@@ -295,13 +295,16 @@ create-call: [
 
 object-body: [
 	some [
-		object-field END-OF-STATEMENT
-		|
-		object-field-getter END-OF-STATEMENT
-		|
-		object-field-setter END-OF-STATEMENT
-		|
-		object-field-getter-setter END-OF-STATEMENT
+		[
+			object-field
+			|
+			object-field-getter
+			|
+			object-field-setter
+			|
+			object-field-getter-setter
+		]
+		END-OF-STATEMENT
 		|
 		object-method
 	]
@@ -372,7 +375,7 @@ get-fields-list: [
 
 ; e.g.
 ; getter
-; 	x : 4
+; 	x
 object-field-getter: [
 	<word> ["getter" | "getters"] ahead block! collect set name-list into get-fields-list
 	(
@@ -384,7 +387,7 @@ object-field-getter: [
 
 ; e.g.
 ; setter
-; 	x : 4
+; 	x
 object-field-setter: [
 	<word> ["setter" | "setters"] ahead block! collect set name-list into get-fields-list
 		(
@@ -396,7 +399,7 @@ object-field-setter: [
 
 ; e.g.
 ; getter/setter
-; 	x : 4
+; 	x
 object-field-getter-setter: [
 	<multi-word> ["getter/setter" | "getters/setters"] ahead block! collect set name-list into get-fields-list
 	(
@@ -423,7 +426,7 @@ object-method: [
 	)
 ]
 
-method-signature: [ ; same as function-signature, but different actions
+method-signature: [ ; almost same as function-signature, but different actions
 	(
 		param-position: 1
 		self-position: 0
@@ -481,6 +484,8 @@ method-statements: [
 
 ; e.g.
 ; (x) number : 7
+; also
+; x's number : 7 ; because of work by lexer.red
 setter-call: [
 	; Not designed to allow callee to be "me" or "my".
 	; Assuming if in the object we just use the field directly.
@@ -515,8 +520,7 @@ function-call: [
 		if (select function-map first fnc-template)
 		|
 		collect set fnc-template [
-			2 20 [
-				; currently a max of 20 parts to a function call
+			2 20 [ ; currently a max of 20 parts to a function call
 				<word> keep string! ; part of the function name the rest are actual parameters
 				| 
 				[
@@ -566,7 +570,7 @@ function-call: [
 ]
 
 literal-list: [
-	<lbrace> collect set lit-list [into list] <rbrace> ; "into" added for lexer 3
+	<lbrace> collect set lit-list into list <rbrace> ; "into" added for lexer 3
 	keep (
 		expr: make remix-list [
 			value: to-hash lit-list
