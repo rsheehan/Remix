@@ -20,12 +20,10 @@ show paper
 ========================================
 
 (n) turtles:
-	turtles : {}
-	repeat (n) times
+	apply (n) times
 		new-turtle: based on (turtle)
 		new-turtle's colour : random colour
 		move the (new-turtle) by (radius)
 		turn the (new-turtle) 90 degrees
-		add the (new-turtle) to (turtles)
 		turn 10 degrees
-	turtles
+		new-turtle

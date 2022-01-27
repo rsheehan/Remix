@@ -197,6 +197,9 @@ apply/collect (block) (n) times:
 	repeat (n) times
 		append (do (block)) to (result)
 
+apply/collect (n) times (block):
+	apply (block) (n) times
+
 Choose a random item from a list.
 pick /item from /the (list):
 	list [random (length of (list))]
