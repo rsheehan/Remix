@@ -6,9 +6,9 @@ n2 : get value
 n3 : get value
 
 middle : choose from
-	(n1) if it's between (n2) and (n3)
-	(n2) if it's between (n1) and (n3)
-	(n3) if it's between (n1) and (n2) ; or just "n3"
+	(n1) if between (n2) and (n3)
+	(n2) if between (n1) and (n3)
+	(n3) if between (n1) and (n2) ; or just "n3"
 
 { "The middle value is ", middle } ↲
 
@@ -17,6 +17,6 @@ middle : choose from
 get value:
 	ask for integer "Enter an integer: "
 
-(n1) if it's between (n2) and (n3)::
+(n1) if between (n2) and (n3)::
 	((n2 ≤ n1) and (n1 ≤ n3)) produces (n1)
 	((n3 ≤ n1) and (n1 ≤ n2)) produces (n1)
