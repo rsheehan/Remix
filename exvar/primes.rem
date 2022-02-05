@@ -1,0 +1,27 @@
+Calculate primes.
+=================
+
+$primes : {2}
+
+
+$number is not divisible by any number in $list :
+	for each $divisor in $list
+		if ($number is divisible by $divisor)
+			return false
+		true
+
+{ length of $primes, " prime: ", $primes as list } ↲
+
+for each $i from 1 to 3
+	
+	$biggest-prime : last in $primes
+	$start : $biggest-prime + 1
+	$finish : ($biggest-prime × $biggest-prime) + 1
+	
+	$the-list : $start to $finish
+	$more-primes : filter $the-list by $x where
+		$x is not divisible by any number in $primes
+	
+	$primes : join $primes and $more-primes
+	
+	{ length of $primes, " primes: ", $primes as list } ↲

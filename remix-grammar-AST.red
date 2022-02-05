@@ -1,7 +1,7 @@
 Red [
 	Title: "The Remix Grammar"
 	Author: "Robert Sheehan"
-	Version: 0.3
+	Version: 0.4
 	Purpose: "The grammar of Remix creating AST. This is used by the transpiler. "
 ]
 
@@ -66,7 +66,9 @@ function-signature: [
 			append/only new-function/template multi-names
 		)
 		|
-		<lparen> <word> set param-name string! <rparen> 
+		<varname> set param-name string! ; e.g. #var
+			; |
+			; [ <lparen> <word> set param-name string! <rparen> ] ; e.g. (var)
 		(
 			append new-function/template "|"
 			append new-function/formal-parameters param-name
@@ -122,7 +124,7 @@ statement: [
 ; e.g. abc : something
 assignment-statement: [
 	collect set parts [
-		<word> keep string! 
+		<varname> keep string! 
 		<colon> 
 		keep expression
 	]
@@ -194,9 +196,15 @@ simple-expression: [
 	|  
 	function-call
 	|
-	<word> set var-name string!
+	; <word> set var-name string!
+	; keep (
+	; 	; only get here because of the heuristic rejecting a single word function if not declared
+	; 	make variable [
+	; 		name: var-name
+	; 	]
+	; )
+	<varname> set var-name string!
 	keep (
-		; only get here because of the heuristic rejecting a single word function if not declared
 		make variable [
 			name: var-name
 		]
@@ -517,6 +525,7 @@ function-call: [
 		; Could be a variable rather than a single string function name.
 		; One heuristic for checking is if the function is already defined.
 		; However this means single word function names must be defined before use.
+		; No longer true with explicit variable names.
 		if (select function-map first fnc-template)
 		|
 		collect set fnc-template [
@@ -528,6 +537,13 @@ function-call: [
 					(
 						; need to record this for checking in the transpiler
 						expr: 'self
+					)
+					|
+					<varname> set var-name string!
+					(
+						expr: make variable [
+							name: var-name
+						]
 					)
 					| <string> set string string! 
 					(
@@ -549,7 +565,6 @@ function-call: [
 					| opt <cont> ahead block! collect set expr [into deferred-block-of-statements] opt [<LINE> <cont>]
 					| <LBRACKET> collect set expr deferred-block-of-statements <RBRACKET> 
 					| <lparen> <LBRACKET> collect set expr deferred-block-of-statements <RBRACKET> <rparen>
-
 					| <lparen> collect set expr expression <rparen> 
 				]
 				keep ("|")

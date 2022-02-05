@@ -1,7 +1,7 @@
 Red [
 	Title: "The Remix Grammar"
 	Author: "Robert Sheehan"
-	Version: 0.3
+	Version: 0.4
 	Purpose: { The grammar of Remix.
 	Some <tags> are followed by the <tag>'s value. }
 ]
@@ -43,7 +43,8 @@ function-signature: [
 		|
 		<multi-word> string!
 		|
-		<lparen> <word> string! <rparen> 
+		<varname> string!
+		; <lparen> <word> string! <rparen> 
 	]
 ]
 
@@ -79,7 +80,7 @@ statement: [
 
 ; e.g. abc : something
 assignment-statement: [
-	<word> string! 
+	<varname> string! 
 	<colon> 
 	expression
 ]
@@ -119,7 +120,8 @@ simple-expression: [
 	list-element
 	| create-call
 	| function-call 
-	| <word> string!
+	; | <word> string!
+	| <varname> string!
 	| <string> string! 
 	| <number> number! 
 	| <boolean> logic!
@@ -250,6 +252,7 @@ function-call: [
 			|
 			; for a self method call
 			<lparen> <word> ["me" | "my"] <rparen>
+			| <varname> string!
 			; a literal parameter
 			| <string> string! | <number> number! | <boolean> logic! | literal-list
 

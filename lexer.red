@@ -1,7 +1,7 @@
 Red [
 	Title: "Lexer revision 3"
 	Author: "Robert Sheehan"
-	Version: 0.3
+	Version: 0.4
 	Purpose: "Produce the sequence of tokens and blocks for the Remix grammar."
 ]
 
@@ -261,6 +261,14 @@ char-sequence: [
 			]
 		)
         |
+		if (#"$" = first chars)
+		keep (
+			make token [
+				name: <varname>
+				value: next chars
+			]
+		)
+		|
 		keep (
 			make token [
 				name: <word>

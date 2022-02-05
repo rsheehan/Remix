@@ -10,710 +10,710 @@ new line:
 	nl
 
 Output the value of "what" followed by a newline.
-showline (what):
-	show (what)
+showline $what:
+	show $what
 	nl
 
-show line (what):
-	showline (what)
+show line $what:
+	showline $what
 
-/show (what) ↲:
-	showline (what)
+/show $what ↲:
+	showline $what
 
 A simplified show function.
-(what) ^ :
-	show (what)
-
-========================================
-Just trying out a more verbal version.
-
-/an empty list :
-	{}
-
-========================================
-
-Negate the "value".
-not (value):
-	if (value)
-		return false
-	true
-
-The boolean "and" operation.
-The "if" in the "not" function causes blocks to be evaluated.
-(value1) and (value2):
-	if (not (value1))
-		return false
-	if (not (value2))
-		return false
-	true
-
-The boolean "or" operation.
-(value1) or (value2):
-	if (value1)
-		return true
-	if (value2)
-		return true
-	false
-
-
-Report if not at the end of the "list".
-not at /the end of /the (list):
-	not (end of (list))
-
-========================================
-
-Alternative append function.
-to (so-far) add/append /on (more) :
-	append (more) to (so-far)
-
-=== Input operations ===
-
-Ask for an integer value.
-ask for /an integer (prompt):
-	input : ask (prompt)
-	convert (input) to integer
-
-========================================
-
-Shorthand for "if (not ()) []".
-Transparent like "if".
-if not (condition)(block)::
-	if (not (condition))
-		do (block)
-
-Repeat the "block" for ever.
-repeat (block) forever:
-	do (block)
-	redo
-
-Repeat the "block" a definite number of times.
-repeat (count) times (block):
-	if (count ≤ 0)
-		return last
-	last : do (block)
-	count : count - 1
-	redo
-
-Alternative definite repeat.
-repeat (block)(count) times:
-	repeat (count) times (block)
-
-While a "condition" is true keep doing "block".
-while (condition) repeat (block):
-	if not (condition)
-		return last
-	last : do (block)
-	redo
-
-Catch the result of "block" even if a "return" is used.
-catch do (block):
-	do (block)
-
-An alternative name for return without a value, i.e. none.
-This is more applicable when breaking out from within a loop or a sequence statement.
-break out::
-	return
-
-Repeat a "block" until some "condition" is true.
-repeat (block) until (condition):
-	last : do (block)
-	if (condition)
-		return last
-	redo
-
-========================================
-
-Run "block" for each item in "list".
-"block" will refer to "item".
-Returns either the last statement result or whatever is returned from "block".
-for each (#item) in /the (list)(block):
-	start (list)
-	do
-		if (end of (list))
-			return last
-		#item : next (list)
-		A return in the (block) following breaks out of the loop, with its result.
-		last : do (block)
-		redo
-
-A for each with a definite "start" and "finish" value.
-for each (#item) from (start) to (finish) (block):
-	for each (#item) in ((start) to (finish)) (block)
-
-For each with "start", "finish" and "step".
-for each (#item) from (start) to (finish) in steps of (step) (block):
-	if (start < finish)
-		test : [#item ≤ finish]
-	… otherwise
-		test : [#item ≥ finish]
-	#item : start
-	while (test) repeat
-		last : do (block)
-		#item : #item + step
-	last
-
-A 2 dimensional for loop over "num-rows" and "num-cols".
-"row-block" can refer to "#down".
-"col-block" can refer to "#down" and "#across".
-for (#across)(num-cols) and (#down)(num-rows) on each row (row-block) (col-block) :
-	for each (#down) from 1 to (num-rows)
-		do (row-block)
-		for each (#across) from 1 to (num-cols)
-			do (col-block)
-
-A 2 dimensional for loop with no "row-block".
-for (#across)(num-cols) and (#down)(num-rows) (col-block) :
-	for (#across)(num-cols) and (#down)(num-rows) on each row [] (col-block)
-
-========================================
-
-Filter "list" using "condition-block" on each "#item".
-filter (list) by (#item) where (condition-block):
-	new-list : {}
-	for each (#item) in (list)
-		if (condition-block)
-			append (item) to (new-list)
-	new-list
-
-Collect items from "list" until "condition" is true.
-keep (#item) from (list) until (condition):
-	new-list : {}
-	for each (#item) in (list)
-		if (condition)
-			break out
-		append (#item) to (new-list)
-	new-list
-
-Create a new list by applying "block" to each element of "list".
-Uses the variable name passed as #item.
-apply (block) to each (#item) from /the (list):
-	result : {}
-	for each (#item) in (list)
-		append (do (block)) to (result)
-
-Create a new list by applying "block" "n" times.
-apply/collect (block) (n) times:
-	result : {}
-	repeat (n) times
-		append (do (block)) to (result)
-
-apply/collect (n) times (block):
-	apply (block) (n) times
-
-Choose a random item from a list.
-pick /item from /the (list):
-	list [random (length of (list))]
-
-========================================
-Return true if all blocks in the {list-of-blocks} are true.
-all of (list-of-blocks):
-	for each (item-block) in (list-of-blocks)
-		if not (item-block)
-			return false
-		true
-
-Return true if any block in the {list-of-blocks} are true.
-any of (list-of-blocks):
-	for each (item-block) in (list-of-blocks)
-		if (item-block)
-			return true
-		false
-
-If any. Transparent like "if".
-if any of (list-of-blocks) /do (consequence)::
-	if (any of (list-of-blocks)) (consequence)
-
-If all. Transparent like "if".
-if all of (list-of-blocks) /do (consequence)::
-	if (all of (list-of-blocks)) (consequence)
-
-========================================
-The "options-block" is a sequence of "[condition] do [block]" statements.
-Optionally followed by a default statement.
-Unlike a simple "do" this function catches any "break out" calls.
-choose from (options-block):
-	do (options-block)
-
-Note the :: in the following function definition.
-(condition) do (block)::
-	if (condition)
-		return do (block)
-
-This is to be used by "choose from".
-all of (conditions) do (consequence)::
-	if (all of (conditions))
-		return do (consequence)
-
-This is to be used by "choose from".
-any of (conditions) do (consequence)::
-	if (any of (conditions))
-		return do (consequence)
-
-See ex/middle.
-(condition) produces (result)::
-	if (condition)
-		return result
-
-========================================
-
-Create a pretty string of "list".
-(list) as list:
-	result : "{"
-	for each (item) in (list)
-		if ((type of (item) = "list") or (type of (item) = "map"))
-			append ((item) as list) to (result)
-		… otherwise …
-			if (item) is string append quote to (result) 
-			append (convert (item) to string) to (result)
-			if (item) is string append quote to (result)
-		if (not at end of (list))
-			append ", " to (result)
-	append "}" to (result)
-
-Only used in (list) as list.
-if (value) is string append quote to (str):
-	if (type of (value) = "string") [append "'" to (str)]
-
-Output a pretty printed "list".
-show (list) as list:
-	show ((list) as list)
-
-showline (list) as list:
-	show (list) as list
-	nl
-
-show line (list) as list:
-	showline (list) as list
-
-(list) as list ↲:
-	showline (list) as list
-
-Output a pretty printed "map".
-show (map) as map:
-	show "{"
-	for each (n) from 1 to (length of (map))
-		show (map [n])
-		if (n ≠ length of (map))
-			show ", "
-	show "}"
-
-showline (map) as map:
-	show (map) as map
-	nl
-
-show line (map) as map:
-	showline (map) as map
-
-(map) as map ↲:
-	showline (map) as map
-
-========================================
-
-Can be used to create reduce functions.
-with (initial) apply (block) on each (#item) in (list):
-	do (initial)
-	for each (#item) in (list)
-		do (block)
-
-- WARNING: To prevent "item" leaking into the top level 
-  we have to give it an initial value.
-
-Sum all the elements in the list (or range).
-sum (list):
-	with …
-		sum : 0
-		item : 0
-	… apply [sum : sum + item] on each (item) in (list)
-
-Multiply all the elements in the list (or range).
-product (list):
-	with …
-		product : 1
-		item : 0
-	… apply [product : product × item] on each (item) in (list)
-
-Concatenate values in a list into a string.
-concatenate (list):
-	with …
-		str : ""
-		item : ""
-	… apply [append (item) to (str)] on each (item) in (list)
-
-Create a copy of the "list".
-copy (list):
-	based on (list)
-
-Join the contents of "list1" and "list2".
-The original lists remain unchanged.
-join (list1) and (list2):
-	with …
-		list : copy (list1)
-		item : {}
-	… apply [append (item) to (list)] on each (item) in (list2)
-
-========================================
-
-(n) is divisible by (divisor):
-	0 = n % divisor
-
-inc (#var):
-	#var : #var + 1
-
-dec (#var):
-	#var : #var - 1
-
-first in /the (list):
-	list [1]
-
-last in /the (list):
-	list [length of (list)]
-
-square (x):
-	x × x
-
-Return true 50% of the time.
-heads :
-	random 2 = 1
-
-Swap the values of "a" and "b".
-(#a) swap/⇆ (#b) :
-	temp : #b
-	#b : #a
-	#a : temp
-
-========================================
-
-=== Set up paper ===
-
-std-width : 800
-std-height : 600
-
-centre : {
-	std-width ÷ 2
-	std-height ÷ 2
-}
-
-centre-x : centre [1]
-centre-y : centre [2]
-
-/a random point:
-	{random (std-width), random (std-height)}
-
-on standard paper:
-	on standard (white) paper
-
-on standard (colour) paper:
-	(colour) paper of (std-width) by (std-height)
-
-on standard paper (draw-block):
-	on standard (white) paper (draw-block)
-
-on standard (colour) paper (draw-block):
-	(colour) paper of (std-width) by (std-height)
-	do (draw-block)
-	show paper
-
-=== Pens ===
-
-black-pen : {
-	width  : 3
-	colour : black
-}
-
-/a (colour) pen:
-	pen : based on (black-pen)
-	pen [colour] : colour
-	pen
-
-/a random pen:
-	(random colour) pen
-
-/a random colour:
-	random (white)
-
-draw with /a (pen-colour) pen:
-	draw with ((pen-colour) pen)
-
-=== Box Operations ===
-
-draw (colour) box from /the (bottom-left) to /the (top-right) :
-	fill colour (colour)
-	draw box from (bottom-left) to (top-right)
-
-=== Shape Operations ===
-
-a shape of (shape-points) with size (shape-size):
-	create
-		position : { 0, 0 }
-		heading  : 0 ; straight up
-		size     : shape-size
-		colour   : black
-		points   : shape-points
-
-		getters/setters
-			position
-			heading
-			size
-			colour
-
-		move /the (me) by (steps) :
-			direction : (heading) heading to direction
-			new-x : position [1] + steps × cosine (direction)
-			new-y : position [2] - steps × sine (direction)
-			position : {new-x, new-y}
-
-		draw /the (me) at (new-position) :
-			position : new-position
-			draw shape (me)
-
-		fill /the (me) :
-			fill colour (colour)
-			draw shape (me)
-			do not fill
-
-		fill /the (me) at (new-position) :
-			position : new-position
-			fill (me)
-
-a shape of (points) :
-	a shape of (points) with size 1
-
-=== Circle Operations ===
-
-draw /a (colour) circle of (size) at (centre):
-	fill colour (colour)
-	draw circle of (size) at (centre)
-
-=== Animation and Drawing Control ===
-
-Groups all the drawing in the "draw-block".
-draw together (draw-block) :
-	hide drawing
-	do (draw-block)
-	show drawing
-
-animate (rate) times/time per sec (block):
-	(rate) times per sec
-	animate (block)
-
-=== Turtle Operations and Objects ===
-
-turtle : a turtle
-
-a turtle :
-	turtle-shape : a shape of {
-		{ 0, 1}
-		{-2, 2}
-		{ 0,-2}
-		{ 2, 2}
-	} with size 5
-
-	extend (turtle-shape)
-		pen-down : true
-		visible : true
-		speed : 10
-		position : convert ((my) position) to paper coordinate
-
-		getters/setters
-			pen-down
-			visible
-			speed
-
-		Move the turtle.
-		move /the (me) (steps) steps/step:
-			start-pos : position
-			direction : (heading) heading to direction
-			distance : 0
-			move-speed : speed
-			repeat
-				if (steps < speed)
-					move-speed : steps
-				distance : distance + move-speed
-				finish-pos : {
-					start-pos [1] + distance × cosine (direction)
-					start-pos [2] - distance × sine (direction)
-				}
-				add continuing command for (me) from (start-pos) to (finish-pos)
-				steps : steps - move-speed
-			… until [steps ≤ 0]
-			add terminating command for (me) from (start-pos) to (finish-pos)
-			position : finish-pos
-
-		Move a turtle to a position.
-		position is a turtle point.
-		move /the (me) to (new-position):
-			turn (me) to (new-position)
-			new-position : convert (new-position) to paper coordinate
-			move (me) (distance from (position) to (new-position)) steps
-
-		Turn a turtle.
-		turn /the (me) (angle) degrees/degree:
-			heading : (heading + angle) % 360
-
-		Turn a turtle to face a position.
-		turn /the (me) to (new-position):
-			start-pos : position
-			finish-pos : convert (new-position) to paper coordinate
-			xd : finish-pos [1] - start-pos [1]
-			yd : start-pos [2] - finish-pos [2]
-			angle : arctangent (yd) over (xd)
-			heading : (angle) heading to direction % 360
-
-turtle-commands : {} ; the list of sub commands to execute each clock tick
-Groups enable multiple commands to be drawn in the same animation tick.
-current-group : turtle-commands ; group to currently add commands to 
-
-turtle-rate : 30
-
-add continuing command for (turtle) from (start) to (finish):
-	add true command for (turtle) from (start) to (finish)
-
-add terminating command for (turtle) from (start) to (finish):
-	add false command for (turtle) from (start) to (finish)
-
-Add a subcommand for a turtle move.
-add (is-continuing) command for (the-turtle) from (the-start) to (the-finish):
-	append {
-		continuing : is-continuing
-		turtle     : the-turtle
-		start      : the-start
-		finish     : the-finish
-		colour     : (the-turtle) colour
-		pen-down   : (the-turtle) pen-down
-		heading    : (the-turtle) heading
-	} to (current-group)
-
-Group commands so that they all execute together.
-group together (command-block):
-	group together into (current-group) (command-block)
-
-group together into (#current-group) (command-block):
-	this-group : {}
-	append (this-group) to (turtle-commands)
-	#current-group : this-group
-	do (command-block)
-	#current-group : turtle-commands
-
-/a random turtle point:
-	{random (std-width) - centre-x, random (std-height) - centre-y}
-
-Set up the screen for turtle use.
-Also sets up the base turtle.
-turtle graphics on (background) paper:
-	on standard (background) paper
-
-Set up for turtle use and execute the turtle commands.
-turtle graphics on (background) paper (turtle-block):
-	turtle graphics on (background) paper
-	do (turtle-block)
-	turtles go
-
-Start running the turtle command list.
-turtles go:
-	start (turtle-commands)
-	animate (turtle-rate) times per sec
-		if (end of (turtle-commands))
-			animation off
-		… otherwise …
-			do command (next(turtle-commands))
-	show paper
-
-Draw a permanent line if the pen is down.
-draw (pen-down) with (pen) from (start) to (finish):
-	if (pen-down)
-		draw on layer 1
-		draw with (pen)
-		draw line from (start) to (finish)
-
-Execute all commands in the list.
-do all commands in (commands):
-	for each (command) in (commands)
-		do command (command)
-
-Execute one command from the commands list.
-do command (command):
-	if (type of (command) = "list")
-		do all commands in (command)
-	… otherwise …
-		choose from
-			[command [command] = "clear"] do
-				clear layer 1
-				clear layer 2
-
-			[command [command] = "pause"] do
-				wait (command [time]) secs
-
-			turtle : command [turtle]
-
-			[command [continuing]] do
-				clear layer 2
-				turtle's colour : command [colour]
-				if (turtle's pen-down)
-					draw with (turtle's colour) pen
-					draw line from (command [start]) to (command [finish])
-				turtle's position : command [finish]
-				turtle's heading : command [heading]
-				if ((turtle) visible)
-					no outline
-					fill (turtle)
-
-			pen : (command [colour]) pen
-			draw (turtle's pen-down) with (pen) from (command [start]) to (command [finish])
-
-Move the base turtle.
-move (steps) steps/step:
-	move (turtle) (steps) steps
-
-Move the base turtle to a position.
-move to (position):
-	move (turtle) to (position)
-
-Turn the base turtle to face a position.
-turn to (position):
-	turn (turtle) to (position)
-
-Turn the base turtle.
-turn (angle) degrees/degree:
-	turn (turtle) (angle) degrees
-
-Draw a circle around a turtle.
-draw (colour) circle of (radius) centred on /the (turtle):
-	draw with (colour) pen
-	draw circle of (radius) at (turtle's position)
-
-Clear the turtle lines.
-erase /the turtle/turtles:
-	append {
-		command : "clear"
-	} to (current-group)
-
-Pause the turtles for a time.
-pause turtles/turtle for (time) secs/sec:
-	append {
-		command : "pause"
-		time : time
-	} to (current-group)
-
-The distance between two points.
-/the distance from (pt1) to (pt2):
-	xd : pt2 [1] - pt1 [1]
-	yd : pt2 [2] - pt1 [2]
-	√ ((xd × xd) + (yd × yd))
-
-Convert a turtle heading to a direction (and vice versa).
-(angle) heading to direction:
-	90 - angle
-
-Convert a paper coordinate to a turtle coordinate.
-convert (coordinate) to turtle coordinate:
-	{
-		coordinate [1] - centre [1]
-		centre [2] - coordinate [2]
-	}
-
-Convert a turtle coordinate to a paper coordinate.
-convert (coordinate) to paper coordinate:
-	{
-		coordinate [1] + centre [1]
-		centre [2] - coordinate [2]
-	}
+$what ^ :
+	show $what
+
+.========================================
+.Just trying out a more verbal version.
+
+./an empty list :
+.	{}
+
+.========================================
+
+.Negate the "value".
+.not (value):
+.	if (value)
+.		return false
+.	true
+
+.The boolean "and" operation.
+.The "if" in the "not" function causes blocks to be evaluated.
+.(value1) and (value2):
+.	if (not (value1))
+.		return false
+.	if (not (value2))
+.		return false
+.	true
+
+.The boolean "or" operation.
+.(value1) or (value2):
+.	if (value1)
+.		return true
+.	if (value2)
+.		return true
+.	false
+
+
+.Report if not at the end of the "list".
+.not at /the end of /the (list):
+.	not (end of (list))
+
+.========================================
+
+.Alternative append function.
+.to (so-far) add/append /on (more) :
+.	append (more) to (so-far)
+
+.=== Input operations ===
+
+.Ask for an integer value.
+.ask for /an integer (prompt):
+.	input : ask (prompt)
+.	convert (input) to integer
+
+.========================================
+
+.Shorthand for "if (not ()) []".
+.Transparent like "if".
+.if not (condition)(block)::
+.	if (not (condition))
+.		do (block)
+
+.Repeat the "block" for ever.
+.repeat (block) forever:
+.	do (block)
+.	redo
+
+.Repeat the "block" a definite number of times.
+.repeat (count) times (block):
+.	if (count ≤ 0)
+.		return last
+.	last : do (block)
+.	count : count - 1
+.	redo
+
+.Alternative definite repeat.
+.repeat (block)(count) times:
+.	repeat (count) times (block)
+
+.While a "condition" is true keep doing "block".
+.while (condition) repeat (block):
+.	if not (condition)
+.		return last
+.	last : do (block)
+.	redo
+
+.Catch the result of "block" even if a "return" is used.
+.catch do (block):
+.	do (block)
+
+.An alternative name for return without a value, i.e. none.
+.This is more applicable when breaking out from within a loop or a sequence statement.
+.break out::
+.	return
+
+.Repeat a "block" until some "condition" is true.
+.repeat (block) until (condition):
+.	last : do (block)
+.	if (condition)
+.		return last
+.	redo
+
+.========================================
+
+.Run "block" for each item in "list".
+."block" will refer to "item".
+.Returns either the last statement result or whatever is returned from "block".
+.for each (#item) in /the (list)(block):
+.	start (list)
+.	do
+.		if (end of (list))
+.			return last
+.		#item : next (list)
+.		A return in the (block) following breaks out of the loop, with its result.
+.		last : do (block)
+.		redo
+
+.A for each with a definite "start" and "finish" value.
+.for each (#item) from (start) to (finish) (block):
+.	for each (#item) in ((start) to (finish)) (block)
+
+.For each with "start", "finish" and "step".
+.for each (#item) from (start) to (finish) in steps of (step) (block):
+.	if (start < finish)
+.		test : [#item ≤ finish]
+.	… otherwise
+.		test : [#item ≥ finish]
+.	#item : start
+.	while (test) repeat
+.		last : do (block)
+.		#item : #item + step
+.	last
+
+.A 2 dimensional for loop over "num-rows" and "num-cols".
+."row-block" can refer to "#down".
+."col-block" can refer to "#down" and "#across".
+.for (#across)(num-cols) and (#down)(num-rows) on each row (row-block) (col-block) :
+.	for each (#down) from 1 to (num-rows)
+.		do (row-block)
+.		for each (#across) from 1 to (num-cols)
+.			do (col-block)
+
+.A 2 dimensional for loop with no "row-block".
+.for (#across)(num-cols) and (#down)(num-rows) (col-block) :
+.	for (#across)(num-cols) and (#down)(num-rows) on each row [] (col-block)
+
+.========================================
+
+.Filter "list" using "condition-block" on each "#item".
+.filter (list) by (#item) where (condition-block):
+.	new-list : {}
+.	for each (#item) in (list)
+.		if (condition-block)
+.			append (item) to (new-list)
+.	new-list
+
+.Collect items from "list" until "condition" is true.
+.keep (#item) from (list) until (condition):
+.	new-list : {}
+.	for each (#item) in (list)
+.		if (condition)
+.			break out
+.		append (#item) to (new-list)
+.	new-list
+
+.Create a new list by applying "block" to each element of "list".
+.Uses the variable name passed as #item.
+.apply (block) to each (#item) from /the (list):
+.	result : {}
+.	for each (#item) in (list)
+.		append (do (block)) to (result)
+
+.Create a new list by applying "block" "n" times.
+.apply/collect (block) (n) times:
+.	result : {}
+.	repeat (n) times
+.		append (do (block)) to (result)
+
+.apply/collect (n) times (block):
+.	apply (block) (n) times
+
+.Choose a random item from a list.
+.pick /item from /the (list):
+.	list [random (length of (list))]
+
+.========================================
+.Return true if all blocks in the {list-of-blocks} are true.
+.all of (list-of-blocks):
+.	for each (item-block) in (list-of-blocks)
+.		if not (item-block)
+.			return false
+.		true
+
+.Return true if any block in the {list-of-blocks} are true.
+.any of (list-of-blocks):
+.	for each (item-block) in (list-of-blocks)
+.		if (item-block)
+.			return true
+.		false
+
+.If any. Transparent like "if".
+.if any of (list-of-blocks) /do (consequence)::
+.	if (any of (list-of-blocks)) (consequence)
+
+.If all. Transparent like "if".
+.if all of (list-of-blocks) /do (consequence)::
+.	if (all of (list-of-blocks)) (consequence)
+
+.========================================
+.The "options-block" is a sequence of "[condition] do [block]" statements.
+.Optionally followed by a default statement.
+.Unlike a simple "do" this function catches any "break out" calls.
+.choose from (options-block):
+.	do (options-block)
+
+.Note the :: in the following function definition.
+.(condition) do (block)::
+.	if (condition)
+.		return do (block)
+
+.This is to be used by "choose from".
+.all of (conditions) do (consequence)::
+.	if (all of (conditions))
+.		return do (consequence)
+
+.This is to be used by "choose from".
+.any of (conditions) do (consequence)::
+.	if (any of (conditions))
+.		return do (consequence)
+
+.See ex/middle.
+.(condition) produces (result)::
+.	if (condition)
+.		return result
+
+.========================================
+
+.Create a pretty string of "list".
+.(list) as list:
+.	result : "{"
+.	for each (item) in (list)
+.		if ((type of (item) = "list") or (type of (item) = "map"))
+.			append ((item) as list) to (result)
+.		… otherwise …
+.			if (item) is string append quote to (result) 
+.			append (convert (item) to string) to (result)
+.			if (item) is string append quote to (result)
+.		if (not at end of (list))
+.			append ", " to (result)
+.	append "}" to (result)
+
+.Only used in (list) as list.
+.if (value) is string append quote to (str):
+.	if (type of (value) = "string") [append "'" to (str)]
+
+.Output a pretty printed "list".
+.show (list) as list:
+.	show ((list) as list)
+
+.showline (list) as list:
+.	show (list) as list
+.	nl
+
+.show line (list) as list:
+.	showline (list) as list
+
+.(list) as list ↲:
+.	showline (list) as list
+
+.Output a pretty printed "map".
+.show (map) as map:
+.	show "{"
+.	for each (n) from 1 to (length of (map))
+.		show (map [n])
+.		if (n ≠ length of (map))
+.			show ", "
+.	show "}"
+
+.showline (map) as map:
+.	show (map) as map
+.	nl
+
+.show line (map) as map:
+.	showline (map) as map
+
+.(map) as map ↲:
+.	showline (map) as map
+
+.========================================
+
+.Can be used to create reduce functions.
+.with (initial) apply (block) on each (#item) in (list):
+.	do (initial)
+.	for each (#item) in (list)
+.		do (block)
+
+.- WARNING: To prevent "item" leaking into the top level 
+.  we have to give it an initial value.
+
+.Sum all the elements in the list (or range).
+.sum (list):
+.	with …
+.		sum : 0
+.		item : 0
+.	… apply [sum : sum + item] on each (item) in (list)
+
+.Multiply all the elements in the list (or range).
+.product (list):
+.	with …
+.		product : 1
+.		item : 0
+.	… apply [product : product × item] on each (item) in (list)
+
+.Concatenate values in a list into a string.
+.concatenate (list):
+.	with …
+.		str : ""
+.		item : ""
+.	… apply [append (item) to (str)] on each (item) in (list)
+
+.Create a copy of the "list".
+.copy (list):
+.	based on (list)
+
+.Join the contents of "list1" and "list2".
+.The original lists remain unchanged.
+.join (list1) and (list2):
+.	with …
+.		list : copy (list1)
+.		item : {}
+.	… apply [append (item) to (list)] on each (item) in (list2)
+
+.========================================
+
+.(n) is divisible by (divisor):
+.	0 = n % divisor
+
+.inc (#var):
+.	#var : #var + 1
+
+.dec (#var):
+.	#var : #var - 1
+
+.first in /the (list):
+.	list [1]
+
+.last in /the (list):
+.	list [length of (list)]
+
+.square (x):
+.	x × x
+
+.Return true 50% of the time.
+.heads :
+.	random 2 = 1
+
+.Swap the values of "a" and "b".
+.(#a) swap/⇆ (#b) :
+.	temp : #b
+.	#b : #a
+.	#a : temp
+
+.========================================
+
+.=== Set up paper ===
+
+.std-width : 800
+.std-height : 600
+
+.centre : {
+.	std-width ÷ 2
+.	std-height ÷ 2
+.}
+
+.centre-x : centre [1]
+.centre-y : centre [2]
+
+./a random point:
+.	{random (std-width), random (std-height)}
+
+.on standard paper:
+.	on standard (white) paper
+
+.on standard (colour) paper:
+.	(colour) paper of (std-width) by (std-height)
+
+.on standard paper (draw-block):
+.	on standard (white) paper (draw-block)
+
+.on standard (colour) paper (draw-block):
+.	(colour) paper of (std-width) by (std-height)
+.	do (draw-block)
+.	show paper
+
+.=== Pens ===
+
+.black-pen : {
+.	width  : 3
+.	colour : black
+.}
+
+./a (colour) pen:
+.	pen : based on (black-pen)
+.	pen [colour] : colour
+.	pen
+
+./a random pen:
+.	(random colour) pen
+
+./a random colour:
+.	random (white)
+
+.draw with /a (pen-colour) pen:
+.	draw with ((pen-colour) pen)
+
+.=== Box Operations ===
+
+.draw (colour) box from /the (bottom-left) to /the (top-right) :
+.	fill colour (colour)
+.	draw box from (bottom-left) to (top-right)
+
+.=== Shape Operations ===
+
+.a shape of (shape-points) with size (shape-size):
+.	create
+.		position : { 0, 0 }
+.		heading  : 0 ; straight up
+.		size     : shape-size
+.		colour   : black
+.		points   : shape-points
+
+.		getters/setters
+.			position
+.			heading
+.			size
+.			colour
+
+.		move /the (me) by (steps) :
+.			direction : (heading) heading to direction
+.			new-x : position [1] + steps × cosine (direction)
+.			new-y : position [2] - steps × sine (direction)
+.			position : {new-x, new-y}
+
+.		draw /the (me) at (new-position) :
+.			position : new-position
+.			draw shape (me)
+
+.		fill /the (me) :
+.			fill colour (colour)
+.			draw shape (me)
+.			do not fill
+
+.		fill /the (me) at (new-position) :
+.			position : new-position
+.			fill (me)
+
+.a shape of (points) :
+.	a shape of (points) with size 1
+
+.=== Circle Operations ===
+
+.draw /a (colour) circle of (size) at (centre):
+.	fill colour (colour)
+.	draw circle of (size) at (centre)
+
+.=== Animation and Drawing Control ===
+
+.Groups all the drawing in the "draw-block".
+.draw together (draw-block) :
+.	hide drawing
+.	do (draw-block)
+.	show drawing
+
+.animate (rate) times/time per sec (block):
+.	(rate) times per sec
+.	animate (block)
+
+.=== Turtle Operations and Objects ===
+
+.turtle : a turtle
+
+.a turtle :
+.	turtle-shape : a shape of {
+.		{ 0, 1}
+.		{-2, 2}
+.		{ 0,-2}
+.		{ 2, 2}
+.	} with size 5
+
+.	extend (turtle-shape)
+.		pen-down : true
+.		visible : true
+.		speed : 10
+.		position : convert ((my) position) to paper coordinate
+
+.		getters/setters
+.			pen-down
+.			visible
+.			speed
+
+.		Move the turtle.
+.		move /the (me) (steps) steps/step:
+.			start-pos : position
+.			direction : (heading) heading to direction
+.			distance : 0
+.			move-speed : speed
+.			repeat
+.				if (steps < speed)
+.					move-speed : steps
+.				distance : distance + move-speed
+.				finish-pos : {
+.					start-pos [1] + distance × cosine (direction)
+.					start-pos [2] - distance × sine (direction)
+.				}
+.				add continuing command for (me) from (start-pos) to (finish-pos)
+.				steps : steps - move-speed
+.			… until [steps ≤ 0]
+.			add terminating command for (me) from (start-pos) to (finish-pos)
+.			position : finish-pos
+
+.		Move a turtle to a position.
+.		position is a turtle point.
+.		move /the (me) to (new-position):
+.			turn (me) to (new-position)
+.			new-position : convert (new-position) to paper coordinate
+.			move (me) (distance from (position) to (new-position)) steps
+
+.		Turn a turtle.
+.		turn /the (me) (angle) degrees/degree:
+.			heading : (heading + angle) % 360
+
+.		Turn a turtle to face a position.
+.		turn /the (me) to (new-position):
+.			start-pos : position
+.			finish-pos : convert (new-position) to paper coordinate
+.			xd : finish-pos [1] - start-pos [1]
+.			yd : start-pos [2] - finish-pos [2]
+.			angle : arctangent (yd) over (xd)
+.			heading : (angle) heading to direction % 360
+
+.turtle-commands : {} ; the list of sub commands to execute each clock tick
+.Groups enable multiple commands to be drawn in the same animation tick.
+.current-group : turtle-commands ; group to currently add commands to 
+
+.turtle-rate : 30
+
+.add continuing command for (turtle) from (start) to (finish):
+.	add true command for (turtle) from (start) to (finish)
+
+.add terminating command for (turtle) from (start) to (finish):
+.	add false command for (turtle) from (start) to (finish)
+
+.Add a subcommand for a turtle move.
+.add (is-continuing) command for (the-turtle) from (the-start) to (the-finish):
+.	append {
+.		continuing : is-continuing
+.		turtle     : the-turtle
+.		start      : the-start
+.		finish     : the-finish
+.		colour     : (the-turtle) colour
+.		pen-down   : (the-turtle) pen-down
+.		heading    : (the-turtle) heading
+.	} to (current-group)
+
+.Group commands so that they all execute together.
+.group together (command-block):
+.	group together into (current-group) (command-block)
+
+.group together into (#current-group) (command-block):
+.	this-group : {}
+.	append (this-group) to (turtle-commands)
+.	#current-group : this-group
+.	do (command-block)
+.	#current-group : turtle-commands
+
+./a random turtle point:
+.	{random (std-width) - centre-x, random (std-height) - centre-y}
+
+.Set up the screen for turtle use.
+.Also sets up the base turtle.
+.turtle graphics on (background) paper:
+.	on standard (background) paper
+
+.Set up for turtle use and execute the turtle commands.
+.turtle graphics on (background) paper (turtle-block):
+.	turtle graphics on (background) paper
+.	do (turtle-block)
+.	turtles go
+
+.Start running the turtle command list.
+.turtles go:
+.	start (turtle-commands)
+.	animate (turtle-rate) times per sec
+.		if (end of (turtle-commands))
+.			animation off
+.		… otherwise …
+.			do command (next(turtle-commands))
+.	show paper
+
+.Draw a permanent line if the pen is down.
+.draw (pen-down) with (pen) from (start) to (finish):
+.	if (pen-down)
+.		draw on layer 1
+.		draw with (pen)
+.		draw line from (start) to (finish)
+
+.Execute all commands in the list.
+.do all commands in (commands):
+.	for each (command) in (commands)
+.		do command (command)
+
+.Execute one command from the commands list.
+.do command (command):
+.	if (type of (command) = "list")
+.		do all commands in (command)
+.	… otherwise …
+.		choose from
+.			[command [command] = "clear"] do
+.				clear layer 1
+.				clear layer 2
+
+.			[command [command] = "pause"] do
+.				wait (command [time]) secs
+
+.			turtle : command [turtle]
+
+.			[command [continuing]] do
+.				clear layer 2
+.				turtle's colour : command [colour]
+.				if (turtle's pen-down)
+.					draw with (turtle's colour) pen
+.					draw line from (command [start]) to (command [finish])
+.				turtle's position : command [finish]
+.				turtle's heading : command [heading]
+.				if ((turtle) visible)
+.					no outline
+.					fill (turtle)
+
+.			pen : (command [colour]) pen
+.			draw (turtle's pen-down) with (pen) from (command [start]) to (command [finish])
+
+.Move the base turtle.
+.move (steps) steps/step:
+.	move (turtle) (steps) steps
+
+.Move the base turtle to a position.
+.move to (position):
+.	move (turtle) to (position)
+
+.Turn the base turtle to face a position.
+.turn to (position):
+.	turn (turtle) to (position)
+
+.Turn the base turtle.
+.turn (angle) degrees/degree:
+.	turn (turtle) (angle) degrees
+
+.Draw a circle around a turtle.
+.draw (colour) circle of (radius) centred on /the (turtle):
+.	draw with (colour) pen
+.	draw circle of (radius) at (turtle's position)
+
+.Clear the turtle lines.
+.erase /the turtle/turtles:
+.	append {
+.		command : "clear"
+.	} to (current-group)
+
+.Pause the turtles for a time.
+.pause turtles/turtle for (time) secs/sec:
+.	append {
+.		command : "pause"
+.		time : time
+.	} to (current-group)
+
+.The distance between two points.
+./the distance from (pt1) to (pt2):
+.	xd : pt2 [1] - pt1 [1]
+.	yd : pt2 [2] - pt1 [2]
+.	√ ((xd × xd) + (yd × yd))
+
+.Convert a turtle heading to a direction (and vice versa).
+.(angle) heading to direction:
+.	90 - angle
+
+.Convert a paper coordinate to a turtle coordinate.
+.convert (coordinate) to turtle coordinate:
+.	{
+.		coordinate [1] - centre [1]
+.		centre [2] - coordinate [2]
+.	}
+
+.Convert a turtle coordinate to a paper coordinate.
+.convert (coordinate) to paper coordinate:
+.	{
+.		coordinate [1] + centre [1]
+.		centre [2] - coordinate [2]
+.	}
