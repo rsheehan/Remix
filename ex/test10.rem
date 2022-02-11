@@ -1,26 +1,26 @@
-n: 2
-showline {4, n}
-showline {1, {2, n, 3}, n}
+$n : 2
+showline {4, $n}
+showline {1, {2, $n, 3}, $n}
 
-list1: {2, 4, 8, 16, 32, 64}
-showline (list1)
+$list1: {2, 4, 8, 16, 32, 64}
+showline $list1
 
-list2: {"abc", 8, 9 + 5}
-showline (list2)
+$list2: {"abc", 8, 9 + 5}
+showline $list2
 
-a: "some value "
-n: 5
+$a : "some value "
+$n : 5
 
-list3: {a, square (n)}
-showline (list3)
+$list3: {$a, square $n}
+showline $list3
 
-list4: {square (n) + square 4, " - abc"}
-showline (list4)
+$list4: {square $n + square 4, " - abc"}
+showline $list4
 
-showline {"The number is ", n, "."}
+showline {"The number is ", $n, "."}
 
-a: " ----- "
-showline {a, 4, " ", 3, " ", 2, " ", 1, a}
+$a : " ----- "
+showline {$a, 4, " ", 3, " ", 2, " ", 1, $a}
 showline {}
-list: {a, "is this ok?", a}
-showline (list)
+$list: {$a, "is this ok?", $a}
+showline $list

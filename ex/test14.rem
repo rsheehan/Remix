@@ -1,22 +1,20 @@
 .The rainfall problem.
 ======================
 
-rain-fall: {-1, -3, 0, 5, -2, 1.0, 0, -1, 6, 7, 999, -2, 0, 10}
+$rain-fall : {-1, -3, 0, 5, -2, 1.0, 0, -1, 6, 7, 999, -2, 0, 10}
 
-show "Original data:"
-showline (rain-fall) as list
+showline {"Original data:", $rain-fall as list}
 
-positive-rain-fall: filter (rain-fall) by (x) where
-	(x) ≥ 0
-valid-rain-fall: keep (x) from (positive-rain-fall) until
-	x = 999
+$positive-rain-fall : filter $rain-fall by $x where
+	$x ≥ 0
+$valid-rain-fall : keep $x from $positive-rain-fall until
+	$x = 999
 
 show "Clean data:"
-showline (valid-rain-fall) as list
+showline $valid-rain-fall as list
 
-count: length of (valid-rain-fall)
-if (count = 0) [
+$count : length of $valid-rain-fall
+if ($count = 0)
 	showline "No valid data."
-] otherwise [
-	showline {"The average rainfall is ", sum (valid-rain-fall) ÷ count}
-]
+… otherwise
+	showline {"The average rainfall is ", sum $valid-rain-fall ÷ $count}

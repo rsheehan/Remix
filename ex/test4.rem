@@ -1,12 +1,12 @@
-go from (start) to (finish):
-	show (start)
+go from $start to $finish :
+	show $start
 	show " "
-	if (start = finish)
+	if ($start = $finish)
 		break out
-	start: start + 1
+	$start: $start + 1
 	redo
 
 go from 1 to 100
 
-for each (i) from 1 to 100
-	show {i, " "}
+for each $i from 1 to 100
+	show {$i, " "}

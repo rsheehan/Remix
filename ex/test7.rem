@@ -1,17 +1,17 @@
-repeat until (condition-block) (block) :
-	repeat (block) until (condition-block)
+repeat until $condition-block $block :
+	repeat $block until $condition-block
 
-x : 1
+$x : 1
 
 showline "about to repeat"
 repeat [
-	showline (x)
-	x : x + 1
-] until [x > 4]
+	showline $x
+	$x : $x + 1
+] until [$x > 4]
 
 showline "and the other repeat"
-repeat until [x > 10]
-	showline (x)
-	x : x + 2
+repeat until [$x > 10]
+	showline $x
+	$x : $x + 2
 
 showline "finished"

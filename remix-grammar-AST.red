@@ -228,7 +228,7 @@ simple-expression: [
 list-element-assignment: [
 	collect set fnc-template [
 		keep ("|")
-		<word> set list-name string!
+		<varname> set list-name string!
 		keep (
 			make variable [
 				name: list-name
@@ -253,7 +253,7 @@ list-element-assignment: [
 list-element: [
 	collect set fnc-template [
 		keep ("|")
-		<word> set list-name string!
+		<varname> set list-name string!
 		keep (
 			make variable [
 				name: list-name

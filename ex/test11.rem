@@ -1,17 +1,17 @@
-list: {5 + 1, {3, {8, 5}, 2, 1}, 7, 99}
-showline {"length of ", list, " = ", length of (list)}
+$list: {5 + 1, {3, {8, 5}, 2, 1}, 7, 99}
+showline {"length of ", $list, " = ", length of $list}
 
-start (list)
+start $list
 while [
-	not at end of (list)
+	not at end of $list
 ] repeat [
-	show {end of (list), ": "}
-	showline (next (list))
+	show {end of $list, ": "}
+	showline (next $list)
 ]
 
-powers: {1, 2, 4, 8, 16}
-for each (item) in (powers)
-	showline {"item: ", item}
+$powers: {1, 2, 4, 8, 16}
+for each $item in $powers
+	showline {"item: ", $item}
 
-for each (item) in {1, 2, "kapow!", 8, 16}
-	showline {"item: ", item}
+for each $item in {1, 2, "kapow!", 8, 16}
+	showline {"item: ", $item}

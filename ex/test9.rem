@@ -1,26 +1,26 @@
 .Fizz-Bang.
 ===========
 
-for each (n) from 1 to 100
-	if ((n) is divisible by 35)
-		"fizz-bang"^
+for each $n from 1 to 100
+	if ($n is divisible by 35)
+		"fizz-bang" ^
 	… otherwise …
-		if ((n) is divisible by 5)
-			"fizz"^ 
+		if ($n is divisible by 5)
+			"fizz" ^ 
 		… otherwise …
-			if ((n) is divisible by 7)
-				"bang"^
+			if ($n is divisible by 7)
+				"bang" ^
 			… otherwise …
-				(n)^
-	" "^
+				$n ^
+	" " ^
 ↲
 
 Trying to do same thing with less indentation.
-for each (n) from 1 to 100
+for each $n from 1 to 100
 	choose from
-		((n) is divisible by 35) do ["fizz-bang"^]
-		((n) is divisible by 5) do ["fizz"^]
-		((n) is divisible by 7) do ["bang"^]
-		(n)^
-	" "^
+		($n is divisible by 35) do ["fizz-bang" ^]
+		($n is divisible by 5) do ["fizz" ^]
+		($n is divisible by 7) do ["bang" ^]
+		$n ^
+	" " ^
 ↲

@@ -1,64 +1,65 @@
 The Remix standard library.
+	- Version 0.4
 ===========================
 
 Output a newline character.
-nl/↲:
+nl/↲ :
 	show "
 "
 
-new line:
+new line :
 	nl
 
 Output the value of "what" followed by a newline.
-showline $what:
+showline $what :
 	show $what
 	nl
 
-show line $what:
+show line $what :
 	showline $what
 
-/show $what ↲:
+/show $what ↲ :
 	showline $what
 
 A simplified show function.
 $what ^ :
 	show $what
 
-.========================================
-.Just trying out a more verbal version.
+========================================
+Just trying out a more verbal version.
 
-./an empty list :
-.	{}
+/an empty list :
+	{}
 
-.========================================
+========================================
 
-.Negate the "value".
-.not (value):
-.	if (value)
-.		return false
-.	true
+Negate the "value".
+not $value :
+	if $value
+		return false
+	true
 
 .The boolean "and" operation.
 .The "if" in the "not" function causes blocks to be evaluated.
-.(value1) and (value2):
-.	if (not (value1))
+.$value1 and $value2:
+.	if (not $value1)
 .		return false
-.	if (not (value2))
+.	if (not $value2)
 .		return false
 .	true
 
-.The boolean "or" operation.
-.(value1) or (value2):
-.	if (value1)
-.		return true
-.	if (value2)
-.		return true
-.	false
+The boolean "or" operation.
+$value1 or $value2 :
+	if $value1
+		return true
+	if $value2
+		return true
+	false
 
 
-.Report if not at the end of the "list".
-.not at /the end of /the (list):
-.	not (end of (list))
+Report if not at the end of the "list".
+not at /the end of /the $list :
+	not (end of $list)
 
 .========================================
 
@@ -73,82 +74,82 @@ $what ^ :
 .	input : ask (prompt)
 .	convert (input) to integer
 
-.========================================
+========================================
 
-.Shorthand for "if (not ()) []".
-.Transparent like "if".
-.if not (condition)(block)::
-.	if (not (condition))
-.		do (block)
+Shorthand for "if (not ()) []".
+Transparent like "if".
+if not $condition $block ::
+	if (not $condition)
+		do $block
 
 .Repeat the "block" for ever.
-.repeat (block) forever:
-.	do (block)
+.repeat $block forever:
+.	do $block
 .	redo
 
 .Repeat the "block" a definite number of times.
-.repeat (count) times (block):
+.repeat (count) times $block:
 .	if (count ≤ 0)
 .		return last
-.	last : do (block)
+.	last : do $block
 .	count : count - 1
 .	redo
 
 .Alternative definite repeat.
-.repeat (block)(count) times:
-.	repeat (count) times (block)
+.repeat $block(count) times:
+.	repeat (count) times $block
 
-.While a "condition" is true keep doing "block".
-.while (condition) repeat (block):
-.	if not (condition)
-.		return last
-.	last : do (block)
-.	redo
+While a "condition" is true keep doing "block".
+while $condition repeat $block :
+	if not $condition
+		return $last
+	$last : do $block
+	redo
 
 .Catch the result of "block" even if a "return" is used.
-.catch do (block):
-.	do (block)
+.catch do $block:
+.	do $block
 
-.An alternative name for return without a value, i.e. none.
-.This is more applicable when breaking out from within a loop or a sequence statement.
-.break out::
-.	return
+An alternative name for return without a value, i.e. none.
+This is more applicable when breaking out from within a loop or a sequence statement.
+break out ::
+	return
 
-.Repeat a "block" until some "condition" is true.
-.repeat (block) until (condition):
-.	last : do (block)
-.	if (condition)
-.		return last
-.	redo
+Repeat a "block" until some "condition" is true.
+repeat $block until $condition :
+	$last : do $block
+	if $condition
+		return $last
+	redo
 
-.========================================
+========================================
 
-.Run "block" for each item in "list".
-."block" will refer to "item".
-.Returns either the last statement result or whatever is returned from "block".
-.for each (#item) in /the (list)(block):
-.	start (list)
-.	do
-.		if (end of (list))
-.			return last
-.		#item : next (list)
-.		A return in the (block) following breaks out of the loop, with its result.
-.		last : do (block)
-.		redo
+Run "block" for each item in "list".
+"block" will refer to "item".
+Returns either the last statement result or whatever is returned from "block".
+for each $#item in /the $list $block :
+	start $list
+	do
+		if (end of $list)
+			return $last
+		$#item : next $list
+		A return in the $block following breaks out of the loop, with its result.
+		$last : do $block
+		redo
 
-.A for each with a definite "start" and "finish" value.
-.for each (#item) from (start) to (finish) (block):
-.	for each (#item) in ((start) to (finish)) (block)
+A for each with a definite "start" and "finish" value.
+for each $#item from $start to $finish $block :
+	for each $#item in ($start to $finish) $block
 
 .For each with "start", "finish" and "step".
-.for each (#item) from (start) to (finish) in steps of (step) (block):
+.for each $#item from (start) to (finish) in steps of (step) $block:
 .	if (start < finish)
 .		test : [#item ≤ finish]
 .	… otherwise
 .		test : [#item ≥ finish]
 .	#item : start
 .	while (test) repeat
-.		last : do (block)
+.		last : do $block
 .		#item : #item + step
 .	last
 
@@ -165,44 +166,44 @@ $what ^ :
 .for (#across)(num-cols) and (#down)(num-rows) (col-block) :
 .	for (#across)(num-cols) and (#down)(num-rows) on each row [] (col-block)
 
-.========================================
+========================================
 
-.Filter "list" using "condition-block" on each "#item".
-.filter (list) by (#item) where (condition-block):
-.	new-list : {}
-.	for each (#item) in (list)
-.		if (condition-block)
-.			append (item) to (new-list)
-.	new-list
+Filter "list" using "condition-block" on each "#item".
+filter $list by $#item where $condition-block :
+	$new-list : {}
+	for each $#item in $list
+		if $condition-block
+			append $item to $new-list
+	$new-list
 
-.Collect items from "list" until "condition" is true.
-.keep (#item) from (list) until (condition):
-.	new-list : {}
-.	for each (#item) in (list)
-.		if (condition)
-.			break out
-.		append (#item) to (new-list)
-.	new-list
+Collect items from "list" until "condition" is true.
+keep $#item from $list until $condition :
+	$new-list : {}
+	for each $#item in $list
+		if $condition
+			break out
+		append $#item to $new-list
+	$new-list
 
 .Create a new list by applying "block" to each element of "list".
 .Uses the variable name passed as #item.
-.apply (block) to each (#item) from /the (list):
+.apply $block to each $#item from /the $list:
 .	result : {}
-.	for each (#item) in (list)
-.		append (do (block)) to (result)
+.	for each $#item in $list
+.		append (do $block) to $result
 
 .Create a new list by applying "block" "n" times.
-.apply/collect (block) (n) times:
+.apply/collect $block (n) times:
 .	result : {}
 .	repeat (n) times
-.		append (do (block)) to (result)
+.		append (do $block) to $result
 
-.apply/collect (n) times (block):
-.	apply (block) (n) times
+.apply/collect (n) times $block:
+.	apply $block (n) times
 
 .Choose a random item from a list.
-.pick /item from /the (list):
-.	list [random (length of (list))]
+.pick /item from /the $list:
+.	list [random (length of $list)]
 
 .========================================
 .Return true if all blocks in the {list-of-blocks} are true.
@@ -227,17 +228,17 @@ $what ^ :
 .if all of (list-of-blocks) /do (consequence)::
 .	if (all of (list-of-blocks)) (consequence)
 
-.========================================
-.The "options-block" is a sequence of "[condition] do [block]" statements.
-.Optionally followed by a default statement.
-.Unlike a simple "do" this function catches any "break out" calls.
-.choose from (options-block):
-.	do (options-block)
+========================================
+The "options-block" is a sequence of "[condition] do [block]" statements.
+Optionally followed by a default statement.
+Unlike a simple "do" this function catches any "break out" calls.
+choose from $options-block :
+	do $options-block
 
-.Note the :: in the following function definition.
-.(condition) do (block)::
-.	if (condition)
-.		return do (block)
+Note the :: in the following function definition.
+$condition do $block ::
+	if $condition
+		return do $block
 
 .This is to be used by "choose from".
 .all of (conditions) do (consequence)::
@@ -250,43 +251,43 @@ $what ^ :
 .		return do (consequence)
 
 .See ex/middle.
-.(condition) produces (result)::
-.	if (condition)
+.$condition produces $result::
+.	if $condition
 .		return result
 
-.========================================
+========================================
 
-.Create a pretty string of "list".
-.(list) as list:
-.	result : "{"
-.	for each (item) in (list)
-.		if ((type of (item) = "list") or (type of (item) = "map"))
-.			append ((item) as list) to (result)
-.		… otherwise …
-.			if (item) is string append quote to (result) 
-.			append (convert (item) to string) to (result)
-.			if (item) is string append quote to (result)
-.		if (not at end of (list))
-.			append ", " to (result)
-.	append "}" to (result)
+Create a pretty string of "list".
+$list as list :
+	$result : "{"
+	for each $item in $list
+		if ((type of $item = "list") or (type of $item = "map"))
+			append ($item as list) to $result
+		… otherwise …
+			if $item is string append quote to $result 
+			append (convert $item to string) to $result
+			if $item is string append quote to $result
+		if (not at end of $list)
+			append ", " to $result
+	append "}" to $result
 
-.Only used in (list) as list.
-.if (value) is string append quote to (str):
-.	if (type of (value) = "string") [append "'" to (str)]
+Only used in $list as list.
+if $value is string append quote to $str :
+	if (type of $value = "string") [append "'" to $str]
 
-.Output a pretty printed "list".
-.show (list) as list:
-.	show ((list) as list)
+Output a pretty printed "list".
+show $list as list :
+	show ($list as list)
 
-.showline (list) as list:
-.	show (list) as list
-.	nl
+showline $list as list :
+	show $list as list
+	nl
 
-.show line (list) as list:
-.	showline (list) as list
+.show line $list as list:
+.	showline $list as list
 
-.(list) as list ↲:
-.	showline (list) as list
+.$list as list ↲:
+.	showline $list as list
 
 .Output a pretty printed "map".
 .show (map) as map:
@@ -307,69 +308,69 @@ $what ^ :
 .(map) as map ↲:
 .	showline (map) as map
 
-.========================================
+========================================
 
-.Can be used to create reduce functions.
-.with (initial) apply (block) on each (#item) in (list):
-.	do (initial)
-.	for each (#item) in (list)
-.		do (block)
+Can be used to create reduce functions.
+with $initial apply $block on each $#item in $list :
+	do $initial
+	for each $#item in $list
+		do $block
 
-.- WARNING: To prevent "item" leaking into the top level 
-.  we have to give it an initial value.
+- WARNING: To prevent "item" leaking into the top level 
+  we have to give it an initial value.
 
-.Sum all the elements in the list (or range).
-.sum (list):
-.	with …
-.		sum : 0
-.		item : 0
-.	… apply [sum : sum + item] on each (item) in (list)
+Sum all the elements in the list (or range).
+sum $list :
+	with …
+		$sum : 0
+		$item : 0
+	… apply [$sum : $sum + $item] on each $item in $list
 
 .Multiply all the elements in the list (or range).
-.product (list):
+.product $list:
 .	with …
 .		product : 1
 .		item : 0
-.	… apply [product : product × item] on each (item) in (list)
+.	… apply [product : product × item] on each $item in $list
 
 .Concatenate values in a list into a string.
-.concatenate (list):
+.concatenate $list:
 .	with …
 .		str : ""
 .		item : ""
-.	… apply [append (item) to (str)] on each (item) in (list)
+.	… apply [append $item to $str] on each $item in $list
 
-.Create a copy of the "list".
-.copy (list):
-.	based on (list)
+Create a copy of the "list".
+copy $list:
+	based on $list
 
-.Join the contents of "list1" and "list2".
-.The original lists remain unchanged.
-.join (list1) and (list2):
-.	with …
-.		list : copy (list1)
-.		item : {}
-.	… apply [append (item) to (list)] on each (item) in (list2)
+Join the contents of "list1" and "list2".
+The original lists remain unchanged.
+join $list1 and $list2 :
+	with …
+		$list : copy $list1
+		$item : {}
+	… apply [append $item to $list] on each $item in $list2
 
-.========================================
+========================================
 
-.(n) is divisible by (divisor):
-.	0 = n % divisor
+$n is divisible by $divisor :
+	0 = $n % $divisor
 
-.inc (#var):
-.	#var : #var + 1
+inc $#var :
+	$#var : $#var + 1
 
-.dec (#var):
-.	#var : #var - 1
+dec $#var :
+	$#var : $#var - 1
 
-.first in /the (list):
-.	list [1]
+first in /the $list :
+	$list [1]
 
-.last in /the (list):
-.	list [length of (list)]
+last in /the $list :
+	$list [length of $list]
 
-.square (x):
-.	x × x
+square $x :
+	$x × $x
 
 .Return true 50% of the time.
 .heads :
@@ -492,9 +493,9 @@ $what ^ :
 .	do (draw-block)
 .	show drawing
 
-.animate (rate) times/time per sec (block):
+.animate (rate) times/time per sec $block:
 .	(rate) times per sec
-.	animate (block)
+.	animate $block
 
 .=== Turtle Operations and Objects ===
 

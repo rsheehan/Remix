@@ -1,14 +1,14 @@
-a: "yesterday"
+$a : "yesterday"
 
 if false [ ; comment
-	show (a)
+	show $a
 ] otherwise [
 	show "no"
 	new line
 ]
 
 if (true) [
-	show (a)
+	show $a
 	new line
 ] otherwise [
 	show "no"

@@ -1,26 +1,26 @@
-repeat until (condition-block) (block):
-	do (block)
-	if (do (condition-block))
+repeat until $condition-block $block :
+	do $block
+	if (do $condition-block)
 		break out
 	redo
 
-line (string) (value):
-	show (string)
-	show (value)
+line $string $value :
+	show $string
+	show $value
 	new line
 
-conditionA: false
-conditionB: false
+$conditionA : false
+$conditionB : false
 
-line "conditionA: " (conditionA)
-line "conditionB: " (conditionB)
+line "conditionA: " $conditionA
+line "conditionB: " $conditionB
 
-repeat until [conditionA]
-	line "inside conditionA: " (conditionA)
-	line "inside conditionB: " (conditionB)
-	if (conditionB)
-		conditionA: true
-	conditionB: true
+repeat until [$conditionA]
+	line "inside conditionA: " $conditionA
+	line "inside conditionB: " $conditionB
+	if $conditionB
+		$conditionA : true
+	$conditionB : true
 
-line "conditionA: " (conditionA)
-line "conditionB: " (conditionB)
+line "conditionA: " $conditionA
+line "conditionB: " $conditionB

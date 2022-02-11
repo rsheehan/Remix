@@ -1,9 +1,9 @@
 
-sqr (v):
-	v × v
+sqr $v :
+	$v × $v
 
-n: 5
+$n : 5
 
-showline (sqr (n) + (4 - 7))
+show (sqr $n + (4 - 7))
 
-showline ("finished")
+showline " should be 22"
