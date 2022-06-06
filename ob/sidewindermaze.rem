@@ -10,7 +10,7 @@ SIZE : 10
 
 square : a shape of {
 	{-1, -1}, {-1, 1}, {1, 1}, {1, -1}
-} with size (SIZE)
+} with size SIZE
 
 LEFT : 1
 RIGHT : 2
@@ -27,21 +27,21 @@ finish : { ; the middle
 	convert (COLUMNS ÷ 2) to integer + 1
 }
 
-on standard (black) paper
+on standard black paper
 	draw together
 		prepare the maze grid
 		make the sidewinder maze
 	wait 1 sec
 	draw together
-		place (blue) dot in (cell at (start))
-		place (orange) dot in (cell at (finish))
-	solve the maze from (start) to (finish)
+		place (blue) dot in (cell at start) ; a method call, can't remove () yet
+		place (orange) dot in (cell at finish)
+	solve the maze from start to finish
 
 prepare the maze grid :
-	for (column) (COLUMNS) and (row) (ROWS) on each row [append {} to (the-maze)] 
-		cell : a maze cell at (row) and (column)
-		append (cell) to (the-maze [row])
-		draw (cell)
+	for column COLUMNS and row ROWS on each row [append {} to the-maze] 
+		cell : a maze cell at row and column
+		append cell to (the-maze [row])
+		draw (cell) ; a method call, can't remove () yet
 
 make the sidewinder maze :
 	deal with all rows except the bottom
@@ -49,17 +49,17 @@ make the sidewinder maze :
 	show the maze
 
 deal with all rows except the bottom :
-	for each (row) from 1 to (ROWS - 1)
-		deal with all columns in (row) except the right
-		deal with the right cell in (row)
+	for each row from 1 to (ROWS - 1)
+		deal with all columns in the row except the right
+		deal with the right cell in row
 
-deal with all columns in (row) except the right :
+deal with all columns in the (row) except the right :
 	start-run : 1
-	for each (column) from 1 to (COLUMNS - 1)
-		if (heads)
+	for each column from 1 to (COLUMNS - 1)
+		if heads
 			remove the right wall in (cell at { row, column })
 		… otherwise …
-			gap : choose from (start-run) to (column)
+			gap : choose from start-run to column
 			remove the bottom wall in (cell at { row, gap })
 			start-run : column + 1
 
@@ -67,11 +67,11 @@ deal with the right cell in (row) :
 	remove the bottom wall in (cell at { row, COLUMNS })
 
 deal with the bottom row : 
-	for each (col) from 1 to (COLUMNS - 1)
-		remove the right wall in (cell at { ROWS, col })
+	for each column from 1 to (COLUMNS - 1)
+		remove the right wall in (cell at { ROWS, column })
 
 show the maze :
-	for (column)(COLUMNS) and (row)(ROWS)
+	for column COLUMNS and row ROWS
 		cell : cell at { row, column }
 		draw cell's exits
 
@@ -83,9 +83,9 @@ choose from (start) to (finish) :
 	(random (1 + finish - start)) + start - 1
 
 solve the maze from (start) to (finish) :
-	beginning : cell at (finish) ; going backwards
+	beginning : cell at finish ; going backwards
 	beginning's distance : 0
-	move outwards from (beginning)
+	move outwards from beginning
 	plot the solution
 
 move outwards from (cell) :
@@ -95,30 +95,30 @@ move outwards from (cell) :
 		[can move right from (cell)]
 		[not visited (right from (cell))]
 	}
-		move (RIGHT) from (cell) with (new-distance)
+		move RIGHT from cell with new-distance
 
 	if all of {
 		[can move down from (cell)]
 		[not visited (down from (cell))]
 	}
-		move (DOWN) from (cell) with (new-distance)
+		move DOWN from cell with new-distance
 
 	if all of {
 		[can move left from (cell)]
 		[not visited (left from (cell))]
 	}
-		move (LEFT) from (cell) with (new-distance)
+		move LEFT from cell with new-distance
 		
 	if all of {
 		[can move up from (cell)]
 		[not visited (up from (cell))]
 	}
-		move (UP) from (cell) with (new-distance)
+		move UP from cell with new-distance
 
 move (direction) from (cell) with (new-distance) :
-	new-cell : cell going (direction) from (cell)
+	new-cell : cell going direction from cell
 	new-cell's distance : new-distance
-	move outwards from (new-cell)
+	move outwards from new-cell
 
 cell going (direction) from (cell) :
 	choose from
@@ -128,11 +128,11 @@ cell going (direction) from (cell) :
 		[direction = DOWN]  do [down from (cell)]
 
 plot the solution :
-	start-cell : cell at (start)
-	go closer than ((start-cell) distance) from (start-cell)
+	start-cell : cell at start
+	go closer than (start-cell's distance) from start-cell
 
 go closer than (distance) from (cell) :
-	if [cell ≠ cell at (start)]
+	if [cell ≠ cell at start]
 		wait 0.25 sec
 		place (green) dot in (cell)
 	if [distance > 1] 
@@ -142,22 +142,22 @@ go closer than (distance) from (cell) :
 				[can move right from (cell)]
 				[(right from (cell)) is (distance) away]
 			} do
-				go closer than (distance) from (right from (cell))
+				go closer than distance from (right from (cell))
 			all of {
 				[can move left from (cell)]
 				[(left from (cell)) is (distance) away]
 			} do
-				go closer than (distance) from (left from (cell))
+				go closer than distance from (left from (cell))
 			all of {
 				[can move down from (cell)]
 				[(down from (cell)) is (distance) away]
 			} do
-				go closer than (distance) from (down from (cell))
+				go closer than distance from (down from (cell))
 			all of {
 				[can move up from (cell)]
 				[(up from (cell)) is (distance) away]
 			} do
-				go closer than (distance) from (up from (cell))
+				go closer than distance from (up from (cell))
 
 ==== Maze Cell Object ====
 
@@ -183,29 +183,29 @@ a maze cell at (the-row) and (the-col) :
 			bottom-open : true
 
 		draw (me) :
-			draw with (red) pen
+			draw with red pen
 			draw (square) at (centre)
 
 		draw (my) exits :
-			draw with (black) pen
-			if (right-open)
+			draw with black pen
+			if right-open
 				x : centre [1] + SIZE
 				y : centre [2] - SIZE
 				start : { x, y }
 				y : centre [2] + SIZE
 				finish : { x, y }
-				draw line from (start) to (finish)
-			if (bottom-open)
+				draw line from start to finish
+			if bottom-open
 				x : centre [1] - SIZE
 				y : centre [2] + SIZE
 				start : { x, y }
 				x : centre [1] + SIZE
 				finish : { x, y }
-				draw line from (start) to (finish)
+				draw line from start to finish
 
 		place (colour) dot in (me) :
-			fill colour (colour)
-			draw circle of (SIZE ÷ 2) at (centre)
+			fill colour colour
+			draw circle of (SIZE ÷ 2) at centre
 
 		right from (me) :
 			cell at { row, column + 1 }
