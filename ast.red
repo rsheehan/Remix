@@ -81,6 +81,7 @@ sequence-stmt: object [
 function-call-stmt: object [
     type: "function"
     fnc-name: ""
+	call-parts: [] ; holds the explicit function call parts for parentheses reduction
     actual-params: [] ; the values of the parameters
     return-higher: false ; if true don't catch returns here, pass them higher
 ]

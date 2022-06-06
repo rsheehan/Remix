@@ -296,7 +296,6 @@ a-simple-call: function [
 	  This is used to distinguish between calls to self methods with calls of the same name. }
 	name [string!]
 	num-params [number!]
-	/extern object-method-list-stack
 ][
 	method-num-params: select last object-method-list-stack name
 	num-params = method-num-params
@@ -407,6 +406,84 @@ create-red-function-call: function [
 	]
 ]
 
+can-we-find: function [
+	{ Return all function matches if any can be found. 
+	  Also need to include the parameters from the call and their positions. }
+	name [string!]
+][
+	call-parts: split name "_"
+	possible-fncs: select func-name-arity length? call-parts
+	collected: copy []
+	foreach possible possible-fncs [
+		could: true
+		param-positions: copy []
+		param-pos: 0
+		foreach part call-parts [
+			poss-part: first possible
+			if (poss-part = "|") [
+				param-pos: param-pos + 1
+				if (part <> "|") [
+					repend param-positions [param-pos part]
+				]
+			]
+			unless (part = poss-part) or (poss-part = "|") [
+				could: false
+				break
+			]
+			possible: next possible
+		]
+		if could [
+			match-name: copy ""
+			foreach part head possible [
+				if (length? match-name) > 0 [
+					append match-name "_"
+				]
+				append match-name part
+			]
+			append collected match-name
+			append/only collected param-positions
+		]
+	]
+	; collected looks like ["print_|_ten_times" [1 "name"]]
+	return collected
+]
+
+substitute-varnames-for-params: function [
+	{ Deal with variables in place of function name parts
+	  Return the created function call if it succeeds, none otherwise. }
+	remix-call "Includes the name and parameter list"
+][
+	name: remix-call/fnc-name
+	possibles: can-we-find name
+	number: (length? possibles) / 2
+	switch/default number [
+		0 [return none]
+		1 [
+			name: first possibles
+			the-fnc: select function-map name
+			unless the-fnc [
+				print rejoin [{Error: ambiguous call found but incorrect "} name {".}]
+				quit
+			]
+			actual-params: remix-call/actual-params
+			var-name-params: second possibles
+			while [(length? var-name-params) > 0][
+				pos: first var-name-params
+				var-name: second var-name-params
+				param: make variable [
+					name: var-name
+				]
+				insert at actual-params pos param
+				remove/part var-name-params 2
+			]
+			return create-red-function-call name the-fnc actual-params
+		]
+	][
+		print rejoin [{Error: ambiguous function call "} name {".}]
+		quit
+	]
+]
+
 create-red-function-or-method-call: function [
 	{ Return the red equivalent of a function or method call. }
 	remix-call "Includes the name and parameter list"
@@ -421,7 +498,13 @@ create-red-function-or-method-call: function [
 	if the-fnc [
 		return create-red-function-call name the-fnc remix-call/actual-params
 	]
-	print rejoin [{Error: no method or function "} name {".} ]
+	; not matched so search for variable names in parameter positions
+	matched-fnc: substitute-varnames-for-params remix-call
+	if matched-fnc [
+		return matched-fnc
+	]
+
+	print rejoin [{Error: need to search for method "} name {".}]
 	quit
 ]
 
@@ -517,6 +600,20 @@ transpile-reference-function: function [
 	]
 ]
 
+add-to-arity-map: function [
+	{ Add the function template into the correct list for the same name/param arity. }
+	fnc-name [string!]
+][
+	parts: split fnc-name "_"
+	arity: length? parts
+	list: select func-name-arity arity
+	unless list [
+		list: copy []
+		put func-name-arity arity list
+	]
+	append/only list parts
+]
+
 transpile-functions: function [
 	{ Transpile all of the Remix code functions.
 	  Now deals with all reference functions first to prevent ordering issues.
@@ -540,14 +637,23 @@ transpile-functions: function [
 			either ref-params = [] [
 				repend/only normal-functions [fnc the-fnc fnc-params]
 			][
-				repend/only reference-functions [the-fnc fnc-params ref-params]
+				repend/only reference-functions [fnc the-fnc fnc-params ref-params]
 			]
 		]
+		switch/default fnc [
+			"|_|" []	; getter list function
+			"|_|_|" []	; setter list function
+		][
+			add-to-arity-map fnc
+		]
+		; this is where all function names are stored
+		; according to the number of parts of the name
 	]
 	foreach fnc-info reference-functions [
-		the-fnc: first fnc-info
-		fnc-params: second fnc-info
-		ref-params: third fnc-info
+		fnc-name: first fnc-info
+		the-fnc: second fnc-info
+		fnc-params: third fnc-info
+		ref-params: fourth fnc-info
 		transpile-reference-function the-fnc fnc-params ref-params
 	]
 	foreach fnc-info normal-functions [

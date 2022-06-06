@@ -4,6 +4,13 @@ Red [Title: "Function helper functions"
 	Purpose: "Red functions to help with Remix functions."
 ]
 
+func-name-arity: make map! []
+comment {
+	The keys are integers of the number of name parts and parameters in the function call.
+	The values are a block of all function templates with the same arity.
+	e.g. 2: [["one" "|"] ["add" "to"]]
+}
+
 function-map: make map! [] ; all functions (no nesting of functions yet)
 comment {
  The keys are the function names as strings e.g. "put_|_into_|".
@@ -100,7 +107,7 @@ to-function-def-names: function [
 	  This deals with multi-names. }
 	block [block!]  "The block of parts and parameter blocks"
 ][
-	names: copy reduce [ copy "" ] ; for multi-names
+	names: reduce [ copy "" ] ; for multi-names
 	foreach part block [
 		case [
 			string? part [
@@ -146,12 +153,15 @@ insert-function: function [
 
 create-function-call: function [
 	{ Create a function object which can be evaluated.
-	  All parameters are stored with their expressions }
+	  All parameters are stored with their expressions.
+	  This now has the block name and the string name. }
 	the-name [string!]
+	template [block!]
 	actual-parameters [block!]
 ][
 	make function-call-stmt [
 		fnc-name: the-name
+		call-parts: template
 		actual-params: actual-parameters
 	]
 ]
@@ -177,5 +187,6 @@ assist-create-function-call: function [
 	name: to-function-name template
 	create-function-call 
 		name
+		template
 		actual-parameters
 ]
