@@ -48,18 +48,6 @@ foreach name extract method-list 2 [
     append/only call-names split name "_"
 ]
 
-extract-all-words: function [
-    { Go through all function names and collect the constituent words. }
-    all-names [block!]
-][
-    all-words: []
-    foreach name-list all-names [
-        all-words: union all-words name-list
-    ]
-]
-
-extract-all-words call-names
-
 display-matches: function [
     matches
 ][
