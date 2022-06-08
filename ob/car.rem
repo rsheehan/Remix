@@ -76,8 +76,12 @@ another-car's details
 .Fields are private, must have getter or setter to access outside the object.
 .Default getter
 .	(object) field
+. or
+.	object's field
 
 .Default setter
 .	(object) field : value
+. or
+.	object's field : value
 
 .Can copy an object with "based on".
