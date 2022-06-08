@@ -1,0 +1,83 @@
+
+/a (car-color) (car-model) with (distance) kms on the clock :
+	create						; object creation
+		model : car-model		; fields
+		color : car-color
+		km-driven : distance
+
+		getter					; creates a getter method for fields
+			model
+
+		change (my) color to (new-color) :		; method name
+			color : new-color					; method body
+
+		increase (my) odometer by (amount) :
+			km-driven : km-driven + amount
+
+		(my) details :
+			showline {"Model: ", model}
+			showline {"Color: ", color}
+			showline {"Kilometres driven: ", km-driven}
+
+a (car) (years) years old:
+	extend (car)				; copy and extend an object
+		age : years
+
+		getter/setter			; creates a getter and setter method for fields
+			age					; these can be overridden if you want special versions
+
+		(my) details :
+			showline {"Model: ", model}
+			showline {"Color: ", color}
+			showline {"Kilometres driven: ", km-driven}
+			showline {"Age in years: ", age}
+
+Construction example.
+=====================
+car : a "white" "Toyota" with 1000 kms on the clock
+car's details
+
+Object access.
+==============
+increase (car) odometer by 500	; call a method
+change (car) color to "black"	; call a method
+car's details					; call a method, like accessing a getter
+
+
+Get field value (must have a getter).
+=====================================
+showline (car's model)
+
+Extend an object.
+=================
+car : a (car) 5 years old
+
+Set field value (must have a setter).
+=====================================
+car's age : 7
+
+Object copy.
+============
+another-car : based on (car)
+another-car's details
+
+Alternatively construct a new extended object.
+==============================================
+another-car : a ("red" "Ford" with 2000 kms on the clock) 4 years old
+another-car's details
+
+.The syntax
+.To create an object
+.	create
+.		fields
+.		methods
+
+.Every method must have a "me" or "my" parameter - like "self" or "this" in other languages.
+.Fields are private, must have getter or setter to access outside the object.
+.Default getter
+.	(object) field
+
+.Default setter
+.	(object) field : value
+
+.Can copy an object with "based on".
