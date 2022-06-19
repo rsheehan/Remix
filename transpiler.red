@@ -111,7 +111,7 @@ create-red-expression: function [
 		number? expression
 		logic? expression
 		none? expression
-		expression = 'self
+		expression = to-lit-word "self" ; changed from 'self to enable compilation
 	][
 		return expression
 	]
@@ -266,7 +266,7 @@ create-method-call: function [
 	; Or a call to a me/my less method of the same object?
 	; If so generate a simple method call.
 	if a-simple-call name length? actual-params [
-		self-location: find actual-params 'self
+		self-location: find actual-params to-lit-word "self" ; changed from 'self to enable compilation
 		if self-location [
 			either (index? self-location) = (select method-list name) [
 				remove self-location

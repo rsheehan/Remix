@@ -2,3 +2,7 @@
 *temp*.rem
 remix.code-workspace
 red.exe
+remix.exe
+libRedRT-defs.r
+libRedRT-include.red
+libRedRT.dll

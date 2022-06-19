@@ -532,6 +532,7 @@ background: none ; will be an image created in setup-paper
 background-template: [] ; will include size and colour
 background-pen: [pen black line-width 2 line-cap round] ; commands to set the current background pens
 animate-instructions: []
+paper: none ; needed to enable compilation to work
 
 change-draw-layer: function [
 	{ Set the draw layer. 0 is the background. }

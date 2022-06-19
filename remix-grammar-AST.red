@@ -5,10 +5,7 @@ Red [
 	Purpose: "The grammar of Remix creating AST. This is used by the transpiler. "
 ]
 
-do %lexer.red
-do %ast.red
-do %function-functions.red
-do %built-in-functions.red
+object-stack: none ; needed to enable compilation to work
 
 END-OF-FN-CALL: [
 	<LINE> | <RBRACKET> | <rparen>  | <rbrace> | <comma> | <operator>
