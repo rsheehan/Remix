@@ -3,7 +3,12 @@ Red [
 	Needs: view
 ]
 
-do %remix-grammar-AST.red
+#include %lexer.red
+#include %ast.red
+#include %function-functions.red
+#include %built-in-functions.red
+#include %remix-grammar-AST.red
+#include %transpiler.red
 
 filename: trim system/options/args/1
 rem-file: to-file filename
