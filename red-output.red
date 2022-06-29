@@ -58,8 +58,6 @@ if not successful-parse [
 
 ; probe ast
 
-do %transpiler.red
-
 print "^/TRANSPILED FUNCTIONS"
 transpile-functions function-map
 user-fncs: exclude (keys-of function-map) built-in-fncs
