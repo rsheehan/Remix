@@ -222,7 +222,7 @@ multi-word: [ ; used for function multiple names
 ]
 
 possessive: [ ; used for object field access
-	copy chars any characters
+	copy chars some characters
 	[#"'" | #"’"] #"s"
 	keep (
 		make token [
@@ -243,7 +243,7 @@ possessive: [ ; used for object field access
 ]
 
 char-sequence: [
-    copy chars any characters
+    copy chars some characters
     [
         if (chars = "true")
 		keep (
